@@ -1400,7 +1400,11 @@
       "アサカヨルカ",
       "ケンチャナガールズ",
       "ニシタチ"
-    ]
+    ],
+    "qualifiedPerformers": [
+      "序盤に"
+    ],
+    "qualifiedNextStageDate": "2026-06-30"
   },
   {
     "id": "2026-06-18-1600-audition-1st-east",
@@ -1443,7 +1447,12 @@
       "月面ビート",
       "断然元気",
       "さそり"
-    ]
+    ],
+    "qualifiedPerformers": [
+      "バイバイスプリット",
+      "居候"
+    ],
+    "qualifiedNextStageDate": "2026-06-30"
   },
   {
     "id": "2026-06-18-1830-audition-1st-east",
