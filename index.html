@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>オーディションEAST／渋谷・神保町スタンドアップ 出演者検索（非公式）</title>
+
+  <meta property="og:title" content="オーディションEAST／渋谷・神保町スタンドアップ 出演者検索 (非公式)">
+  <meta property="og:description" content="日時などで検索可能 / お気に入り機能あり">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://yukiguni00.github.io/search-audition/">
+  <meta property="og:image" content="https://yukiguni00.github.io/search-audition/ogp.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:locale" content="ja_JP">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="オーディションEAST／渋谷・神保町スタンドアップ 出演者検索 (非公式)">
+  <meta name="twitter:description" content="日時などで検索可能 / お気に入り機能あり">
+  <meta name="twitter:image" content="https://yukiguni00.github.io/search-audition/ogp-twitter.jpg">
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const disableAnalytics = params.get("noanalytics") === "1";
+
+    if (!disableAnalytics) {
+      const cloudflareScript = document.createElement("script");
+      cloudflareScript.defer = true;
+      cloudflareScript.src = "https://static.cloudflareinsights.com/beacon.min.js";
+      cloudflareScript.setAttribute("data-cf-beacon", '{"token": "466d8e9a4f474f79be9cd1b76ddd137b"}');
+      document.head.appendChild(cloudflareScript);
+
+      const googleAnalyticsScript = document.createElement("script");
+      googleAnalyticsScript.async = true;
+      googleAnalyticsScript.src = "https://www.googletagmanager.com/gtag/js?id=G-1J7SDDNWB7";
+      document.head.appendChild(googleAnalyticsScript);
+
+      window.dataLayer = window.dataLayer || [];
+      window.gtag = function() {
+        window.dataLayer.push(arguments);
+      };
+      window.gtag("js", new Date());
+      window.gtag("config", "G-1J7SDDNWB7");
+    }
+  </script>
+  
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="container">
+    <header class="hero">
+      <h1>オーディションEAST<br>渋谷・神保町スタンドアップ<br>出演者検索（非公式）</h1>
+    </header>
+
+    <section class="panel favorite-panel" id="favoritePanel" hidden>
+      <h2>★今後の出演予定</h2>
+      <div id="favoriteSchedule"></div>
+    </section>
+
+    <section class="panel favorite-backup-panel" id="favoriteBackupPanel" hidden>
+      <h2>お気に入りをバックアップ・復元</h2>
+      <p class="backup-lead">機種変更やブラウザ変更に備えて、お気に入り登録情報をバックアップ・復元できます。</p>
+
+      <div class="backup-block">
+        <h3>バックアップ</h3>
+        <p class="backup-note">現在のお気に入り登録情報からバックアップコードを生成します。復元の際に必要となるため、メモなどに保存してください。</p>
+        <button id="createBackupBtn" class="secondary-btn backup-action-btn" type="button">コードを生成</button>
+        <textarea id="backupCodeOutput" class="backup-code" readonly placeholder="ここにバックアップコードが表示されます"></textarea>
+        <button id="copyBackupBtn" class="secondary-btn backup-action-btn" type="button">コピーする</button>
+        <p id="backupCreateStatus" class="backup-status" aria-live="polite"></p>
+      </div>
+
+      <div class="backup-block">
+        <h3>復元</h3>
+        <p class="backup-note">下記に、保存しておいたバックアップコードを貼り付けてください。「復元する」を押すと、現在のお気に入りは上書きされます。</p>
+        <textarea id="backupCodeInput" class="backup-code" placeholder="バックアップコードを貼り付け"></textarea>
+        <button id="restoreBackupBtn" class="secondary-btn backup-action-btn" type="button">復元する</button>
+        <p id="backupRestoreStatus" class="backup-status" aria-live="polite"></p>
+      </div>
+      <button id="closeBackupBtn" class="favorite-backup-link backup-close-btn" type="button">閉じる</button>
+    </section>
+
+    <section class="panel">
+      <h2>芸人名で検索</h2>
+      <input id="nameQuery" type="text" placeholder="芸人の名前を入力">
+      <button id="randomPerformerBtn" class="secondary-btn random-btn" type="button">まだ知らない芸人を探す</button>
+    </section>
+
+    <section class="panel">
+      <h2>条件で絞り込む</h2>
+      <div class="filters">
+        <label class="filter-full">ライブ名
+          <select id="eventType">
+            <option value="all">すべて</option>
+            <option value="audition-1st-east">オーディション1stステージ EAST</option>
+            <option value="audition-2nd-east">オーディション2ndステージ EAST</option>
+            <option value="standup">渋谷・神保町スタンドアップ</option>
+          </select>
+        </label>
+        <div class="filters-compact">
+          <label>月
+            <select id="month">
+              <option value="all">すべて</option>
+            </select>
+          </label>
+          <label>日
+            <select id="day">
+              <option value="all">すべて</option>
+            </select>
+          </label>
+          <label>時間
+            <select id="hour">
+              <option value="all">すべて</option>
+            </select>
+          </label>
+        </div>
+      </div>
+      <div class="button-row">
+        <button id="favoritesOnlyBtn" class="secondary-btn" type="button" aria-pressed="false">★のみ</button>
+        <button id="clearBtn" class="secondary-btn" type="button">条件クリア</button>
+      </div>
+
+      <p class="note">
+        出演者名の☆からお気に入り登録ができます。<br>
+        お気に入り登録情報は、現在のブラウザに保存されます。
+      </p>
+      
+    </section>
+
+    <section class="panel">
+      <h2>検索結果</h2>
+      <p id="resultNote" class="result-note">
+        ※出演者は香盤順です<br>
+      </p>
+      <div id="qualifiedSummary"></div>
+      <div id="results"></div>
+    </section>
+
+
+    <section class="panel archive-panel" id="archive">
+      <h2 class="archive-heading">
+        <button id="archiveToggleBtn" class="archive-toggle" type="button" aria-expanded="false" aria-controls="archiveBody">
+          <span>過去の開催</span>
+          <span class="archive-toggle-icon" aria-hidden="true">＋</span>
+        </button>
+      </h2>
+      <p id="archiveMessage" class="archive-message" aria-live="polite"></p>
+      <div id="archiveBody" class="archive-body" hidden>
+        <div id="archiveResults"></div>
+      </div>
+    </section>
+
+    <button id="floatingTopBtn" class="floating-top-btn" aria-label="ページ上部へ戻る">↑ トップ</button>
+
+
+    <footer class="footer">
+  <p>情報出典：<a href="https://x.com/jimbo_audition" target="_blank" rel="noopener noreferrer">@jimbo_audition</a></p>
+      <p>
+        最新情報は公式アカウントをご確認ください。<br>
+        ご意見・不具合などありましたら、<br>下記リンクからご連絡ください。<br>
+        （特に情報の間違いなどお願いいたします！）
+      </p>
+      <p><a href="https://note.com/yukiguni00/n/n15084f98cda4" target="_blank" rel="noopener noreferrer">このサイトについて／問い合わせ</a></p>
+      <p class="analytics-note">
+        サイト改善の参考にするため、Cloudflare Web AnalyticsおよびGoogle Analytics 4でアクセス状況を確認しています。
+      </p>
+    </footer>
+    
+  </main>
+  <script src="script.js"></script>
+</body>
+</html>
