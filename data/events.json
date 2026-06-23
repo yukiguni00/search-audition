@@ -933,10 +933,7 @@
       "半分フィット",
       "おやすみまとのん",
       "チョウザメタンク"
-    ],
-    "qualifiedPerformers": [],
-    "qualifiedResult": "none",
-    "qualifiedNextStageDate": "2026-06-30"
+    ]
   },
   {
     "id": "2026-06-11-1600-audition-1st-east",
@@ -1167,10 +1164,7 @@
       "井上バルキ",
       "片翼のチキン",
       "とものかつみ(芸人)"
-    ],
-    "qualifiedPerformers": [],
-    "qualifiedResult": "none",
-    "qualifiedNextStageDate": "2026-06-30"
+    ]
   },
   {
     "id": "2026-06-15-1830-audition-1st-east",
@@ -1212,11 +1206,7 @@
       "山本ともうします。",
       "きしゃぽっぽ",
       "高野たかし"
-    ],
-    "qualifiedPerformers": [
-      "濡れカバ"
-    ],
-    "qualifiedNextStageDate": "2026-06-30"
+    ]
   },
   {
     "id": "2026-06-16-1600-audition-1st-east",
@@ -1259,12 +1249,7 @@
       "よし乃",
       "高橋しんぺー",
       "ソビト"
-    ],
-    "qualifiedPerformers": [
-      "バクラテン",
-      "坊主ボーイズ"
-    ],
-    "qualifiedNextStageDate": "2026-06-30"
+    ]
   },
   {
     "id": "2026-06-16-1830-audition-1st-east",
@@ -1306,12 +1291,7 @@
       "りゅうちゃん",
       "東海らいだー",
       "かなとガッパイ"
-    ],
-    "qualifiedPerformers": [
-      "美バンブー",
-      "江頭一馬"
-    ],
-    "qualifiedNextStageDate": "2026-06-30"
+    ]
   },
   {
     "id": "2026-06-17-1600-audition-1st-east",
@@ -1354,11 +1334,7 @@
       "世紀連盟",
       "ゴリシ",
       "いぬ派ねこ派"
-    ],
-    "qualifiedPerformers": [
-      "マシン語感"
-    ],
-    "qualifiedNextStageDate": "2026-06-30"
+    ]
   },
   {
     "id": "2026-06-17-1830-audition-1st-east",
@@ -1400,11 +1376,7 @@
       "アサカヨルカ",
       "ケンチャナガールズ",
       "ニシタチ"
-    ],
-    "qualifiedPerformers": [
-      "序盤に"
-    ],
-    "qualifiedNextStageDate": "2026-06-30"
+    ]
   },
   {
     "id": "2026-06-18-1600-audition-1st-east",
@@ -1447,12 +1419,7 @@
       "月面ビート",
       "断然元気",
       "さそり"
-    ],
-    "qualifiedPerformers": [
-      "バイバイスプリット",
-      "居候"
-    ],
-    "qualifiedNextStageDate": "2026-06-30"
+    ]
   },
   {
     "id": "2026-06-18-1830-audition-1st-east",
@@ -1494,12 +1461,7 @@
       "タテヤマ",
       "ワンルーム",
       "太公望"
-    ],
-    "qualifiedPerformers": [
-      "ミロデジャネイロ",
-      "スカイサーキット"
-    ],
-    "qualifiedNextStageDate": "2026-06-30"
+    ]
   },
   {
     "id": "2026-06-23-1600-audition-1st-east",
@@ -1542,7 +1504,12 @@
       "ボールガール",
       "和田べこ吉",
       "ハチコマックス"
-    ]
+    ],
+    "qualifiedPerformers": [
+      "千年ぶり",
+      "ストロングブルジュニア"
+    ],
+    "qualifiedNextStageDate": "2026-06-30"
   },
   {
     "id": "2026-06-23-1830-audition-1st-east",
