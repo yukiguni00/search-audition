@@ -1590,7 +1590,11 @@
       "ちっちゃ〜い噴水",
       "コロネケン",
       "オニクラサキ"
-    ]
+    ],
+    "qualifiedPerformers": [
+      "弁天フクロウ"
+    ],
+    "qualifiedNextStageDate": "2026-06-30"
   },
   {
     "id": "2026-06-24-1600-audition-1st-east",
@@ -1632,7 +1636,12 @@
       "フローズンミヤビ",
       "私と〇〇の関係",
       "渥美朝陽"
-    ]
+    ],
+    "qualifiedPerformers": [
+      "ニコミハジメテ",
+      "かびん"
+    ],
+    "qualifiedNextStageDate": "2026-06-30"
   },
   {
     "id": "2026-06-24-1830-audition-1st-east",
@@ -1675,7 +1684,13 @@
       "コハクノユメ",
       "ZAZY",
       "しゅう"
-    ]
+    ],
+    "qualifiedPerformers": [
+      "ドゥダダ",
+      "ライダーキック",
+      "ゼウス"
+    ],
+    "qualifiedNextStageDate": "2026-06-30"
   },
   {
     "id": "2026-06-25-1600-audition-1st-east",
