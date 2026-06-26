@@ -446,3 +446,8 @@ button{padding:12px 16px;border:none;border-radius:12px;background:#111;color:#f
   font-weight:700;
   line-height:1.6;
 }
+
+
+.result-note[hidden]{
+  display:none;
+}

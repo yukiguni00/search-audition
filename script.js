@@ -272,6 +272,57 @@ function getFavoriteScheduleData() {
     });
   });
 
+  const pendingSecondDate = getMainPendingSecondStageDate();
+
+  if (pendingSecondDate && pendingSecondDate >= today && !hasPublishedSecondStageDetails(pendingSecondDate)) {
+    const pendingNames = [];
+    const seenPending = new Set();
+
+    events
+      .filter((ev) => ev.eventType === "audition-1st-east")
+      .filter((ev) => ev.qualifiedNextStageDate === pendingSecondDate)
+      .filter((ev) => Array.isArray(ev.qualifiedPerformers) && ev.qualifiedPerformers.length)
+      .sort((a, b) => a.date.localeCompare(b.date) || a.timeMinutes - b.timeMinutes)
+      .forEach((ev) => {
+        ev.qualifiedPerformers.forEach((name) => {
+          const key = normalizeText(name);
+
+          if (!key || seenPending.has(key)) return;
+          seenPending.add(key);
+
+          if (!favoriteSet.has(key)) return;
+
+          pendingNames.push(name);
+          upcomingKeys.add(key);
+        });
+      });
+
+    if (pendingNames.length) {
+      const dateObj = new Date(pendingSecondDate);
+      eventGroups.push({
+        event: {
+          id: `${pendingSecondDate}-audition-2nd-east`,
+          eventType: "audition-2nd-east",
+          title: "オーディション2ndステージ EAST",
+          date: pendingSecondDate,
+          month: dateObj.getMonth() + 1,
+          day: dateObj.getDate(),
+          time: "未定",
+          timeMinutes: 0,
+          venue: "詳細未定",
+          performers: pendingNames,
+          isPendingSecondStage: true,
+        },
+        names: pendingNames,
+      });
+    }
+  }
+
+  eventGroups.sort((a, b) =>
+    a.event.date.localeCompare(b.event.date) ||
+    (a.event.timeMinutes || 0) - (b.event.timeMinutes || 0)
+  );
+
   const noUpcoming = favorites
     .filter((key) => !upcomingKeys.has(key))
     .map((key) => ({
@@ -672,6 +723,17 @@ function getPendingQualifiedGroups(filters) {
 }
 
 
+function hasPublishedSecondStageDetails(nextStageDate) {
+  if (!nextStageDate) return false;
+
+  return events.some((ev) =>
+    ev.eventType === "audition-2nd-east" &&
+    ev.date === nextStageDate &&
+    Array.isArray(ev.performers) &&
+    ev.performers.length
+  );
+}
+
 function getPendingSecondStageDateKeys() {
   return [...new Set(
     events
@@ -690,6 +752,7 @@ function getMainPendingSecondStageDate() {
 
 function filtersAllowPendingSecondStageCard(filters, nextStageDate) {
   if (!nextStageDate) return false;
+  if (hasPublishedSecondStageDetails(nextStageDate)) return false;
   if (filters.eventType !== "all" && filters.eventType !== "audition-2nd-east") return false;
 
   const dateObj = new Date(nextStageDate);
@@ -753,7 +816,7 @@ function buildPendingSecondStageCardHTML(filters, favorites) {
       </div>
       <h3>オーディション2ndステージ EAST</h3>
       <p class="pending-second-note">
-        1stステージ通過者を掲載しています。詳しい公演情報が公開され次第更新します。
+        ※詳しい公演情報が公開され次第更新します
       </p>
       <div class="performer-section">
         <div class="card-section-label">出演予定者</div>
@@ -763,12 +826,23 @@ function buildPendingSecondStageCardHTML(filters, favorites) {
   `;
 }
 
+function updateResultNoteForPendingSecondStage(futureResults, pendingSecondStageCard) {
+  const note = document.querySelector(".result-note");
+  if (!note) return;
+
+  note.hidden = Boolean(pendingSecondStageCard) && futureResults.length === 0;
+}
+
 function renderMainEvents(targetId, list, filters) {
   const target = document.getElementById(targetId);
   const favorites = getFavorites();
   const pendingSecondStageCard = targetId === "results"
     ? buildPendingSecondStageCardHTML(filters, favorites)
     : "";
+
+  if (targetId === "results") {
+    updateResultNoteForPendingSecondStage(list, pendingSecondStageCard);
+  }
 
   if (!list.length && !pendingSecondStageCard) {
     target.innerHTML = targetId === "results"
