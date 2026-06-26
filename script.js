@@ -592,7 +592,7 @@ function getQualifiedPerformersHTML(ev, favorites) {
   if (ev.qualifiedResult === "none") {
     return `
       <div class="qualified-performers">
-        <div class="card-section-label">2nd進出者</div>
+        <div class="card-section-label">${getQualifiedStageLabel(ev)}</div>
         <div class="qualified-none">該当者なし</div>
       </div>
     `;
@@ -646,27 +646,8 @@ function getPendingQualifiedGroups(filters) {
 
   return events
     .filter((ev) => ev.eventType === "audition-1st-east")
-    .filter((ev) =>
-      (Array.isArray(ev.qualifiedPerformers) && ev.qualifiedPerformers.length) ||
-      ev.qualifiedResult === "none"
-    )
+    .filter((ev) => Array.isArray(ev.qualifiedPerformers) && ev.qualifiedPerformers.length)
     .map((ev) => {
-      if (ev.qualifiedResult === "none") {
-        if (filters.nameQuery || favoritesOnlyMode) {
-          return {
-            event: ev,
-            names: [],
-            result: "hidden-none",
-          };
-        }
-
-        return {
-          event: ev,
-          names: [],
-          result: "none",
-        };
-      }
-
       const names = ev.qualifiedPerformers.filter((name) => {
         const key = normalizeText(name);
 
@@ -680,10 +661,9 @@ function getPendingQualifiedGroups(filters) {
       return {
         event: ev,
         names,
-        result: "qualified",
       };
     })
-    .filter((group) => group.result === "none" || group.names.length)
+    .filter((group) => group.names.length)
     .sort((a, b) =>
       (a.event.qualifiedNextStageDate || "").localeCompare(b.event.qualifiedNextStageDate || "") ||
       a.event.date.localeCompare(b.event.date) ||
@@ -692,9 +672,123 @@ function getPendingQualifiedGroups(filters) {
 }
 
 
+function getPendingSecondStageDateKeys() {
+  return [...new Set(
+    events
+      .filter((ev) => ev.eventType === "audition-1st-east")
+      .filter((ev) => Array.isArray(ev.qualifiedPerformers) && ev.qualifiedPerformers.length)
+      .map((ev) => ev.qualifiedNextStageDate)
+      .filter(Boolean)
+  )].sort();
+}
+
+function getMainPendingSecondStageDate() {
+  const today = todayString();
+  const upcoming = getPendingSecondStageDateKeys().filter((date) => date >= today);
+  return upcoming[0] || getPendingSecondStageDateKeys()[0] || "";
+}
+
+function filtersAllowPendingSecondStageCard(filters, nextStageDate) {
+  if (!nextStageDate) return false;
+  if (filters.eventType !== "all" && filters.eventType !== "audition-2nd-east") return false;
+
+  const dateObj = new Date(nextStageDate);
+  const month = dateObj.getMonth() + 1;
+  const day = dateObj.getDate();
+
+  if (filters.month !== "all" && Number(filters.month) !== month) return false;
+  if (filters.day !== "all" && Number(filters.day) !== day) return false;
+
+  return true;
+}
+
+function getPendingSecondStagePerformers(filters) {
+  const nextStageDate = getMainPendingSecondStageDate();
+  if (!filtersAllowPendingSecondStageCard(filters, nextStageDate)) {
+    return {
+      nextStageDate,
+      names: [],
+    };
+  }
+
+  const favorites = getFavoritePerformersSet();
+  const names = [];
+  const seen = new Set();
+
+  events
+    .filter((ev) => ev.eventType === "audition-1st-east")
+    .filter((ev) => ev.qualifiedNextStageDate === nextStageDate)
+    .filter((ev) => Array.isArray(ev.qualifiedPerformers) && ev.qualifiedPerformers.length)
+    .sort((a, b) => a.date.localeCompare(b.date) || a.timeMinutes - b.timeMinutes)
+    .forEach((ev) => {
+      ev.qualifiedPerformers.forEach((name) => {
+        const key = normalizeText(name);
+
+        if (!key || seen.has(key)) return;
+        if (filters.nameQuery && !key.includes(filters.nameQuery)) return;
+        if (favoritesOnlyMode && !favorites.has(key)) return;
+
+        names.push(name);
+        seen.add(key);
+      });
+    });
+
+  return {
+    nextStageDate,
+    names,
+  };
+}
+
+function buildPendingSecondStageCardHTML(filters, favorites) {
+  const { nextStageDate, names } = getPendingSecondStagePerformers(filters);
+  if (!names.length) return "";
+
+  const dateLabel = formatDateLabel(nextStageDate) || "日程未定";
+
+  return `
+    <article class="result-card pending-second-card" id="event-${nextStageDate || "pending"}-audition-2nd-east">
+      <div class="datetime-venue">
+        <div>${dateLabel} 開演時間未定</div>
+        <div class="venue-line">会場：詳細未定</div>
+      </div>
+      <h3>オーディション2ndステージ EAST</h3>
+      <p class="pending-second-note">
+        1stステージ通過者を掲載しています。詳しい公演情報が公開され次第更新します。
+      </p>
+      <div class="performer-section">
+        <div class="card-section-label">出演予定者</div>
+        <div class="performers">${buildPerformerChipsHTML(names, favorites)}</div>
+      </div>
+    </article>
+  `;
+}
+
+function renderMainEvents(targetId, list, filters) {
+  const target = document.getElementById(targetId);
+  const favorites = getFavorites();
+  const pendingSecondStageCard = targetId === "results"
+    ? buildPendingSecondStageCardHTML(filters, favorites)
+    : "";
+
+  if (!list.length && !pendingSecondStageCard) {
+    target.innerHTML = targetId === "results"
+      ? '<p class="empty">該当する今後の開催はありません</p>'
+      : '<p class="empty"></p>';
+    return;
+  }
+
+  target.innerHTML = `${pendingSecondStageCard}${list.map((ev) => buildEventCardHTML(ev, targetId, favorites)).join("")}`;
+  bindStarButtons(target);
+}
+
+
 function renderQualifiedSummary(filters) {
   const target = document.getElementById("qualifiedSummary");
   if (!target) return false;
+
+  // 2nd進出者は検索結果カードとして表示するため、一覧表示は使わない
+  target.innerHTML = "";
+  return false;
 
   if (filters.eventType !== "audition-2nd-east") {
     target.innerHTML = "";
@@ -710,10 +804,10 @@ function renderQualifiedSummary(filters) {
 
   const dateGroups = new Map();
 
-  groups.forEach(({ event, names, result }) => {
+  groups.forEach(({ event, names }) => {
     const key = event.qualifiedNextStageDate || "undecided";
     if (!dateGroups.has(key)) dateGroups.set(key, []);
-    dateGroups.get(key).push({ event, names, result });
+    dateGroups.get(key).push({ event, names });
   });
 
   const dateGroupEntries = [...dateGroups.entries()];
@@ -734,10 +828,10 @@ function renderQualifiedSummary(filters) {
           <div class="qualified-summary-date-group">
             ${isSingleNextStageDate ? "" : `<div class="qualified-summary-date">${dateLabel}</div>`}
             <div class="qualified-summary-list">
-              ${items.map(({ event, names, result }) => `
+              ${items.map(({ event, names }) => `
                 <div class="qualified-summary-item">
                   <div class="qualified-source">${formatDateLabel(event.date)} ${event.time} 通過</div>
-                  <div class="qualified-summary-names">${result === "none" ? "該当者なし" : names.map(escapeHTML).join("／")}</div>
+                  <div class="qualified-summary-names">${names.map(escapeHTML).join("／")}</div>
                 </div>
               `).join("")}
             </div>
@@ -748,22 +842,6 @@ function renderQualifiedSummary(filters) {
   `;
 
   return true;
-}
-
-
-function updateResultNote(filters, futureResults, hasQualifiedSummary) {
-  const note = document.getElementById("resultNote");
-  if (!note) return;
-
-  const hasFutureOfficialSecondEvent = filters.eventType === "audition-2nd-east" &&
-    futureResults.some((ev) => ev.eventType === "audition-2nd-east");
-
-  if (filters.eventType === "audition-2nd-east" && hasQualifiedSummary && !hasFutureOfficialSecondEvent) {
-    note.innerHTML = "※1stの結果をもとに掲載しています<br>";
-    return;
-  }
-
-  note.innerHTML = "※出演者は香盤順です<br>";
 }
 
 function getTicketLinkHTML(ev, targetId) {
@@ -867,13 +945,12 @@ function runSearch() {
   const pastOnlyHit = activeFilters && futureResults.length === 0 && pastResults.length > 0;
 
   const hasQualifiedSummary = renderQualifiedSummary(filters);
-  updateResultNote(filters, futureResults, hasQualifiedSummary);
 
   if (hasQualifiedSummary && futureResults.length === 0) {
     const results = document.getElementById("results");
     if (results) results.innerHTML = "";
   } else {
-    renderEvents("results", futureResults);
+    renderMainEvents("results", futureResults, filters);
   }
 
   if (pastOnlyHit) {
