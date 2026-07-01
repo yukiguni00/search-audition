@@ -1014,18 +1014,14 @@ function getNextStageSectionsHTML(ev, favorites) {
 function getTicketLinkHTML(ev, targetId) {
   if (targetId !== "results") return "";
 
-  const parts = [];
+  const notePart = ev.ticketNote
+    ? `<div class="ticket-extra-note">${escapeHTML(ev.ticketNote)}</div>`
+    : "";
 
-  if (ev.ticketSaleInfo) {
-    parts.push(`<div class="ticket-sale-info">${escapeHTML(ev.ticketSaleInfo)}</div>`);
-  }
-
-  if (ev.ticketNote) {
-    parts.push(`<div class="ticket-extra-note">${escapeHTML(ev.ticketNote)}</div>`);
-  }
+  let linkPart = "";
 
   if (Array.isArray(ev.ticketLinks) && ev.ticketLinks.length) {
-    parts.push(`
+    linkPart = `
       <div class="ticket-link-list">
         ${ev.ticketLinks.map((link) => `
           <a href="${escapeHTML(link.url)}" target="_blank" rel="noopener noreferrer">
@@ -1033,30 +1029,38 @@ function getTicketLinkHTML(ev, targetId) {
           </a>
         `).join("")}
       </div>
-    `);
+    `;
   } else if (ev.ticketUrl) {
-    const linkLabel = ev.eventType === "audition-2nd-east" ||
-      ev.eventType === "kakeru-sho-challenge-east" ||
-      ev.eventType === "kiwami-grand-battle-east"
-        ? "FANYチケット"
-        : "FANYチケット";
-
-    const prefix = ev.ticketNote
-      ? "購入："
-      : (ev.eventType === "audition-2nd-east" ? "チケットは" : "チケットは取り置き、もしくは");
-
-    const suffix = ev.ticketNote
-      ? ""
-      : (ev.eventType === "audition-2nd-east" ? "からご購入ください" : "から");
-
-    parts.push(`
-      <div>
-        ${prefix}
-        <a href="${escapeHTML(ev.ticketUrl)}" target="_blank" rel="noopener noreferrer">${linkLabel}</a>
-        ${suffix}
-      </div>
-    `);
+    if (ev.ticketNote) {
+      linkPart = `
+        <div class="ticket-purchase-link">
+          購入：
+          <a href="${escapeHTML(ev.ticketUrl)}" target="_blank" rel="noopener noreferrer">FANYチケット</a>
+        </div>
+      `;
+    } else {
+      linkPart = ev.eventType === "audition-2nd-east"
+        ? `
+          <div class="ticket-purchase-link">
+            チケットは
+            <a href="${escapeHTML(ev.ticketUrl)}" target="_blank" rel="noopener noreferrer">FANYチケット</a>
+            からご購入ください
+          </div>
+        `
+        : `
+          <div class="ticket-purchase-link">
+            チケットは取り置き、もしくは
+            <a href="${escapeHTML(ev.ticketUrl)}" target="_blank" rel="noopener noreferrer">FANYチケット</a>から
+          </div>
+        `;
+    }
   }
+
+  const salePart = ev.ticketSaleInfo
+    ? `<div class="ticket-sale-info">${escapeHTML(ev.ticketSaleInfo)}</div>`
+    : "";
+
+  const parts = [notePart, linkPart, salePart].filter((part) => part && part.trim());
 
   if (!parts.length) return "";
 
