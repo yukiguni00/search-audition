@@ -8,7 +8,20 @@ function formatDisplayDate(ev) {
   const weekdays = ["日", "月", "火", "水", "木", "金", "土"];
   const dateObj = new Date(ev.date);
   const weekday = weekdays[dateObj.getDay()];
-  return `${ev.month}月${ev.day}日(${weekday}) 開演${ev.time}`;
+  const startLabel = `${ev.month}月${ev.day}日(${weekday})`;
+
+  if (ev.dateEnd && ev.dateEnd !== ev.date) {
+    const endObj = new Date(ev.dateEnd);
+    const endWeekday = weekdays[endObj.getDay()];
+    const endLabel = `${endObj.getMonth() + 1}月${endObj.getDate()}日(${endWeekday})`;
+    return `${startLabel}〜${endLabel} ${ev.time}`;
+  }
+
+  if (ev.time === "出演公演未定" || ev.time === "未定") {
+    return `${startLabel} ${ev.time}`;
+  }
+
+  return `${startLabel} 開演${ev.time}`;
 }
 
 function normalizeText(text) {
@@ -154,18 +167,42 @@ function updateArchiveMessage(message) {
   target.textContent = message || "";
 }
 
+function getEventDateParts(ev) {
+  const start = new Date(ev.date);
+  const end = new Date(ev.dateEnd || ev.date);
+  const dates = [];
+
+  if (Number.isNaN(start.getTime()) || Number.isNaN(end.getTime())) {
+    return [{ month: ev.month, day: ev.day }];
+  }
+
+  const cursor = new Date(start);
+  while (cursor <= end && dates.length < 10) {
+    dates.push({
+      month: cursor.getMonth() + 1,
+      day: cursor.getDate(),
+    });
+    cursor.setDate(cursor.getDate() + 1);
+  }
+
+  return dates;
+}
+
 function eventMatchesFilters(ev, filters, includePast = false, options = {}) {
   const { ignoreNameQuery = false, ignoreFavoritesOnly = false } = options;
   const today = todayString();
 
-  if (!includePast && ev.date < today) return false;
+  if (!includePast && (ev.dateEnd || ev.date) < today) return false;
   if (includePast && ev.date >= today) return false;
   if (filters.eventType !== "all" && ev.eventType !== filters.eventType) return false;
-  if (filters.month !== "all" && ev.month !== Number(filters.month)) return false;
-  if (filters.day !== "all" && ev.day !== Number(filters.day)) return false;
+
+  const dateParts = getEventDateParts(ev);
+  if (filters.month !== "all" && !dateParts.some((part) => part.month === Number(filters.month))) return false;
+  if (filters.day !== "all" && !dateParts.some((part) => part.day === Number(filters.day))) return false;
+
   if (filters.hour !== "all" && ev.timeMinutes < Number(filters.hour) * 60) return false;
   if (!ignoreNameQuery && filters.nameQuery) {
-    const hit = ev.performers.some((name) => normalizeText(name).includes(filters.nameQuery));
+    const hit = (ev.performers || []).some((name) => normalizeText(name).includes(filters.nameQuery));
     if (!hit) return false;
   }
   if (!ignoreFavoritesOnly && favoritesOnlyMode && !eventHasFavorite(ev)) return false;
@@ -230,7 +267,12 @@ function filterEvents(list, includePast = false) {
 
   return list
     .filter((ev) => eventMatchesFilters(ev, filters, includePast))
-    .sort((a, b) => a.date.localeCompare(b.date) || a.timeMinutes - b.timeMinutes);
+    .sort((a, b) => {
+      if (includePast) {
+        return b.date.localeCompare(a.date) || b.timeMinutes - a.timeMinutes;
+      }
+      return a.date.localeCompare(b.date) || a.timeMinutes - b.timeMinutes;
+    });
 }
 
 function findPerformerDisplayName(key) {
@@ -830,7 +872,10 @@ function updateResultNoteForPendingSecondStage(futureResults, pendingSecondStage
   const note = document.querySelector(".result-note");
   if (!note) return;
 
-  note.hidden = Boolean(pendingSecondStageCard) && futureResults.length === 0;
+  const hasOnlyPendingSecondStageCard = Boolean(pendingSecondStageCard) && futureResults.length === 0;
+  const hasNonLineupOrderEvent = futureResults.some((ev) => ev.lineupOrder === false);
+
+  note.hidden = hasOnlyPendingSecondStageCard || hasNonLineupOrderEvent;
 }
 
 function renderMainEvents(targetId, list, filters) {
@@ -918,27 +963,111 @@ function renderQualifiedSummary(filters) {
   return true;
 }
 
-function getTicketLinkHTML(ev, targetId) {
-  if (targetId !== "results" || !ev.ticketUrl) return "";
 
-  if (ev.eventType === "audition-2nd-east") {
-    return `<p class="ticket-note">
-      チケットは
-      <a href="${ev.ticketUrl}" target="_blank" rel="noopener noreferrer">FANYチケット</a>
-      からご購入ください
-    </p>`;
+function getEventDetailHTML(ev) {
+  const details = [];
+
+  if (ev.openTime || ev.endTime) {
+    const timeParts = [];
+    if (ev.openTime) timeParts.push(`開場${escapeHTML(ev.openTime)}`);
+    if (ev.endTime) timeParts.push(`終演${escapeHTML(ev.endTime)}`);
+    if (timeParts.length) details.push(timeParts.join("｜"));
   }
 
-  return `<p class="ticket-note">
-    チケットは取り置き、もしくは
-    <a href="${ev.ticketUrl}" target="_blank" rel="noopener noreferrer">FANYチケット</a>から
-  </p>`;
+  if (ev.mc) {
+    details.push(`MC：${escapeHTML(ev.mc)}`);
+  }
+
+  if (ev.eventInfo) {
+    details.push(escapeHTML(ev.eventInfo));
+  }
+
+  if (!details.length) return "";
+
+  return `<div class="event-detail-note">${details.map((line) => `<div>${line}</div>`).join("")}</div>`;
 }
 
+function getNextStageSectionsHTML(ev, favorites) {
+  if (!Array.isArray(ev.nextStageSections) || !ev.nextStageSections.length) return "";
+
+  const sections = ev.nextStageSections.map((section) => {
+    const performers = buildPerformerChipsHTML(section.performers || [], favorites);
+    if (!performers) return "";
+
+    return `
+      <div class="next-stage-group">
+        <div class="card-section-label">${escapeHTML(section.label)}</div>
+        <div class="performers next-stage-list">${performers}</div>
+      </div>
+    `;
+  }).join("");
+
+  if (!sections.trim()) return "";
+
+  return `
+    <div class="next-stage-performers">
+      ${sections}
+    </div>
+  `;
+}
+
+function getTicketLinkHTML(ev, targetId) {
+  if (targetId !== "results") return "";
+
+  const parts = [];
+
+  if (ev.ticketSaleInfo) {
+    parts.push(`<div class="ticket-sale-info">${escapeHTML(ev.ticketSaleInfo)}</div>`);
+  }
+
+  if (ev.ticketNote) {
+    parts.push(`<div class="ticket-extra-note">${escapeHTML(ev.ticketNote)}</div>`);
+  }
+
+  if (Array.isArray(ev.ticketLinks) && ev.ticketLinks.length) {
+    parts.push(`
+      <div class="ticket-link-list">
+        ${ev.ticketLinks.map((link) => `
+          <a href="${escapeHTML(link.url)}" target="_blank" rel="noopener noreferrer">
+            ${escapeHTML(link.label)} ${escapeHTML(formatDateLabel(link.date))} ${escapeHTML(link.time)}
+          </a>
+        `).join("")}
+      </div>
+    `);
+  } else if (ev.ticketUrl) {
+    const linkLabel = ev.eventType === "audition-2nd-east" ||
+      ev.eventType === "kakeru-sho-challenge-east" ||
+      ev.eventType === "kiwami-grand-battle-east"
+        ? "FANYチケット"
+        : "FANYチケット";
+
+    const prefix = ev.ticketNote
+      ? "購入："
+      : (ev.eventType === "audition-2nd-east" ? "チケットは" : "チケットは取り置き、もしくは");
+
+    const suffix = ev.ticketNote
+      ? ""
+      : (ev.eventType === "audition-2nd-east" ? "からご購入ください" : "から");
+
+    parts.push(`
+      <div>
+        ${prefix}
+        <a href="${escapeHTML(ev.ticketUrl)}" target="_blank" rel="noopener noreferrer">${linkLabel}</a>
+        ${suffix}
+      </div>
+    `);
+  }
+
+  if (!parts.length) return "";
+
+  return `<div class="ticket-note">${parts.join("")}</div>`;
+}
 
 function buildEventCardHTML(ev, targetId, favorites) {
   const performers = buildPerformerChipsHTML(ev.performers, favorites);
   const qualifiedPerformers = getQualifiedPerformersHTML(ev, favorites);
+  const nextStageSections = getNextStageSectionsHTML(ev, favorites);
+  const eventDetails = getEventDetailHTML(ev);
   const ticketLink = getTicketLinkHTML(ev, targetId);
 
   return `
@@ -948,8 +1077,10 @@ function buildEventCardHTML(ev, targetId, favorites) {
         <div class="venue-line">会場：${escapeHTML(ev.venue)}</div>
       </div>
       <h3>${escapeHTML(ev.title)}</h3>
+      ${eventDetails}
       ${qualifiedPerformers}
-      <div class="performer-section ${qualifiedPerformers ? "has-qualified" : ""}">
+      ${nextStageSections}
+      <div class="performer-section ${(qualifiedPerformers || nextStageSections) ? "has-qualified" : ""}">
         <div class="card-section-label">出演者</div>
         <div class="performers">${performers}</div>
       </div>
@@ -957,7 +1088,6 @@ function buildEventCardHTML(ev, targetId, favorites) {
     </article>
   `;
 }
-
 
 function bindStarButtons(target) {
   target.querySelectorAll(".star").forEach((btn) => {
