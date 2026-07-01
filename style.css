@@ -540,3 +540,9 @@ button{padding:12px 16px;border:none;border-radius:12px;background:#111;color:#f
   margin:4px 0 10px;
   line-height:1.7;
 }
+
+
+.event-notice,
+.ticket-extra-note{
+  white-space: pre-line;
+}
