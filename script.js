@@ -210,44 +210,38 @@ function eventMatchesFilters(ev, filters, includePast = false, options = {}) {
 }
 
 function pickRandomPerformer() {
-  const filters = getCurrentFilters();
   const favorites = new Set(getFavorites());
 
-  const getUniqueNames = (eventList) => [...new Set(
-    eventList.flatMap((ev) => Array.isArray(ev.performers) ? ev.performers : [])
-  )];
+  const allNames = [...new Set(
+    events.flatMap((ev) => Array.isArray(ev.performers) ? ev.performers : [])
+  )].filter((name) => name && name.trim());
 
-  const futureEvents = events.filter((ev) =>
-    eventMatchesFilters(ev, filters, false, { ignoreNameQuery: true })
-  );
-  const futureNames = getUniqueNames(futureEvents);
+  const pool = allNames.filter((name) => !favorites.has(normalizeText(name)));
 
-  let poolSource = "future";
-  let allNames = futureNames;
-
-  if (!allNames.length) {
-    const pastEvents = events.filter((ev) =>
-      eventMatchesFilters(ev, filters, true, { ignoreNameQuery: true })
-    );
-    allNames = getUniqueNames(pastEvents);
-    poolSource = "past";
-  }
-
-  if (!allNames.length) {
-    alert("この条件で選べる出演者が見つかりませんでした");
+  if (!pool.length) {
+    alert("お気に入り未登録の出演者が見つかりませんでした");
     return;
   }
 
-  const nonFavoriteNames = allNames.filter((name) => !favorites.has(normalizeText(name)));
-  const pool = nonFavoriteNames.length ? nonFavoriteNames : allNames;
   const selected = pool[Math.floor(Math.random() * pool.length)];
 
   document.getElementById("nameQuery").value = selected;
+  document.getElementById("eventType").value = "all";
+  document.getElementById("month").value = "all";
+  document.getElementById("day").value = "all";
+  document.getElementById("hour").value = "all";
+  favoritesOnlyMode = false;
+  updateFavoritesOnlyButton();
 
-  if (poolSource === "past") {
-    setArchiveOpen(true);
-  }
+  const today = todayString();
+  const selectedKey = normalizeText(selected);
+  const hasPastHit = events.some((ev) =>
+    ev.date < today &&
+    Array.isArray(ev.performers) &&
+    ev.performers.some((name) => normalizeText(name) === selectedKey)
+  );
 
+  setArchiveOpen(hasPastHit);
   runSearch();
 }
 
