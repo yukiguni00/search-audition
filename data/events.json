@@ -3329,7 +3329,7 @@
     "sourceAccount": "@jimbo_audition",
     "ticketUrl": "https://ticket.fany.lol/event/detail/16934/45121",
     "ticketSaleInfo": "一般発売：7月4日(土) 10:00",
-    "ticketNote": "チケットの購入はFANYチケットのみ。出演者への取り置きはできません。",
+    "ticketNote": "チケットの購入はFANYチケットのみ。\n出演者への取り置きはできません。",
     "lineupOrder": false,
     "performers": [
       "隠れドキュン",
@@ -3362,7 +3362,7 @@
     "venue": "渋谷よしもと漫才劇場",
     "sourceAccount": "@jimbo_audition",
     "ticketSaleInfo": "一般発売：7月5日(日) 10:00",
-    "ticketNote": "チケットの購入はFANYチケットのみ。出演者への取り置きはできません。",
+    "ticketNote": "チケットの購入はFANYチケットのみ。\n出演者への取り置きはできません。",
     "lineupOrder": false,
     "performers": [
       "きっと君はくるさ",
@@ -3398,6 +3398,6 @@
         "url": "https://ticket.fany.lol/event/detail/17841/47128"
       }
     ],
-    "eventNotice": "出演公演は未定です。追加情報があり次第、更新予定です。"
+    "eventNotice": "出演公演は未定です。\n追加情報があり次第、更新予定です。"
   }
 ]
