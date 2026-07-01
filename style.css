@@ -479,21 +479,35 @@ button{padding:12px 16px;border:none;border-radius:12px;background:#111;color:#f
 }
 
 .ticket-sale-info{
-  margin-bottom:4px;
+  margin-top:10px;
   font-weight:700;
   color:#333;
+  line-height:1.7;
 }
 
 .ticket-extra-note{
-  margin-bottom:6px;
+  margin-bottom:8px;
+  line-height:1.7;
 }
 
 .ticket-link-list{
   display:grid;
-  gap:6px;
-  margin-top:6px;
+  gap:8px;
+  margin:8px 0 10px;
+  line-height:1.7;
 }
 
 .ticket-link-list a{
   display:block;
+}
+
+
+.ticket-purchase-link{
+  margin:4px 0 10px;
+  line-height:1.7;
+}
+
+
+.ticket-note{
+  line-height:1.7;
 }
