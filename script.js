@@ -964,7 +964,9 @@ function renderQualifiedSummary(filters) {
 }
 
 
-function getEventDetailHTML(ev) {
+function getEventDetailHTML(ev, targetId) {
+  if (targetId !== "results") return "";
+
   const details = [];
 
   if (ev.openTime || ev.endTime) {
@@ -985,6 +987,12 @@ function getEventDetailHTML(ev) {
   if (!details.length) return "";
 
   return `<div class="event-detail-note">${details.map((line) => `<div>${line}</div>`).join("")}</div>`;
+}
+
+
+function getEventNoticeHTML(ev) {
+  if (!ev.eventNotice) return "";
+  return `<p class="event-notice">${escapeHTML(ev.eventNotice)}</p>`;
 }
 
 function getNextStageSectionsHTML(ev, favorites) {
@@ -1022,11 +1030,13 @@ function getTicketLinkHTML(ev, targetId) {
 
   if (Array.isArray(ev.ticketLinks) && ev.ticketLinks.length) {
     linkPart = `
+      <div class="ticket-purchase-label">購入：</div>
       <div class="ticket-link-list">
         ${ev.ticketLinks.map((link) => `
-          <a href="${escapeHTML(link.url)}" target="_blank" rel="noopener noreferrer">
-            ${escapeHTML(link.label)} ${escapeHTML(formatDateLabel(link.date))} ${escapeHTML(link.time)}
-          </a>
+          <div class="ticket-link-row">
+            <span>${escapeHTML(link.label)} ${escapeHTML(formatDateLabel(link.date))} ${escapeHTML(link.time)}</span>
+            <a href="${escapeHTML(link.url)}" target="_blank" rel="noopener noreferrer">FANYチケット</a>
+          </div>
         `).join("")}
       </div>
     `;
@@ -1071,7 +1081,8 @@ function buildEventCardHTML(ev, targetId, favorites) {
   const performers = buildPerformerChipsHTML(ev.performers, favorites);
   const qualifiedPerformers = getQualifiedPerformersHTML(ev, favorites);
   const nextStageSections = getNextStageSectionsHTML(ev, favorites);
-  const eventDetails = getEventDetailHTML(ev);
+  const eventDetails = getEventDetailHTML(ev, targetId);
+  const eventNotice = getEventNoticeHTML(ev);
   const ticketLink = getTicketLinkHTML(ev, targetId);
 
   return `
@@ -1084,6 +1095,7 @@ function buildEventCardHTML(ev, targetId, favorites) {
       ${eventDetails}
       ${qualifiedPerformers}
       ${nextStageSections}
+      ${eventNotice}
       <div class="performer-section ${(qualifiedPerformers || nextStageSections) ? "has-qualified" : ""}">
         <div class="card-section-label">出演者</div>
         <div class="performers">${performers}</div>
