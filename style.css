@@ -47,10 +47,10 @@ button{padding:12px 16px;border:none;border-radius:12px;background:#111;color:#f
 }
 
 .ticket-note{
-  margin: 12px 0 0;
-  font-size: 12px;
-  line-height: 1.6;
-  color: #666;
+  margin:12px 0 0;
+  color:#666;
+  font-size:12px;
+  line-height:1.7;
 }
 
 .ticket-note a{
@@ -114,10 +114,6 @@ button{padding:12px 16px;border:none;border-radius:12px;background:#111;color:#f
   border-radius:14px;
   font-weight:600;
 }
-.secondary-btn:hover{
-  background:#e4e4ea;
-}
-
 .secondary-btn:hover{
   background:#e4e4ea;
 }
@@ -374,51 +370,12 @@ button{padding:12px 16px;border:none;border-radius:12px;background:#111;color:#f
 .qualified-list{
   margin-bottom:2px;
 }
-.qualified-summary{
-  margin:4px 0 16px;
-  padding:0;
-  color:#555;
-  font-size:.9rem;
-  line-height:1.65;
-}
-.qualified-summary h3{
-  margin:0 0 8px;
-  color:#333;
-  font-size:1rem;
-}
-.qualified-summary-list{
-  display:grid;
-  gap:8px;
-}
-.qualified-summary-item{
-  padding:0;
-}
-.qualified-source{
-  color:#333;
-  font-size:.86rem;
-  line-height:1.5;
-}
 
 
 .performer-section.has-qualified{
   margin-top:14px;
   padding-top:12px;
   border-top:1px solid #e2e2e2;
-}
-.qualified-summary-date-group{
-  margin-top:12px;
-}
-.qualified-summary-date{
-  margin:0 0 8px;
-  color:#222;
-  font-size:.95rem;
-  font-weight:700;
-  line-height:1.5;
-}
-.qualified-summary-names{
-  color:#222;
-  font-weight:700;
-  line-height:1.6;
 }
 
 
@@ -490,25 +447,8 @@ button{padding:12px 16px;border:none;border-radius:12px;background:#111;color:#f
   line-height:1.7;
 }
 
-.ticket-link-list{
-  display:grid;
-  gap:8px;
-  margin:8px 0 10px;
-  line-height:1.7;
-}
-
-.ticket-link-list a{
-  display:inline;
-}
-
-
 .ticket-purchase-link{
   margin:4px 0 10px;
-  line-height:1.7;
-}
-
-
-.ticket-note{
   line-height:1.7;
 }
 
@@ -539,6 +479,10 @@ button{padding:12px 16px;border:none;border-radius:12px;background:#111;color:#f
   gap:6px;
   margin:4px 0 10px;
   line-height:1.7;
+}
+
+.ticket-link-list a{
+  display:inline;
 }
 
 

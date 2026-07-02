@@ -541,7 +541,6 @@ function jumpToEventCard(eventId) {
 }
 
 
-
 function bytesToBase64(bytes) {
   let binary = "";
   bytes.forEach((byte) => {
@@ -837,70 +836,6 @@ function getQualifiedPerformersHTML(ev, favorites) {
   return getStageResultsHTML(ev, favorites);
 }
 
-function getScheduledSecondPerformersSet() {
-  const scheduled = new Set();
-
-  events
-    .filter((ev) => ev.eventType === "audition-2nd-east" && Array.isArray(ev.performers))
-    .forEach((ev) => {
-      ev.performers.forEach((name) => {
-        scheduled.add(normalizeText(name));
-      });
-    });
-
-  return scheduled;
-}
-
-
-function isQualifiedPerformerScheduled(name, qualifiedEvent) {
-  const key = normalizeText(name);
-  const nextStageDate = qualifiedEvent.qualifiedNextStageDate;
-
-  return events.some((ev) => {
-    if (ev.eventType !== "audition-2nd-east" || !Array.isArray(ev.performers)) return false;
-
-    const hasName = ev.performers.some((performerName) => normalizeText(performerName) === key);
-    if (!hasName) return false;
-
-    if (nextStageDate) {
-      return ev.date === nextStageDate;
-    }
-
-    return ev.date > qualifiedEvent.date;
-  });
-}
-
-function getPendingQualifiedGroups(filters) {
-  const favorites = getFavoritePerformersSet();
-
-  return events
-    .filter((ev) => ev.eventType === "audition-1st-east")
-    .filter((ev) => Array.isArray(ev.qualifiedPerformers) && ev.qualifiedPerformers.length)
-    .map((ev) => {
-      const names = ev.qualifiedPerformers.filter((name) => {
-        const key = normalizeText(name);
-
-        if (isQualifiedPerformerScheduled(name, ev)) return false;
-        if (filters.nameQuery && !key.includes(filters.nameQuery)) return false;
-        if (favoritesOnlyMode && !favorites.has(key)) return false;
-
-        return true;
-      });
-
-      return {
-        event: ev,
-        names,
-      };
-    })
-    .filter((group) => group.names.length)
-    .sort((a, b) =>
-      (a.event.qualifiedNextStageDate || "").localeCompare(b.event.qualifiedNextStageDate || "") ||
-      a.event.date.localeCompare(b.event.date) ||
-      a.event.timeMinutes - b.event.timeMinutes
-    );
-}
-
-
 function hasPublishedSecondStageDetails(nextStageDate) {
   if (!nextStageDate) return false;
 
@@ -1055,70 +990,6 @@ function renderMainEvents(targetId, list, filters) {
   bindStarButtons(target);
 }
 
-
-function renderQualifiedSummary(filters) {
-  const target = document.getElementById("qualifiedSummary");
-  if (!target) return false;
-
-  // 2nd進出者は検索結果カードとして表示するため、一覧表示は使わない
-  target.innerHTML = "";
-  return false;
-
-  if (filters.eventType !== "audition-2nd-east") {
-    target.innerHTML = "";
-    return false;
-  }
-
-  const groups = getPendingQualifiedGroups(filters);
-
-  if (!groups.length) {
-    target.innerHTML = "";
-    return false;
-  }
-
-  const dateGroups = new Map();
-
-  groups.forEach(({ event, names }) => {
-    const key = event.qualifiedNextStageDate || "undecided";
-    if (!dateGroups.has(key)) dateGroups.set(key, []);
-    dateGroups.get(key).push({ event, names });
-  });
-
-  const dateGroupEntries = [...dateGroups.entries()];
-  const isSingleNextStageDate = dateGroupEntries.length === 1;
-  const singleDateLabel = isSingleNextStageDate
-    ? (dateGroupEntries[0][0] === "undecided" ? "日程未定" : `${formatDateLabel(dateGroupEntries[0][0])}出演予定`)
-    : "";
-
-  target.innerHTML = `
-    <section class="qualified-summary">
-      <h3>2nd進出者一覧${singleDateLabel ? ` ${singleDateLabel}` : ""}</h3>
-      ${dateGroupEntries.map(([dateKey, items]) => {
-        const dateLabel = dateKey === "undecided"
-          ? "日程未定"
-          : `${formatDateLabel(dateKey)}出演予定`;
-
-        return `
-          <div class="qualified-summary-date-group">
-            ${isSingleNextStageDate ? "" : `<div class="qualified-summary-date">${dateLabel}</div>`}
-            <div class="qualified-summary-list">
-              ${items.map(({ event, names }) => `
-                <div class="qualified-summary-item">
-                  <div class="qualified-source">${formatDateLabel(event.date)} ${event.time} 通過</div>
-                  <div class="qualified-summary-names">${names.map(escapeHTML).join("／")}</div>
-                </div>
-              `).join("")}
-            </div>
-          </div>
-        `;
-      }).join("")}
-    </section>
-  `;
-
-  return true;
-}
-
-
 function getEventDetailHTML(ev, targetId) {
   if (targetId !== "results") return "";
 
@@ -1143,7 +1014,6 @@ function getEventDetailHTML(ev, targetId) {
 
   return `<div class="event-detail-note">${details.map((line) => `<div>${line}</div>`).join("")}</div>`;
 }
-
 
 
 function getTicketInfo(ev) {
@@ -1275,21 +1145,6 @@ function bindStarButtons(target) {
   });
 }
 
-function renderEvents(targetId, list) {
-  const target = document.getElementById(targetId);
-  const favorites = getFavorites();
-
-  if (!list.length) {
-    target.innerHTML = targetId === "results"
-      ? '<p class="empty">該当する今後の開催はありません</p>'
-      : '<p class="empty"></p>';
-    return;
-  }
-
-  target.innerHTML = list.map((ev) => buildEventCardHTML(ev, targetId, favorites)).join("");
-  bindStarButtons(target);
-}
-
 function renderArchiveEvents(targetId, list, openMonths = false) {
   const target = document.getElementById(targetId);
   const favorites = getFavorites();
@@ -1328,14 +1183,7 @@ function runSearch() {
   const activeFilters = hasActiveFilters(filters);
   const pastOnlyHit = activeFilters && futureResults.length === 0 && pastResults.length > 0;
 
-  const hasQualifiedSummary = renderQualifiedSummary(filters);
-
-  if (hasQualifiedSummary && futureResults.length === 0) {
-    const results = document.getElementById("results");
-    if (results) results.innerHTML = "";
-  } else {
-    renderMainEvents("results", futureResults, filters);
-  }
+  renderMainEvents("results", futureResults, filters);
 
   if (pastOnlyHit) {
     setArchiveOpen(true);
