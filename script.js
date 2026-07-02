@@ -1,6 +1,7 @@
 let favoritesOnlyMode = false;
 const FAVORITE_KEY = "favoritePerformers";
 let events = [];
+let performerProfiles = new Map();
 let archiveOpen = false;
 let favoriteScheduleExpanded = false;
 
@@ -714,7 +715,14 @@ function buildPerformerChipsHTML(names, favorites) {
   return (names || []).map((name) => {
     const normalizedName = normalizeText(name);
     const isFavorite = favorites.includes(normalizedName);
-    return `<span class="performer ${isFavorite ? "favorite" : ""}"><button class="star" data-name="${escapeHTML(name)}" data-key="${escapeHTML(normalizedName)}" type="button">${isFavorite ? "★" : "☆"}</button>${escapeHTML(name)}</span>`;
+    const nameHTML = getPerformerNameHTML(name);
+
+    return `
+      <span class="performer ${isFavorite ? "favorite" : ""}">
+        <button class="star" data-name="${escapeHTML(name)}" data-key="${escapeHTML(normalizedName)}" type="button">${isFavorite ? "★" : "☆"}</button>
+        ${nameHTML}
+      </span>
+    `;
   }).join("");
 }
 
@@ -1303,6 +1311,62 @@ async function loadEventsData() {
   }
 }
 
+function extractProfilesMap(data) {
+  const profiles = data && data.profiles && typeof data.profiles === "object"
+    ? data.profiles
+    : {};
+
+  const profileMap = new Map();
+
+  Object.entries(profiles).forEach(([name, profile]) => {
+    const officialUrl = profile && (profile.officialUrl || profile.url);
+    if (!name || !officialUrl) return;
+
+    profileMap.set(normalizeText(name), {
+      name,
+      officialUrl,
+      checkedAt: profile.checkedAt || "",
+    });
+  });
+
+  return profileMap;
+}
+
+async function loadProfilesData() {
+  try {
+    const data = await fetchJSON("data/profiles.json");
+    return extractProfilesMap(data);
+  } catch (e) {
+    console.warn("profiles.json を読み込めなかったため、プロフィールリンクなしで表示します", e);
+    return new Map();
+  }
+}
+
+function getPerformerProfile(name) {
+  return performerProfiles.get(normalizeText(name)) || null;
+}
+
+function getPerformerNameHTML(name) {
+  const profile = getPerformerProfile(name);
+
+  if (!profile || !profile.officialUrl) {
+    return `<span class="performer-name">${escapeHTML(name)}</span>`;
+  }
+
+  return `
+    <a
+      class="performer-profile-link"
+      href="${escapeHTML(profile.officialUrl)}"
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-label="${escapeHTML(name)}の公式プロフィールを開く"
+    >
+      <span class="performer-name-text">${escapeHTML(name)}</span>
+      <span class="external-link-icon" aria-hidden="true">↗</span>
+    </a>
+  `;
+}
+
 async function init() {
   populateSelects();
   bindAutoSearch();
@@ -1311,7 +1375,13 @@ async function init() {
   setArchiveOpen(false);
 
   try {
-    events = await loadEventsData();
+    const [loadedEvents, loadedProfiles] = await Promise.all([
+      loadEventsData(),
+      loadProfilesData(),
+    ]);
+
+    events = loadedEvents;
+    performerProfiles = loadedProfiles;
   } catch (e) {
     console.error(e);
     const results = document.getElementById("results");

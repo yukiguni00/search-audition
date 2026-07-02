@@ -1,0 +1,21 @@
+{
+  "version": 1,
+  "profiles": {
+    "隠れドキュン": {
+      "officialUrl": "https://profile.yoshimoto.co.jp/talent/detail?id=14144",
+      "checkedAt": "2026-07-02"
+    },
+    "江頭一馬": {
+      "officialUrl": "https://profile.yoshimoto.co.jp/talent/detail?id=10838",
+      "checkedAt": "2026-07-02"
+    },
+    "まぼろし組": {
+      "officialUrl": "https://profile.yoshimoto.co.jp/talent/detail?id=9887",
+      "checkedAt": "2026-07-02"
+    },
+    "イザナミン": {
+      "officialUrl": "https://profile.yoshimoto.co.jp/talent/detail?id=12622",
+      "checkedAt": "2026-07-02"
+    }
+  }
+}
