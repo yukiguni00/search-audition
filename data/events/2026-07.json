@@ -10,9 +10,6 @@
     "timeMinutes": 1170,
     "venue": "渋谷よしもと漫才劇場",
     "sourceAccount": "@jimbo_audition",
-    "ticketUrl": "https://ticket.fany.lol/event/detail/16934/45121",
-    "ticketSaleInfo": "一般発売：7月4日(土) 10:00",
-    "ticketNote": "チケットの購入はFANYチケットのみ。\n出演者への取り置きはできません。",
     "lineupOrder": false,
     "performers": [
       "隠れドキュン",
@@ -30,6 +27,11 @@
       "あなたとネ",
       "ストロングブルジュニア",
       "ミックストマトジュース"
-    ]
+    ],
+    "ticket": {
+      "purchaseNote": "チケットの購入はFANYチケットのみ。\n出演者への取り置きはできません。",
+      "saleInfo": "一般発売：7月4日(土) 10:00",
+      "url": "https://ticket.fany.lol/event/detail/16934/45121"
+    }
   }
 ]
