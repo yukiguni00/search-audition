@@ -386,12 +386,12 @@ button{padding:12px 16px;border:none;border-radius:12px;background:#111;color:#f
 }
 
 
-.pending-stage-card{
+.pending-second-card{
   border-color:#dfe8ff;
   background:#fbfdff;
 }
 
-.pending-stage-note{
+.pending-second-note{
   margin:8px 0 0;
   color:#666;
   font-size:.86rem;
