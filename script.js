@@ -1367,6 +1367,42 @@ function getPerformerNameHTML(name) {
   `;
 }
 
+async function loadSiteNoticeData() {
+  try {
+    return await fetchJSON("data/site-notice.json");
+  } catch (e) {
+    console.warn("site-notice.json を読み込めなかったため、お知らせは非表示にします", e);
+    return null;
+  }
+}
+
+function renderSiteNotice(noticeData) {
+  const wrapper = document.getElementById("siteNotice");
+  const track = document.getElementById("siteNoticeTrack");
+  if (!wrapper || !track) return;
+
+  const items = noticeData && noticeData.enabled && Array.isArray(noticeData.items)
+    ? noticeData.items.filter((item) => item && item.message)
+    : [];
+
+  if (!items.length) {
+    wrapper.hidden = true;
+    track.innerHTML = "";
+    return;
+  }
+
+  const text = items.map((item) => {
+    const label = item.label ? `${item.label} ` : "";
+    const detail = item.detail ? `　${item.detail}` : "";
+    return `${label}${item.message}${detail}`;
+  }).join("　／　");
+
+  const content = `<span>${escapeHTML(text)}</span>`;
+
+  wrapper.hidden = false;
+  track.innerHTML = `${content}${content}`;
+}
+
 async function init() {
   populateSelects();
   bindAutoSearch();
@@ -1375,13 +1411,15 @@ async function init() {
   setArchiveOpen(false);
 
   try {
-    const [loadedEvents, loadedProfiles] = await Promise.all([
+    const [loadedEvents, loadedProfiles, loadedNotice] = await Promise.all([
       loadEventsData(),
       loadProfilesData(),
+      loadSiteNoticeData(),
     ]);
 
     events = loadedEvents;
     performerProfiles = loadedProfiles;
+    renderSiteNotice(loadedNotice);
   } catch (e) {
     console.error(e);
     const results = document.getElementById("results");
