@@ -37,7 +37,17 @@ function saveFavorites(favorites) {
 }
 
 function todayString() {
-  return new Date().toISOString().slice(0, 10);
+  const jst = new Date(Date.now() + 9 * 60 * 60 * 1000);
+
+  if (jst.getUTCHours() < 3) {
+    jst.setUTCDate(jst.getUTCDate() - 1);
+  }
+
+  const year = jst.getUTCFullYear();
+  const month = String(jst.getUTCMonth() + 1).padStart(2, "0");
+  const day = String(jst.getUTCDate()).padStart(2, "0");
+
+  return `${year}-${month}-${day}`;
 }
 
 function toggleFavorite(name) {
@@ -167,6 +177,13 @@ function updateArchiveMessage(message) {
   target.textContent = message || "";
 }
 
+function timeToMinutes(timeString) {
+  const match = /^(\d{1,2}):(\d{2})/.exec(String(timeString || ""));
+  if (!match) return null;
+
+  return Number(match[1]) * 60 + Number(match[2]);
+}
+
 function getEventDateParts(ev) {
   const start = new Date(ev.date);
   const end = new Date(ev.dateEnd || ev.date);
@@ -179,6 +196,7 @@ function getEventDateParts(ev) {
   const cursor = new Date(start);
   while (cursor <= end && dates.length < 10) {
     dates.push({
+      date: cursor.toISOString().slice(0, 10),
       month: cursor.getMonth() + 1,
       day: cursor.getDate(),
     });
@@ -188,24 +206,62 @@ function getEventDateParts(ev) {
   return dates;
 }
 
+function getEventOccurrences(ev) {
+  if (Array.isArray(ev.ticketLinks) && ev.ticketLinks.length) {
+    return ev.ticketLinks
+      .map((link) => {
+        const dateObj = new Date(link.date);
+        if (Number.isNaN(dateObj.getTime())) return null;
+
+        return {
+          date: link.date,
+          month: dateObj.getMonth() + 1,
+          day: dateObj.getDate(),
+          timeMinutes: timeToMinutes(link.time) ?? ev.timeMinutes ?? 0,
+        };
+      })
+      .filter(Boolean);
+  }
+
+  return getEventDateParts(ev).map((part) => ({
+    ...part,
+    timeMinutes: ev.timeMinutes ?? 0,
+  }));
+}
+
+function eventMatchesDateTimeFilters(ev, filters) {
+  const hasDateTimeFilter =
+    filters.month !== "all" ||
+    filters.day !== "all" ||
+    filters.hour !== "all";
+
+  if (!hasDateTimeFilter) return true;
+
+  return getEventOccurrences(ev).some((occurrence) => {
+    if (filters.month !== "all" && occurrence.month !== Number(filters.month)) return false;
+    if (filters.day !== "all" && occurrence.day !== Number(filters.day)) return false;
+    if (filters.hour !== "all" && occurrence.timeMinutes < Number(filters.hour) * 60) return false;
+
+    return true;
+  });
+}
+
 function eventMatchesFilters(ev, filters, includePast = false, options = {}) {
   const { ignoreNameQuery = false, ignoreFavoritesOnly = false } = options;
   const today = todayString();
 
   if (!includePast && (ev.dateEnd || ev.date) < today) return false;
-  if (includePast && ev.date >= today) return false;
+  if (includePast && (ev.dateEnd || ev.date) >= today) return false;
   if (filters.eventType !== "all" && ev.eventType !== filters.eventType) return false;
+  if (!eventMatchesDateTimeFilters(ev, filters)) return false;
 
-  const dateParts = getEventDateParts(ev);
-  if (filters.month !== "all" && !dateParts.some((part) => part.month === Number(filters.month))) return false;
-  if (filters.day !== "all" && !dateParts.some((part) => part.day === Number(filters.day))) return false;
-
-  if (filters.hour !== "all" && ev.timeMinutes < Number(filters.hour) * 60) return false;
   if (!ignoreNameQuery && filters.nameQuery) {
     const hit = (ev.performers || []).some((name) => normalizeText(name).includes(filters.nameQuery));
     if (!hit) return false;
   }
+
   if (!ignoreFavoritesOnly && favoritesOnlyMode && !eventHasFavorite(ev)) return false;
+
   return true;
 }
 
@@ -236,7 +292,7 @@ function pickRandomPerformer() {
   const today = todayString();
   const selectedKey = normalizeText(selected);
   const hasPastHit = events.some((ev) =>
-    ev.date < today &&
+    (ev.dateEnd || ev.date) < today &&
     Array.isArray(ev.performers) &&
     ev.performers.some((name) => normalizeText(name) === selectedKey)
   );
@@ -283,7 +339,7 @@ function getFavoriteScheduleData() {
   const today = todayString();
 
   const futureEvents = events
-    .filter((ev) => ev.date >= today)
+    .filter((ev) => (ev.dateEnd || ev.date) >= today)
     .sort((a, b) => a.date.localeCompare(b.date) || a.timeMinutes - b.timeMinutes);
 
   const favoriteSet = new Set(favorites);
@@ -862,14 +918,33 @@ function buildPendingSecondStageCardHTML(filters, favorites) {
   `;
 }
 
-function updateResultNoteForPendingSecondStage(futureResults, pendingSecondStageCard) {
-  const note = document.querySelector(".result-note");
+function isLineupOrderedEvent(ev) {
+  if (ev.lineupOrder === false) return false;
+  if (ev.lineupOrder === true) return true;
+
+  return ev.eventType === "audition-1st-east" || ev.eventType === "audition-2nd-east";
+}
+
+function getResultNoteMessage(futureResults, pendingSecondStageCard) {
+  if (pendingSecondStageCard && !futureResults.length) return "";
+
+  const hasLineupOrderedEvent = futureResults.some((ev) => isLineupOrderedEvent(ev));
+  if (!hasLineupOrderedEvent) return "";
+
+  const hasUnorderedEvent = futureResults.some((ev) => !isLineupOrderedEvent(ev));
+
+  return hasUnorderedEvent
+    ? "※オーディションの出演者は香盤順です"
+    : "※出演者は香盤順です";
+}
+
+function updateResultNoteForCurrentResults(futureResults, pendingSecondStageCard) {
+  const note = document.getElementById("resultNote") || document.querySelector(".result-note");
   if (!note) return;
 
-  const hasOnlyPendingSecondStageCard = Boolean(pendingSecondStageCard) && futureResults.length === 0;
-  const hasNonLineupOrderEvent = futureResults.some((ev) => ev.lineupOrder === false);
-
-  note.hidden = hasOnlyPendingSecondStageCard || hasNonLineupOrderEvent;
+  const message = getResultNoteMessage(futureResults, pendingSecondStageCard);
+  note.hidden = !message;
+  note.innerHTML = message ? `${escapeHTML(message)}<br>` : "";
 }
 
 function renderMainEvents(targetId, list, filters) {
@@ -880,7 +955,7 @@ function renderMainEvents(targetId, list, filters) {
     : "";
 
   if (targetId === "results") {
-    updateResultNoteForPendingSecondStage(list, pendingSecondStageCard);
+    updateResultNoteForCurrentResults(list, pendingSecondStageCard);
   }
 
   if (!list.length && !pendingSecondStageCard) {
