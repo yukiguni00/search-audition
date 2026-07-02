@@ -207,8 +207,10 @@ function getEventDateParts(ev) {
 }
 
 function getEventOccurrences(ev) {
-  if (Array.isArray(ev.ticketLinks) && ev.ticketLinks.length) {
-    return ev.ticketLinks
+  const ticketLinks = getEventTicketLinks(ev);
+
+  if (ticketLinks.length) {
+    return ticketLinks
       .map((link) => {
         const dateObj = new Date(link.date);
         if (Number.isNaN(dateObj.getTime())) return null;
@@ -731,24 +733,108 @@ function buildPerformerChipsHTML(names, favorites) {
   }).join("");
 }
 
-function getQualifiedPerformersHTML(ev, favorites) {
-  if (ev.qualifiedResult === "none") {
-    return `
-      <div class="qualified-performers">
-        <div class="card-section-label">${getQualifiedStageLabel(ev)}</div>
-        <div class="qualified-none">該当者なし</div>
-      </div>
-    `;
+function getStageResults(ev) {
+  if (Array.isArray(ev.stageResults) && ev.stageResults.length) {
+    return ev.stageResults
+      .map((result) => ({
+        status: result.status || "advanced",
+        label: result.label || "次ステージ進出者",
+        nextEventType: result.nextEventType || "",
+        nextEventTitle: result.nextEventTitle || "",
+        nextDate: result.nextDate || "",
+        performers: Array.isArray(result.performers) ? result.performers : [],
+        displayStyle: result.displayStyle || "next-stage",
+      }))
+      .filter((result) => result.status === "none" || result.performers.length);
   }
 
-  if (!Array.isArray(ev.qualifiedPerformers) || !ev.qualifiedPerformers.length) return "";
+  if (Array.isArray(ev.nextStageSections) && ev.nextStageSections.length) {
+    return ev.nextStageSections
+      .map((section) => ({
+        status: "advanced",
+        label: section.label || "次ステージ進出者",
+        performers: Array.isArray(section.performers) ? section.performers : [],
+        displayStyle: "next-stage",
+      }))
+      .filter((result) => result.performers.length);
+  }
+
+  if (ev.qualifiedResult === "none") {
+    return [{
+      status: "none",
+      label: "2nd進出者",
+      performers: [],
+      displayStyle: "qualified",
+    }];
+  }
+
+  if (Array.isArray(ev.qualifiedPerformers) && ev.qualifiedPerformers.length) {
+    return [{
+      status: "advanced",
+      label: getQualifiedStageLabel(ev),
+      nextEventType: "audition-2nd-east",
+      nextEventTitle: "オーディション2ndステージ EAST",
+      nextDate: ev.qualifiedNextStageDate || "",
+      performers: ev.qualifiedPerformers,
+      displayStyle: "qualified",
+    }];
+  }
+
+  return [];
+}
+
+function getQualifiedStageResultsHTML(results, favorites) {
+  return results.map((result) => {
+    const content = result.status === "none"
+      ? '<div class="qualified-none">該当者なし</div>'
+      : `<div class="performers qualified-list">${buildPerformerChipsHTML(result.performers, favorites)}</div>`;
+
+    return `
+      <div class="qualified-performers">
+        <div class="card-section-label">${escapeHTML(result.label)}</div>
+        ${content}
+      </div>
+    `;
+  }).join("");
+}
+
+function getNextStageResultsHTML(results, favorites) {
+  const sections = results.map((result) => {
+    const performers = buildPerformerChipsHTML(result.performers, favorites);
+    if (!performers) return "";
+
+    return `
+      <div class="next-stage-group">
+        <div class="card-section-label">${escapeHTML(result.label)}</div>
+        <div class="performers next-stage-list">${performers}</div>
+      </div>
+    `;
+  }).join("");
+
+  if (!sections.trim()) return "";
 
   return `
-    <div class="qualified-performers">
-      <div class="card-section-label">${getQualifiedStageLabel(ev)}</div>
-      <div class="performers qualified-list">${buildPerformerChipsHTML(ev.qualifiedPerformers, favorites)}</div>
+    <div class="next-stage-performers">
+      ${sections}
     </div>
   `;
+}
+
+function getStageResultsHTML(ev, favorites) {
+  const results = getStageResults(ev);
+  if (!results.length) return "";
+
+  const qualifiedResults = results.filter((result) => result.displayStyle === "qualified");
+  const nextStageResults = results.filter((result) => result.displayStyle !== "qualified");
+
+  return `
+    ${getQualifiedStageResultsHTML(qualifiedResults, favorites)}
+    ${getNextStageResultsHTML(nextStageResults, favorites)}
+  `;
+}
+
+function getQualifiedPerformersHTML(ev, favorites) {
+  return getStageResultsHTML(ev, favorites);
 }
 
 function getScheduledSecondPerformersSet() {
@@ -1059,49 +1145,51 @@ function getEventDetailHTML(ev, targetId) {
 }
 
 
+
+function getTicketInfo(ev) {
+  const ticket = ev.ticket || {};
+
+  return {
+    purchaseNote: ticket.purchaseNote ?? ev.ticketNote ?? "",
+    saleInfo: ticket.saleInfo ?? ev.ticketSaleInfo ?? "",
+    links: Array.isArray(ticket.links)
+      ? ticket.links
+      : (Array.isArray(ev.ticketLinks) ? ev.ticketLinks : []),
+    url: ticket.url ?? ticket.ticketUrl ?? ev.ticketUrl ?? "",
+    streamingUrl: ticket.streamingUrl ?? ev.streamingUrl ?? "",
+    streamingLabel: ticket.streamingLabel ?? ev.streamingLabel ?? "配信",
+  };
+}
+
+function getEventTicketLinks(ev) {
+  return getTicketInfo(ev).links;
+}
+
 function getEventNoticeHTML(ev) {
   if (!ev.eventNotice) return "";
   return `<p class="event-notice">${escapeHTML(ev.eventNotice)}</p>`;
 }
 
 function getNextStageSectionsHTML(ev, favorites) {
-  if (!Array.isArray(ev.nextStageSections) || !ev.nextStageSections.length) return "";
-
-  const sections = ev.nextStageSections.map((section) => {
-    const performers = buildPerformerChipsHTML(section.performers || [], favorites);
-    if (!performers) return "";
-
-    return `
-      <div class="next-stage-group">
-        <div class="card-section-label">${escapeHTML(section.label)}</div>
-        <div class="performers next-stage-list">${performers}</div>
-      </div>
-    `;
-  }).join("");
-
-  if (!sections.trim()) return "";
-
-  return `
-    <div class="next-stage-performers">
-      ${sections}
-    </div>
-  `;
+  return getStageResultsHTML(ev, favorites);
 }
 
 function getTicketLinkHTML(ev, targetId) {
   if (targetId !== "results") return "";
 
-  const notePart = ev.ticketNote
-    ? `<div class="ticket-extra-note">${escapeHTML(ev.ticketNote)}</div>`
+  const ticket = getTicketInfo(ev);
+
+  const notePart = ticket.purchaseNote
+    ? `<div class="ticket-extra-note">${escapeHTML(ticket.purchaseNote)}</div>`
     : "";
 
   let linkPart = "";
 
-  if (Array.isArray(ev.ticketLinks) && ev.ticketLinks.length) {
+  if (ticket.links.length) {
     linkPart = `
       <div class="ticket-purchase-label">購入：</div>
       <div class="ticket-link-list">
-        ${ev.ticketLinks.map((link) => `
+        ${ticket.links.map((link) => `
           <div class="ticket-link-row">
             <span>${escapeHTML(link.label)} ${escapeHTML(formatDateLabel(link.date))} ${escapeHTML(link.time)}</span>
             <a href="${escapeHTML(link.url)}" target="_blank" rel="noopener noreferrer">FANYチケット</a>
@@ -1109,12 +1197,12 @@ function getTicketLinkHTML(ev, targetId) {
         `).join("")}
       </div>
     `;
-  } else if (ev.ticketUrl) {
-    if (ev.ticketNote) {
+  } else if (ticket.url) {
+    if (ticket.purchaseNote) {
       linkPart = `
         <div class="ticket-purchase-link">
           購入：
-          <a href="${escapeHTML(ev.ticketUrl)}" target="_blank" rel="noopener noreferrer">FANYチケット</a>
+          <a href="${escapeHTML(ticket.url)}" target="_blank" rel="noopener noreferrer">FANYチケット</a>
         </div>
       `;
     } else {
@@ -1122,24 +1210,33 @@ function getTicketLinkHTML(ev, targetId) {
         ? `
           <div class="ticket-purchase-link">
             チケットは
-            <a href="${escapeHTML(ev.ticketUrl)}" target="_blank" rel="noopener noreferrer">FANYチケット</a>
+            <a href="${escapeHTML(ticket.url)}" target="_blank" rel="noopener noreferrer">FANYチケット</a>
             からご購入ください
           </div>
         `
         : `
           <div class="ticket-purchase-link">
             チケットは取り置き、もしくは
-            <a href="${escapeHTML(ev.ticketUrl)}" target="_blank" rel="noopener noreferrer">FANYチケット</a>から
+            <a href="${escapeHTML(ticket.url)}" target="_blank" rel="noopener noreferrer">FANYチケット</a>から
           </div>
         `;
     }
   }
 
-  const salePart = ev.ticketSaleInfo
-    ? `<div class="ticket-sale-info">${escapeHTML(ev.ticketSaleInfo)}</div>`
+  const streamingPart = ticket.streamingUrl
+    ? `
+      <div class="ticket-streaming-link">
+        ${escapeHTML(ticket.streamingLabel)}：
+        <a href="${escapeHTML(ticket.streamingUrl)}" target="_blank" rel="noopener noreferrer">配信チケット</a>
+      </div>
+    `
     : "";
 
-  const parts = [notePart, linkPart, salePart].filter((part) => part && part.trim());
+  const salePart = ticket.saleInfo
+    ? `<div class="ticket-sale-info">${escapeHTML(ticket.saleInfo)}</div>`
+    : "";
+
+  const parts = [notePart, linkPart, streamingPart, salePart].filter((part) => part && part.trim());
 
   if (!parts.length) return "";
 
@@ -1148,8 +1245,7 @@ function getTicketLinkHTML(ev, targetId) {
 
 function buildEventCardHTML(ev, targetId, favorites) {
   const performers = buildPerformerChipsHTML(ev.performers, favorites);
-  const qualifiedPerformers = getQualifiedPerformersHTML(ev, favorites);
-  const nextStageSections = getNextStageSectionsHTML(ev, favorites);
+  const stageResults = getStageResultsHTML(ev, favorites);
   const eventDetails = getEventDetailHTML(ev, targetId);
   const eventNotice = getEventNoticeHTML(ev);
   const ticketLink = getTicketLinkHTML(ev, targetId);
@@ -1162,10 +1258,9 @@ function buildEventCardHTML(ev, targetId, favorites) {
       </div>
       <h3>${escapeHTML(ev.title)}</h3>
       ${eventDetails}
-      ${qualifiedPerformers}
-      ${nextStageSections}
+      ${stageResults}
       ${eventNotice}
-      <div class="performer-section ${(qualifiedPerformers || nextStageSections) ? "has-qualified" : ""}">
+      <div class="performer-section ${stageResults ? "has-qualified" : ""}">
         <div class="card-section-label">出演者</div>
         <div class="performers">${performers}</div>
       </div>

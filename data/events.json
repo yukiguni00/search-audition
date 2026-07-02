@@ -3172,19 +3172,23 @@
       "やままん"
     ],
     "ticketUrl": "https://ticket.fany.lol/event/detail/17611",
-    "mc": "ブラゴーリ",
-    "ticketSaleInfo": "チケット発売：6月27日(土) 10:00",
-    "ticketNote": "チケットはFANYチケットのみ。出演者への取り置きはできません。出演者は変更になる可能性があります。",
-    "endTime": "15:00",
-    "nextStageSections": [
+    "stageResults": [
       {
+        "status": "advanced",
         "label": "極グランドバトルEAST進出者",
+        "nextEventType": "kiwami-grand-battle-east",
+        "nextEventTitle": "極グランドバトルEAST",
+        "nextDate": "2026-08-08",
         "performers": [
           "きっと君はくるさ"
         ]
       },
       {
+        "status": "advanced",
         "label": "翔チャレンジバトルEAST進出者",
+        "nextEventType": "kakeru-challenge-east",
+        "nextEventTitle": "Kakeru翔チャレンジバトルEAST",
+        "nextDate": "2026-07-10",
         "performers": [
           "うしお",
           "濡れカバ",
@@ -3231,20 +3235,24 @@
       "ミックストマトジュース"
     ],
     "ticketUrl": "https://ticket.fany.lol/event/detail/17611",
-    "mc": "ブラゴーリ",
-    "ticketSaleInfo": "チケット発売：6月27日(土) 10:00",
-    "ticketNote": "チケットはFANYチケットのみ。出演者への取り置きはできません。出演者は変更になる可能性があります。",
-    "endTime": "18:00",
-    "nextStageSections": [
+    "stageResults": [
       {
+        "status": "advanced",
         "label": "極グランドバトルEAST進出者",
+        "nextEventType": "kiwami-grand-battle-east",
+        "nextEventTitle": "極グランドバトルEAST",
+        "nextDate": "2026-08-08",
         "performers": [
           "ドゥダダ",
           "佐川ピン芸人"
         ]
       },
       {
+        "status": "advanced",
         "label": "翔チャレンジバトルEAST進出者",
+        "nextEventType": "kakeru-challenge-east",
+        "nextEventTitle": "Kakeru翔チャレンジバトルEAST",
+        "nextDate": "2026-07-10",
         "performers": [
           "隠れドキュン",
           "あなたとネ",
@@ -3290,13 +3298,13 @@
       "七色フラン"
     ],
     "ticketUrl": "https://ticket.fany.lol/event/detail/17611",
-    "mc": "ブラゴーリ",
-    "ticketSaleInfo": "チケット発売：6月27日(土) 10:00",
-    "ticketNote": "チケットはFANYチケットのみ。出演者への取り置きはできません。出演者は変更になる可能性があります。",
-    "endTime": "21:00",
-    "nextStageSections": [
+    "stageResults": [
       {
+        "status": "advanced",
         "label": "極グランドバトルEAST進出者",
+        "nextEventType": "kiwami-grand-battle-east",
+        "nextEventTitle": "極グランドバトルEAST",
+        "nextDate": "2026-08-08",
         "performers": [
           "スカイサーキット",
           "おとうふ",
@@ -3304,7 +3312,11 @@
         ]
       },
       {
+        "status": "advanced",
         "label": "翔チャレンジバトルEAST進出者",
+        "nextEventType": "kakeru-challenge-east",
+        "nextEventTitle": "Kakeru翔チャレンジバトルEAST",
+        "nextDate": "2026-07-10",
         "performers": [
           "魔界拳法",
           "江頭一馬",
