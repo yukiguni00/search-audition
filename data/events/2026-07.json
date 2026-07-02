@@ -1,0 +1,35 @@
+[
+  {
+    "id": "2026-07-10-1930-kakeru-sho-challenge-east",
+    "eventType": "kakeru-sho-challenge-east",
+    "title": "Kakeru翔チャレンジバトルEAST",
+    "date": "2026-07-10",
+    "month": 7,
+    "day": 10,
+    "time": "19:30",
+    "timeMinutes": 1170,
+    "venue": "渋谷よしもと漫才劇場",
+    "sourceAccount": "@jimbo_audition",
+    "ticketUrl": "https://ticket.fany.lol/event/detail/16934/45121",
+    "ticketSaleInfo": "一般発売：7月4日(土) 10:00",
+    "ticketNote": "チケットの購入はFANYチケットのみ。\n出演者への取り置きはできません。",
+    "lineupOrder": false,
+    "performers": [
+      "隠れドキュン",
+      "江頭一馬",
+      "まぼろし組",
+      "イザナミン",
+      "ことぶき",
+      "帝国タクシー",
+      "濡れカバ",
+      "デジタルバッハ",
+      "ニコミハジメテ",
+      "居候",
+      "うしお",
+      "魔界拳法",
+      "あなたとネ",
+      "ストロングブルジュニア",
+      "ミックストマトジュース"
+    ]
+  }
+]

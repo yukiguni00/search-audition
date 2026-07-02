@@ -1229,6 +1229,44 @@ function bindFloatingTop() {
   });
 }
 
+
+async function fetchJSON(path) {
+  const res = await fetch(path, { cache: "no-store" });
+  if (!res.ok) {
+    throw new Error(`${path} を読み込めませんでした`);
+  }
+  return res.json();
+}
+
+function extractEventsList(data) {
+  if (Array.isArray(data)) return data;
+  if (data && Array.isArray(data.events)) return data.events;
+  throw new Error("イベントJSONの形式が正しくありません");
+}
+
+async function loadEventsData() {
+  try {
+    const index = await fetchJSON("data/events-index.json");
+    if (!index || !Array.isArray(index.files) || !index.files.length) {
+      throw new Error("events-index.json の files が空です");
+    }
+
+    const monthlyEvents = await Promise.all(
+      index.files.map(async (file) => {
+        const path = file.startsWith("data/") ? file : `data/${file}`;
+        const data = await fetchJSON(path);
+        return extractEventsList(data);
+      })
+    );
+
+    return monthlyEvents.flat();
+  } catch (e) {
+    console.warn("月別JSONの読み込みに失敗したため、従来の data/events.json を読み込みます", e);
+    const data = await fetchJSON("data/events.json");
+    return extractEventsList(data);
+  }
+}
+
 async function init() {
   populateSelects();
   bindAutoSearch();
@@ -1236,8 +1274,17 @@ async function init() {
   bindFavoriteBackup();
   setArchiveOpen(false);
 
-  const res = await fetch("data/events.json", { cache: "no-store" });
-  events = await res.json();
+  try {
+    events = await loadEventsData();
+  } catch (e) {
+    console.error(e);
+    const results = document.getElementById("results");
+    if (results) {
+      results.innerHTML = '<p class="empty">イベント情報を読み込めませんでした。時間をおいて再読み込みしてください。</p>';
+    }
+    return;
+  }
+
   renderFavoriteSchedule();
   runSearch();
 }
