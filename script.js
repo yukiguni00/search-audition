@@ -26,7 +26,12 @@ function formatDisplayDate(ev) {
 }
 
 function normalizeText(text) {
-  return (text || "").trim().replace(/\s+/g, " ").normalize("NFKC").toLowerCase();
+  return (text || "")
+    .trim()
+    .replace(/\s+/g, " ")
+    .normalize("NFKC")
+    .replace(/[〜～~∼]/g, "〜")
+    .toLowerCase();
 }
 
 function getFavorites() {
