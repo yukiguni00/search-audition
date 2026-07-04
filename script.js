@@ -1,5 +1,8 @@
 let favoritesOnlyMode = false;
 const FAVORITE_KEY = "favoritePerformers";
+const PERFORMER_RENAME_ALIASES = {
+  "竹迫ゆうじだ!!!": "竹迫ゆうじ",
+};
 let events = [];
 let performerProfiles = new Map();
 let archiveOpen = false;
@@ -26,16 +29,32 @@ function formatDisplayDate(ev) {
 }
 
 function normalizeText(text) {
-  return (text || "")
+  const normalized = (text || "")
     .trim()
     .replace(/\s+/g, " ")
     .normalize("NFKC")
     .replace(/[〜～~∼]/g, "〜")
     .toLowerCase();
+
+  return PERFORMER_RENAME_ALIASES[normalized] || normalized;
 }
 
 function getFavorites() {
-  return JSON.parse(localStorage.getItem(FAVORITE_KEY) || "[]");
+  try {
+    const raw = localStorage.getItem(FAVORITE_KEY);
+    const list = raw ? JSON.parse(raw) : [];
+    if (!Array.isArray(list)) return [];
+
+    const normalized = [...new Set(list.map((name) => normalizeText(name)).filter(Boolean))];
+
+    if (JSON.stringify(list) !== JSON.stringify(normalized)) {
+      saveFavorites(normalized);
+    }
+
+    return normalized;
+  } catch (e) {
+    return [];
+  }
 }
 
 function saveFavorites(favorites) {
