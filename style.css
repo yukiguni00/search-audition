@@ -583,14 +583,3 @@ a:focus-visible{outline:3px solid #1769aa;outline-offset:3px}
     animation-duration:22s;
   }
 }
-
-@media (prefers-reduced-motion:reduce){
-  *,*::before,*::after{
-    scroll-behavior:auto!important;
-    animation-duration:.01ms!important;
-    animation-iteration-count:1!important;
-    transition-duration:.01ms!important;
-  }
-  .site-notice-track{animation:none;transform:none}
-  .site-notice-track span+span{display:none}
-}
