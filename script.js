@@ -1,8 +1,9 @@
 let favoritesOnlyMode = false;
 const FAVORITE_KEY = "favoritePerformers";
-const PERFORMER_RENAME_ALIASES = {
-  "竹迫ゆうじだ!!!": "竹迫ゆうじ",
+const FALLBACK_PERFORMER_ALIAS_DATA = {
+  aliases: [{ currentName: "竹迫ゆうじだ！！！", aliases: ["竹迫ゆうじ"] }],
 };
+let performerRenameAliases = new Map();
 let events = [];
 let performerProfiles = new Map();
 let archiveOpen = false;
@@ -28,15 +29,37 @@ function formatDisplayDate(ev) {
   return `${startLabel} 開演${ev.time}`;
 }
 
-function normalizeText(text) {
-  const normalized = (text || "")
+function normalizeTextWithoutAliases(text) {
+  return (text || "")
     .trim()
     .replace(/\s+/g, " ")
     .normalize("NFKC")
     .replace(/[〜～~∼]/g, "〜")
     .toLowerCase();
+}
 
-  return PERFORMER_RENAME_ALIASES[normalized] || normalized;
+function normalizeText(text) {
+  const normalized = normalizeTextWithoutAliases(text);
+
+  return performerRenameAliases.get(normalized) || normalized;
+}
+
+function buildPerformerAliasMap(data) {
+  const aliasMap = new Map();
+  const groups = data && Array.isArray(data.aliases) ? data.aliases : [];
+
+  groups.forEach((group) => {
+    const currentName = normalizeTextWithoutAliases(group && group.currentName);
+    if (!currentName) return;
+
+    aliasMap.set(currentName, currentName);
+    (Array.isArray(group.aliases) ? group.aliases : []).forEach((alias) => {
+      const normalizedAlias = normalizeTextWithoutAliases(alias);
+      if (normalizedAlias) aliasMap.set(normalizedAlias, currentName);
+    });
+  });
+
+  return aliasMap;
 }
 
 function getFavorites() {
@@ -103,6 +126,8 @@ function toggleFavorite(name) {
 function updateFavoriteUI(key, isFavorite) {
   document.querySelectorAll(`.star[data-key="${CSS.escape(key)}"]`).forEach((btn) => {
     btn.textContent = isFavorite ? "★" : "☆";
+    btn.setAttribute("aria-pressed", isFavorite ? "true" : "false");
+    btn.setAttribute("aria-label", getFavoriteAriaLabel(btn.dataset.name, isFavorite));
     const performer = btn.closest(".performer");
     if (performer) {
       performer.classList.toggle("favorite", isFavorite);
@@ -467,9 +492,9 @@ function renderFavoriteSchedule() {
     ? `
       <div class="favorite-list">
         ${visibleGroups.map(({ event, names }) => `
-          <button class="favorite-item favorite-jump-btn" type="button" data-event-id="${event.id}">
-            <div class="favorite-meta favorite-event-line">${formatDisplayDate(event)} ${event.venue}</div>
-            <div class="favorite-name">${names.join("／")}</div>
+          <button class="favorite-item favorite-jump-btn" type="button" data-event-id="${escapeHTML(event.id)}">
+            <div class="favorite-meta favorite-event-line">${escapeHTML(formatDisplayDate(event))} ${escapeHTML(event.venue)}</div>
+            <div class="favorite-name">${names.map((name) => escapeHTML(name)).join("／")}</div>
           </button>
         `).join("")}
       </div>
@@ -480,7 +505,7 @@ function renderFavoriteSchedule() {
     ? `
       <div class="favorite-no-upcoming">
         <div class="favorite-no-upcoming-title">掲載中の出演予定なし</div>
-        <div class="favorite-name-list">${noUpcoming.map(({ name }) => name).join("、")}</div>
+        <div class="favorite-name-list">${noUpcoming.map(({ name }) => escapeHTML(name)).join("、")}</div>
       </div>
     `
     : "";
@@ -743,11 +768,24 @@ function buildPerformerChipsHTML(names, favorites) {
 
     return `
       <span class="performer ${isFavorite ? "favorite" : ""}">
-        <button class="star" data-name="${escapeHTML(name)}" data-key="${escapeHTML(normalizedName)}" type="button">${isFavorite ? "★" : "☆"}</button>
+        <button
+          class="star"
+          data-name="${escapeHTML(name)}"
+          data-key="${escapeHTML(normalizedName)}"
+          type="button"
+          aria-pressed="${isFavorite ? "true" : "false"}"
+          aria-label="${escapeHTML(getFavoriteAriaLabel(name, isFavorite))}"
+        >${isFavorite ? "★" : "☆"}</button>
         ${nameHTML}
       </span>
     `;
   }).join("");
+}
+
+function getFavoriteAriaLabel(name, isFavorite) {
+  return isFavorite
+    ? `${name}をお気に入りから解除`
+    : `${name}をお気に入りに追加`;
 }
 
 function getStageResults(ev) {
@@ -759,6 +797,8 @@ function getStageResults(ev) {
         nextEventType: result.nextEventType || "",
         nextEventTitle: result.nextEventTitle || "",
         nextDate: result.nextDate || "",
+        nextTime: result.nextTime || "",
+        nextVenue: result.nextVenue || "",
         performers: Array.isArray(result.performers) ? result.performers : [],
         displayStyle: result.displayStyle || "next-stage",
       }))
@@ -1171,9 +1211,9 @@ function buildEventCardHTML(ev, targetId, favorites) {
   const ticketLink = getTicketLinkHTML(ev, targetId);
 
   return `
-    <article class="result-card" id="event-${ev.id}">
+    <article class="result-card" id="event-${escapeHTML(ev.id)}">
       <div class="datetime-venue">
-        <div>${formatDisplayDate(ev)}</div>
+        <div>${escapeHTML(formatDisplayDate(ev))}</div>
         <div class="venue-line">会場：${escapeHTML(ev.venue)}</div>
       </div>
       <h3>${escapeHTML(ev.title)}</h3>
@@ -1356,6 +1396,16 @@ function extractProfilesMap(data) {
   return profileMap;
 }
 
+async function loadPerformerAliasesData() {
+  try {
+    const data = await fetchJSON("data/performer-aliases.json");
+    return buildPerformerAliasMap(data);
+  } catch (e) {
+    console.warn("performer-aliases.json を読み込めなかったため、内蔵の改名情報を使用します", e);
+    return buildPerformerAliasMap(FALLBACK_PERFORMER_ALIAS_DATA);
+  }
+}
+
 async function loadProfilesData() {
   try {
     const data = await fetchJSON("data/profiles.json");
@@ -1435,6 +1485,8 @@ async function init() {
   setArchiveOpen(false);
 
   try {
+    performerRenameAliases = await loadPerformerAliasesData();
+
     const [loadedEvents, loadedProfiles, loadedNotice] = await Promise.all([
       loadEventsData(),
       loadProfilesData(),

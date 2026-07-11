@@ -1,0 +1,7 @@
+{
+  "private": true,
+  "scripts": {
+    "data:sync": "node scripts/sync-events.cjs",
+    "data:check": "node scripts/sync-events.cjs --check"
+  }
+}
