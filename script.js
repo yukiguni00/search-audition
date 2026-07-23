@@ -1118,6 +1118,7 @@ function getTicketInfo(ev) {
     url: ticket.url ?? ticket.ticketUrl ?? ev.ticketUrl ?? "",
     streamingUrl: ticket.streamingUrl ?? ev.streamingUrl ?? "",
     streamingLabel: ticket.streamingLabel ?? ev.streamingLabel ?? "配信",
+    streamingNote: ticket.streamingNote ?? ev.streamingNote ?? "",
   };
 }
 
@@ -1190,7 +1191,9 @@ function getTicketLinkHTML(ev, targetId) {
         <a href="${escapeHTML(ticket.streamingUrl)}" target="_blank" rel="noopener noreferrer">配信チケット</a>
       </div>
     `
-    : "";
+    : (ticket.streamingNote
+      ? `<div class="ticket-streaming-note">${escapeHTML(ticket.streamingNote)}</div>`
+      : "");
 
   const salePart = ticket.saleInfo
     ? `<div class="ticket-sale-info">${escapeHTML(ticket.saleInfo)}</div>`

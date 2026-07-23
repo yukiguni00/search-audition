@@ -2,7 +2,7 @@
   {
     "id": "2026-08-08-1700-kiwami-grand-battle-east-1",
     "eventType": "kiwami-grand-battle-east",
-    "title": "極グランドバトルEAST",
+    "title": "極グランドバトルEAST 第一部",
     "date": "2026-08-08",
     "month": 8,
     "day": 8,
@@ -13,20 +13,20 @@
     "venue": "渋谷よしもと漫才劇場",
     "sourceAccount": "@jimbo_audition",
     "lineupOrder": false,
-    "eventInfo": "第一部｜配信はございません",
     "performers": [
       "ドゥダダ"
     ],
     "ticket": {
       "purchaseNote": "チケットの購入はFANYチケットのみ。\n出演者への取り置きはできません。",
       "saleInfo": "一般発売：7月5日(日) 10:00",
-      "url": "https://ticket.fany.lol/event/detail/17841/47125"
+      "url": "https://ticket.fany.lol/event/detail/17841/47125",
+      "streamingNote": "配信なし"
     }
   },
   {
     "id": "2026-08-08-2015-kiwami-grand-battle-east-2",
     "eventType": "kiwami-grand-battle-east",
-    "title": "極グランドバトルEAST",
+    "title": "極グランドバトルEAST 第二部",
     "date": "2026-08-08",
     "month": 8,
     "day": 8,
@@ -37,7 +37,6 @@
     "venue": "渋谷よしもと漫才劇場",
     "sourceAccount": "@jimbo_audition",
     "lineupOrder": false,
-    "eventInfo": "第二部｜配信はございません",
     "performers": [
       "佐川ピン芸人",
       "スカイサーキット"
@@ -45,13 +44,14 @@
     "ticket": {
       "purchaseNote": "チケットの購入はFANYチケットのみ。\n出演者への取り置きはできません。",
       "saleInfo": "一般発売：7月5日(日) 10:00",
-      "url": "https://ticket.fany.lol/event/detail/17841/47126"
+      "url": "https://ticket.fany.lol/event/detail/17841/47126",
+      "streamingNote": "配信なし"
     }
   },
   {
     "id": "2026-08-09-1700-kiwami-grand-battle-east-3",
     "eventType": "kiwami-grand-battle-east",
-    "title": "極グランドバトルEAST",
+    "title": "極グランドバトルEAST 第三部",
     "date": "2026-08-09",
     "month": 8,
     "day": 9,
@@ -62,20 +62,20 @@
     "venue": "渋谷よしもと漫才劇場",
     "sourceAccount": "@jimbo_audition",
     "lineupOrder": false,
-    "eventInfo": "第三部｜配信はございません",
     "performers": [
       "おとうふ"
     ],
     "ticket": {
       "purchaseNote": "チケットの購入はFANYチケットのみ。\n出演者への取り置きはできません。",
       "saleInfo": "一般発売：7月5日(日) 10:00",
-      "url": "https://ticket.fany.lol/event/detail/17841/47127"
+      "url": "https://ticket.fany.lol/event/detail/17841/47127",
+      "streamingNote": "配信なし"
     }
   },
   {
     "id": "2026-08-09-2015-kiwami-grand-battle-east-4",
     "eventType": "kiwami-grand-battle-east",
-    "title": "極グランドバトルEAST",
+    "title": "極グランドバトルEAST 第四部",
     "date": "2026-08-09",
     "month": 8,
     "day": 9,
@@ -86,7 +86,6 @@
     "venue": "渋谷よしもと漫才劇場",
     "sourceAccount": "@jimbo_audition",
     "lineupOrder": false,
-    "eventInfo": "第四部｜配信はございません",
     "performers": [
       "きっと君はくるさ",
       "ジェーン"
@@ -94,7 +93,8 @@
     "ticket": {
       "purchaseNote": "チケットの購入はFANYチケットのみ。\n出演者への取り置きはできません。",
       "saleInfo": "一般発売：7月5日(日) 10:00",
-      "url": "https://ticket.fany.lol/event/detail/17841/47128"
+      "url": "https://ticket.fany.lol/event/detail/17841/47128",
+      "streamingNote": "配信なし"
     }
   }
 ]
