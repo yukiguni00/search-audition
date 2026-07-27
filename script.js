@@ -1444,6 +1444,45 @@ function getPerformerNameHTML(name) {
   `;
 }
 
+async function loadSiteAlertData() {
+  try {
+    return await fetchJSON("data/site-alert.json");
+  } catch (e) {
+    console.warn("site-alert.json を読み込めなかったため、HTML内のお知らせを表示します", e);
+    return null;
+  }
+}
+
+function renderSiteAlert(alertData) {
+  const wrapper = document.getElementById("siteAlert");
+  const icon = document.getElementById("siteAlertIcon");
+  const heading = document.getElementById("siteAlertHeading");
+  const message = document.getElementById("siteAlertMessage");
+  const note = document.getElementById("siteAlertNote");
+
+  if (!wrapper || !heading || !message || !note) return;
+
+  if (alertData && alertData.enabled === false) {
+    wrapper.hidden = true;
+    return;
+  }
+
+  if (!alertData) {
+    wrapper.hidden = false;
+    return;
+  }
+
+  if (icon) {
+    icon.textContent = alertData.icon || "⚠️";
+  }
+
+  heading.textContent = alertData.heading || "";
+  message.textContent = alertData.message || "";
+  note.textContent = alertData.note ? `※${alertData.note}` : "";
+  note.hidden = !alertData.note;
+  wrapper.hidden = !(alertData.heading || alertData.message || alertData.note);
+}
+
 async function loadSiteNoticeData() {
   try {
     return await fetchJSON("data/site-notice.json");
@@ -1490,15 +1529,17 @@ async function init() {
   try {
     performerRenameAliases = await loadPerformerAliasesData();
 
-    const [loadedEvents, loadedProfiles, loadedNotice] = await Promise.all([
+    const [loadedEvents, loadedProfiles, loadedNotice, loadedAlert] = await Promise.all([
       loadEventsData(),
       loadProfilesData(),
       loadSiteNoticeData(),
+      loadSiteAlertData(),
     ]);
 
     events = loadedEvents;
     performerProfiles = loadedProfiles;
     renderSiteNotice(loadedNotice);
+    renderSiteAlert(loadedAlert);
   } catch (e) {
     console.error(e);
     const results = document.getElementById("results");

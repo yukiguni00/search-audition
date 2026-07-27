@@ -590,3 +590,71 @@ a:focus-visible{outline:3px solid #1769aa;outline-offset:3px}
     animation-duration:22s;
   }
 }
+
+
+.site-alert-card{
+  margin:0 0 16px;
+  padding:18px 20px;
+  border:2px solid #f0a03b;
+  border-left-width:8px;
+  border-radius:16px;
+  background:#fff4df;
+  box-shadow:0 4px 18px rgba(112,68,12,.11);
+  color:#30271d;
+}
+
+.site-alert-heading-row{
+  display:flex;
+  align-items:flex-start;
+  gap:10px;
+}
+
+.site-alert-icon{
+  flex:none;
+  font-size:1.45rem;
+  line-height:1.2;
+}
+
+.site-alert-card h2{
+  margin:0;
+  font-size:1.08rem;
+  line-height:1.5;
+}
+
+.site-alert-message{
+  margin:10px 0 0;
+  font-size:.96rem;
+  font-weight:600;
+  line-height:1.85;
+}
+
+.site-alert-note{
+  margin:10px 0 0;
+  padding-top:10px;
+  border-top:1px solid rgba(166,104,26,.24);
+  color:#65513a;
+  font-size:.86rem;
+  line-height:1.75;
+}
+
+@media (max-width:720px){
+  .site-alert-card{
+    margin-bottom:14px;
+    padding:15px 14px;
+    border-left-width:6px;
+    border-radius:14px;
+  }
+
+  .site-alert-card h2{
+    font-size:1rem;
+  }
+
+  .site-alert-message{
+    font-size:.92rem;
+    line-height:1.8;
+  }
+
+  .site-alert-note{
+    font-size:.82rem;
+  }
+}
