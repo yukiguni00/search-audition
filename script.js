@@ -1001,31 +1001,32 @@ function getPendingStageGroups(filters, options = {}) {
     );
 }
 
+function buildPendingStageCardHTML(group, favorites) {
+  const dateLabel = formatDateLabel(group.nextDate) || "日程未定";
+  const timeLabel = group.nextTime ? `開演${escapeHTML(group.nextTime)}` : "開演時間未定";
+
+  return `
+    <article class="result-card pending-stage-card" id="event-${group.id}">
+      <div class="datetime-venue">
+        <div>${dateLabel} ${timeLabel}</div>
+        <div class="venue-line">会場：${escapeHTML(group.venue)}</div>
+      </div>
+      <h3>${escapeHTML(group.nextEventTitle)}</h3>
+      <p class="pending-stage-note">
+        ※詳しい公演情報が公開され次第更新します
+      </p>
+      <div class="performer-section">
+        <div class="card-section-label">出演予定者</div>
+        <div class="performers">${buildPerformerChipsHTML(group.names, favorites)}</div>
+      </div>
+    </article>
+  `;
+}
+
 function buildPendingStageCardsHTML(filters, favorites) {
-  const groups = getPendingStageGroups(filters);
-  if (!groups.length) return "";
-
-  return groups.map((group) => {
-    const dateLabel = formatDateLabel(group.nextDate) || "日程未定";
-    const timeLabel = group.nextTime ? `開演${escapeHTML(group.nextTime)}` : "開演時間未定";
-
-    return `
-      <article class="result-card pending-stage-card" id="event-${group.id}">
-        <div class="datetime-venue">
-          <div>${dateLabel} ${timeLabel}</div>
-          <div class="venue-line">会場：${escapeHTML(group.venue)}</div>
-        </div>
-        <h3>${escapeHTML(group.nextEventTitle)}</h3>
-        <p class="pending-stage-note">
-          ※詳しい公演情報が公開され次第更新します
-        </p>
-        <div class="performer-section">
-          <div class="card-section-label">出演予定者</div>
-          <div class="performers">${buildPerformerChipsHTML(group.names, favorites)}</div>
-        </div>
-      </article>
-    `;
-  }).join("");
+  return getPendingStageGroups(filters)
+    .map((group) => buildPendingStageCardHTML(group, favorites))
+    .join("");
 }
 
 
@@ -1061,22 +1062,42 @@ function updateResultNoteForCurrentResults(futureResults, pendingStageCards) {
 function renderMainEvents(targetId, list, filters) {
   const target = document.getElementById(targetId);
   const favorites = getFavorites();
-  const pendingStageCards = targetId === "results"
-    ? buildPendingStageCardsHTML(filters, favorites)
-    : "";
+  const pendingStageGroups = targetId === "results"
+    ? getPendingStageGroups(filters)
+    : [];
 
   if (targetId === "results") {
-    updateResultNoteForCurrentResults(list, pendingStageCards);
+    updateResultNoteForCurrentResults(list, pendingStageGroups.length > 0);
   }
 
-  if (!list.length && !pendingStageCards) {
+  const renderItems = [
+    ...list.map((ev) => ({
+      date: ev.date || "9999-99-99",
+      timeMinutes: ev.timeMinutes ?? 0,
+      title: ev.title || "",
+      html: buildEventCardHTML(ev, targetId, favorites),
+    })),
+    ...pendingStageGroups.map((group) => ({
+      date: group.nextDate || "9999-99-99",
+      // 開演時間未定は、同じ日の時刻確定済み公演より後ろに並べる。
+      timeMinutes: timeToMinutes(group.nextTime) ?? 24 * 60,
+      title: group.nextEventTitle || "",
+      html: buildPendingStageCardHTML(group, favorites),
+    })),
+  ].sort((a, b) =>
+    a.date.localeCompare(b.date) ||
+    a.timeMinutes - b.timeMinutes ||
+    a.title.localeCompare(b.title, "ja")
+  );
+
+  if (!renderItems.length) {
     target.innerHTML = targetId === "results"
       ? '<p class="empty">該当する今後の開催はありません</p>'
       : '<p class="empty"></p>';
     return;
   }
 
-  target.innerHTML = `${pendingStageCards}${list.map((ev) => buildEventCardHTML(ev, targetId, favorites)).join("")}`;
+  target.innerHTML = renderItems.map((item) => item.html).join("");
   bindStarButtons(target);
 }
 
