@@ -77,7 +77,11 @@
     "ticket": {
       "saleInfo": "一般発売：7月24日(金) 10:00",
       "url": "https://ticket.fany.lol/event/detail/18735"
-    }
+    },
+    "qualifiedPerformers": [
+      "ことぶき"
+    ],
+    "qualifiedNextStageDate": "2026-08-28"
   },
   {
     "id": "2026-07-28-1830-audition-1st-east",
@@ -118,6 +122,99 @@
       "ショウズィー",
       "オレンジの町",
       "夏のらくがき"
+    ],
+    "ticket": {
+      "saleInfo": "一般発売：7月24日(金) 10:00",
+      "url": "https://ticket.fany.lol/event/detail/18735"
+    },
+    "qualifiedPerformers": [
+      "マシン語感"
+    ],
+    "qualifiedNextStageDate": "2026-08-28"
+  },
+  {
+    "id": "2026-07-29-1600-audition-1st-east",
+    "eventType": "audition-1st-east",
+    "title": "オーディション1stステージ EAST",
+    "date": "2026-07-29",
+    "month": 7,
+    "day": 29,
+    "time": "16:00",
+    "timeMinutes": 960,
+    "openTime": "15:45",
+    "venue": "LEFKADA新宿",
+    "sourceAccount": "@jimbo_audition",
+    "performers": [
+      "ミッドナイトウルフ",
+      "上げ膳据え膳",
+      "とは言うものの",
+      "弁けぇ",
+      "だらくデビル",
+      "1000タコ",
+      "かに当番",
+      "エニーモア",
+      "謝花",
+      "ダイアゴナル",
+      "かばんぴかぴ科",
+      "エルダストリー",
+      "ウラマツ",
+      "あかざきまさゆき",
+      "エスファイブ",
+      "いにしえ",
+      "ひとよし",
+      "まえだかっこかり",
+      "象美人",
+      "おのしおり",
+      "グラインシガー",
+      "おばあちゃん",
+      "サダキヨ",
+      "天神モンキー",
+      "マルモウケ",
+      "怪物ちゃん"
+    ],
+    "ticket": {
+      "saleInfo": "一般発売：7月24日(金) 10:00",
+      "url": "https://ticket.fany.lol/event/detail/18735"
+    }
+  },
+  {
+    "id": "2026-07-29-1830-audition-1st-east",
+    "eventType": "audition-1st-east",
+    "title": "オーディション1stステージ EAST",
+    "date": "2026-07-29",
+    "month": 7,
+    "day": 29,
+    "time": "18:30",
+    "timeMinutes": 1110,
+    "openTime": "18:15",
+    "venue": "LEFKADA新宿",
+    "sourceAccount": "@jimbo_audition",
+    "performers": [
+      "ミイラボックス",
+      "遠視",
+      "ミクロ菩薩",
+      "多摩こんにゃく",
+      "S字クランク",
+      "にしだっくす",
+      "味さと",
+      "ゴスケ",
+      "森のくまさん",
+      "キャディーのこいちゃん",
+      "はるかぜとともに",
+      "てぃーし",
+      "サンバドル",
+      "タイフードセンター",
+      "全ツ",
+      "ガンスミス",
+      "おぐちちぐお",
+      "からくり電球",
+      "ゼンナ",
+      "既婚者",
+      "ナガレ蟹",
+      "ももなり",
+      "東京師走",
+      "くさかんむり",
+      "カノプス"
     ],
     "ticket": {
       "saleInfo": "一般発売：7月24日(金) 10:00",
