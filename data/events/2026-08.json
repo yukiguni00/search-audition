@@ -136,7 +136,10 @@
     "ticket": {
       "saleInfo": "一般発売：7月24日(金) 10:00",
       "url": "https://ticket.fany.lol/event/detail/18735"
-    }
+    },
+    "qualifiedPerformers": [],
+    "qualifiedResult": "none",
+    "qualifiedNextStageDate": "2026-08-28"
   },
   {
     "id": "2026-08-04-1830-audition-1st-east",
@@ -180,7 +183,11 @@
     "ticket": {
       "saleInfo": "一般発売：7月24日(金) 10:00",
       "url": "https://ticket.fany.lol/event/detail/18735"
-    }
+    },
+    "qualifiedPerformers": [
+      "マルティンス"
+    ],
+    "qualifiedNextStageDate": "2026-08-28"
   },
   {
     "id": "2026-08-05-1600-audition-1st-east",
@@ -224,7 +231,10 @@
       "ワンダッシュ",
       "アバンセリーヌ",
       "ヴェスプッチ"
-    ]
+    ],
+    "qualifiedPerformers": [],
+    "qualifiedResult": "none",
+    "qualifiedNextStageDate": "2026-08-28"
   },
   {
     "id": "2026-08-05-1830-audition-1st-east",
@@ -267,7 +277,11 @@
     "ticket": {
       "saleInfo": "一般発売：7月24日(金) 10:00",
       "url": "https://ticket.fany.lol/event/detail/18735"
-    }
+    },
+    "qualifiedPerformers": [
+      "トラモチーフ"
+    ],
+    "qualifiedNextStageDate": "2026-08-28"
   },
   {
     "id": "2026-08-06-1830-audition-1st-east",
