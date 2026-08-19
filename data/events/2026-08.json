@@ -399,7 +399,11 @@
       "ミシガンサック",
       "21世紀少年",
       "かずみちゃん"
-    ]
+    ],
+    "qualifiedPerformers": [
+      "ゼウス"
+    ],
+    "qualifiedNextStageDate": "2026-08-28"
   },
   {
     "id": "2026-08-07-1830-audition-1st-east",
@@ -443,7 +447,10 @@
     "ticket": {
       "saleInfo": "一般発売：7月24日(金) 10:00",
       "url": "https://ticket.fany.lol/event/detail/18735"
-    }
+    },
+    "qualifiedPerformers": [],
+    "qualifiedResult": "none",
+    "qualifiedNextStageDate": "2026-08-28"
   },
   {
     "id": "2026-08-08-1700-kiwami-grand-battle-east-1",
@@ -586,7 +593,12 @@
       "スティンガー",
       "蒼井",
       "テンプルカントリー"
-    ]
+    ],
+    "qualifiedPerformers": [
+      "エリー",
+      "おもち道場"
+    ],
+    "qualifiedNextStageDate": "2026-08-28"
   },
   {
     "id": "2026-08-10-1830-audition-1st-east",
@@ -630,7 +642,13 @@
       "スポスポーツ",
       "ベジコプター",
       "ミックストマトジュース"
-    ]
+    ],
+    "qualifiedPerformers": [
+      "ミックストマトジュース",
+      "歓楽ラビット",
+      "キンジトウ"
+    ],
+    "qualifiedNextStageDate": "2026-08-28"
   },
   {
     "id": "2026-08-12-1600-audition-1st-east",
@@ -674,7 +692,11 @@
       "さよならチェンジアップ",
       "TOKIO",
       "ユニコ"
-    ]
+    ],
+    "qualifiedPerformers": [
+      "クリアノート"
+    ],
+    "qualifiedNextStageDate": "2026-08-28"
   },
   {
     "id": "2026-08-12-1830-audition-1st-east",
@@ -716,8 +738,13 @@
       "TOP GOLD",
       "磯辺あげ",
       "亜麻色",
-      "塩谷"
-    ]
+      "塩谷",
+      "パリストンズ"
+    ],
+    "qualifiedPerformers": [
+      "パリストンズ"
+    ],
+    "qualifiedNextStageDate": "2026-08-28"
   },
   {
     "id": "2026-08-13-1600-audition-1st-east",
@@ -761,7 +788,11 @@
       "大木木琴",
       "ピコリーノ",
       "タカパ"
-    ]
+    ],
+    "qualifiedPerformers": [
+      "ラクダ人生"
+    ],
+    "qualifiedNextStageDate": "2026-08-28"
   },
   {
     "id": "2026-08-13-1830-audition-1st-east",
@@ -805,7 +836,11 @@
       "寿司東京",
       "しみず",
       "いぬ派ねこ派"
-    ]
+    ],
+    "qualifiedPerformers": [
+      "寿司東京"
+    ],
+    "qualifiedNextStageDate": "2026-08-28"
   },
   {
     "id": "2026-08-14-1600-audition-1st-east",
@@ -849,7 +884,12 @@
     "ticket": {
       "saleInfo": "一般発売：7月24日(金) 10:00",
       "url": "https://ticket.fany.lol/event/detail/18735"
-    }
+    },
+    "qualifiedPerformers": [
+      "強い電気",
+      "また会えると思ったから"
+    ],
+    "qualifiedNextStageDate": "2026-08-28"
   },
   {
     "id": "2026-08-14-1830-audition-1st-east",
@@ -893,7 +933,11 @@
     "ticket": {
       "saleInfo": "一般発売：7月24日(金) 10:00",
       "url": "https://ticket.fany.lol/event/detail/18735"
-    }
+    },
+    "qualifiedPerformers": [
+      "タケゾウ"
+    ],
+    "qualifiedNextStageDate": "2026-08-28"
   },
   {
     "id": "2026-08-17-1600-audition-1st-east",
@@ -937,7 +981,12 @@
       "鷹メイソン",
       "ねづみ大根",
       "ツカレタハト"
-    ]
+    ],
+    "qualifiedPerformers": [
+      "カガリ",
+      "ハンマラッソ"
+    ],
+    "qualifiedNextStageDate": "2026-08-28"
   },
   {
     "id": "2026-08-17-1830-audition-1st-east",
@@ -981,7 +1030,12 @@
       "ジブラーD介。",
       "あさゆま",
       "増田ひまわり"
-    ]
+    ],
+    "qualifiedPerformers": [
+      "ZAZY",
+      "ピュンパティ"
+    ],
+    "qualifiedNextStageDate": "2026-08-28"
   },
   {
     "id": "2026-08-18-1600-audition-1st-east",
@@ -1023,8 +1077,14 @@
       "電田二連撃",
       "のげさる",
       "ヒゲヅラマンボウ",
-      "バスターエンドラン"
-    ]
+      "バスターエンドラン",
+      "ジェーン"
+    ],
+    "qualifiedPerformers": [
+      "ストロングブルジュニア",
+      "ジェーン"
+    ],
+    "qualifiedNextStageDate": "2026-08-28"
   },
   {
     "id": "2026-08-18-1830-audition-1st-east",
@@ -1068,7 +1128,13 @@
       "狂い咲きサンダーロード",
       "泥舟",
       "湘南ブースト"
-    ]
+    ],
+    "qualifiedPerformers": [
+      "七色フラン",
+      "キイロイゾウサン",
+      "湘南ブースト"
+    ],
+    "qualifiedNextStageDate": "2026-08-28"
   },
   {
     "id": "2026-08-19-1600-audition-1st-east",
@@ -1112,7 +1178,12 @@
       "フロッグロック",
       "世紀連盟",
       "きんゆうや"
-    ]
+    ],
+    "qualifiedPerformers": [
+      "XYZ",
+      "パピヨン"
+    ],
+    "qualifiedNextStageDate": "2026-08-28"
   },
   {
     "id": "2026-08-19-1830-audition-1st-east",
