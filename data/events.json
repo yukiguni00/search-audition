@@ -5205,10 +5205,11 @@
       "エリー"
     ],
     "ticket": {
-      "purchaseNote": "前売1,500円｜当日2,000円",
+      "purchaseNote": "前売1,500円｜当日2,000円｜配信なし",
       "saleInfo": "一般発売：8月26日(水) 10:00",
-      "streamingNote": "配信なし"
-    }
+      "url": "https://ticket.fany.lol/reception/63152/50691"
+    },
+    "openTime": "13:15"
   },
   {
     "id": "2026-08-28-1630-audition-2nd-east-2",
@@ -5248,10 +5249,11 @@
       "序盤に"
     ],
     "ticket": {
-      "purchaseNote": "前売1,500円｜当日2,000円",
+      "purchaseNote": "前売1,500円｜当日2,000円｜配信なし",
       "saleInfo": "一般発売：8月26日(水) 10:00",
-      "streamingNote": "配信なし"
-    }
+      "url": "https://ticket.fany.lol/reception/63152/50692"
+    },
+    "openTime": "16:15"
   },
   {
     "id": "2026-08-28-1930-audition-2nd-east-3",
@@ -5292,9 +5294,10 @@
       "スカイサーキット"
     ],
     "ticket": {
-      "purchaseNote": "前売1,500円｜当日2,000円",
+      "purchaseNote": "前売1,500円｜当日2,000円｜配信なし",
       "saleInfo": "一般発売：8月26日(水) 10:00",
-      "streamingNote": "配信なし"
-    }
+      "url": "https://ticket.fany.lol/reception/63152/50693"
+    },
+    "openTime": "19:15"
   }
 ]
