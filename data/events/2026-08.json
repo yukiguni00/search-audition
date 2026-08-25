@@ -1463,14 +1463,53 @@
     "sourceAccount": "@jimbo_audition",
     "performers": [],
     "eventNotice": "出演者一覧は未確認です",
-    "qualifiedPerformers": [
-      "魔界拳法",
-      "ASANA"
-    ],
-    "qualifiedNextStageDate": "2026-08-28",
     "ticket": {
       "saleInfo": "一般発売：7月24日(金) 10:00",
       "url": "https://ticket.fany.lol/event/detail/18735"
-    }
+    },
+    "stageResults": [
+      {
+        "status": "advanced",
+        "label": "2nd進出者",
+        "nextEventType": "audition-2nd-east",
+        "nextEventTitle": "オーディション2ndステージ EAST",
+        "nextDate": "2026-08-28",
+        "performers": [
+          "魔界拳法",
+          "ASANA"
+        ],
+        "displayStyle": "qualified"
+      },
+      {
+        "status": "advanced",
+        "label": "8月度 追加合格",
+        "nextEventType": "audition-2nd-east",
+        "nextEventTitle": "オーディション2ndステージ EAST",
+        "nextDate": "2026-08-28",
+        "performers": [
+          "佐川ピン芸人",
+          "そっとしといてくれ",
+          "ドゥダダ",
+          "ビル煮",
+          "クニサダ",
+          "日曜ボウリング",
+          "輩メガネ",
+          "逆転のモリモリ",
+          "デジタルバッハ",
+          "お茶天狗",
+          "薔薇飯店",
+          "ロメロ",
+          "アミダライン",
+          "カタパルトン",
+          "ブルー",
+          "武士炒め",
+          "ライダーキック",
+          "ミスポリエチレン",
+          "弁天フクロウ",
+          "ドラゴンレッド"
+        ],
+        "displayStyle": "qualified"
+      }
+    ]
   }
 ]
