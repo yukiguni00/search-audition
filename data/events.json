@@ -4881,7 +4881,12 @@
       "光るカモシカ",
       "こしあんな",
       "木製フリーマン"
-    ]
+    ],
+    "qualifiedPerformers": [
+      "つつがないね",
+      "スカイサーキット"
+    ],
+    "qualifiedNextStageDate": "2026-08-28"
   },
   {
     "id": "2026-08-20-1600-audition-1st-east",
@@ -4925,7 +4930,11 @@
     "ticket": {
       "saleInfo": "一般発売：7月24日(金) 10:00",
       "url": "https://ticket.fany.lol/event/detail/18735"
-    }
+    },
+    "qualifiedPerformers": [
+      "トニーフランク"
+    ],
+    "qualifiedNextStageDate": "2026-08-28"
   },
   {
     "id": "2026-08-20-1830-audition-1st-east",
@@ -4969,7 +4978,12 @@
     "ticket": {
       "saleInfo": "一般発売：7月24日(金) 10:00",
       "url": "https://ticket.fany.lol/event/detail/18735"
-    }
+    },
+    "qualifiedPerformers": [
+      "たまゆら学園",
+      "きっと君はくるさ"
+    ],
+    "qualifiedNextStageDate": "2026-08-28"
   },
   {
     "id": "2026-08-21-1600-audition-1st-east",
@@ -5013,7 +5027,10 @@
     "ticket": {
       "saleInfo": "一般発売：7月24日(金) 10:00",
       "url": "https://ticket.fany.lol/event/detail/18735"
-    }
+    },
+    "qualifiedPerformers": [],
+    "qualifiedNextStageDate": "2026-08-28",
+    "qualifiedResult": "none"
   },
   {
     "id": "2026-08-21-1830-audition-1st-east",
@@ -5054,6 +5071,57 @@
       "ぺんぺん鳥後藤",
       "ターマネーギ"
     ],
+    "ticket": {
+      "saleInfo": "一般発売：7月24日(金) 10:00",
+      "url": "https://ticket.fany.lol/event/detail/18735"
+    },
+    "qualifiedPerformers": [],
+    "qualifiedNextStageDate": "2026-08-28",
+    "qualifiedResult": "none"
+  },
+  {
+    "id": "2026-08-24-1600-audition-1st-east",
+    "eventType": "audition-1st-east",
+    "title": "オーディション1stステージ EAST",
+    "date": "2026-08-24",
+    "month": 8,
+    "day": 24,
+    "time": "16:00",
+    "timeMinutes": 960,
+    "openTime": "15:45",
+    "venue": "LEFKADA新宿",
+    "sourceAccount": "@jimbo_audition",
+    "performers": [],
+    "eventNotice": "出演者一覧は未確認です",
+    "qualifiedPerformers": [
+      "焼き塩",
+      "おとうふ"
+    ],
+    "qualifiedNextStageDate": "2026-08-28",
+    "ticket": {
+      "saleInfo": "一般発売：7月24日(金) 10:00",
+      "url": "https://ticket.fany.lol/event/detail/18735"
+    }
+  },
+  {
+    "id": "2026-08-24-1830-audition-1st-east",
+    "eventType": "audition-1st-east",
+    "title": "オーディション1stステージ EAST",
+    "date": "2026-08-24",
+    "month": 8,
+    "day": 24,
+    "time": "18:30",
+    "timeMinutes": 1110,
+    "openTime": "18:15",
+    "venue": "LEFKADA新宿",
+    "sourceAccount": "@jimbo_audition",
+    "performers": [],
+    "eventNotice": "出演者一覧は未確認です",
+    "qualifiedPerformers": [
+      "魔界拳法",
+      "ASANA"
+    ],
+    "qualifiedNextStageDate": "2026-08-28",
     "ticket": {
       "saleInfo": "一般発売：7月24日(金) 10:00",
       "url": "https://ticket.fany.lol/event/detail/18735"
