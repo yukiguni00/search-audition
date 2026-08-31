@@ -1,94 +1,70 @@
 [
   {
-    "id": "2026-10-17-1700-kiwami-grand-battle-east-一",
+    "id": "2026-10-17-18-kiwami-grand-battle-east",
     "eventType": "kiwami-grand-battle-east",
-    "title": "グランドバトルEAST 第一部",
+    "title": "グランドバトルEAST",
     "date": "2026-10-17",
+    "dateEnd": "2026-10-18",
     "month": 10,
     "day": 17,
-    "time": "17:00",
+    "time": "複数公演",
     "timeMinutes": 1020,
-    "openTime": "16:45",
-    "endTime": "19:00",
     "venue": "渋谷よしもと漫才劇場",
     "sourceAccount": "@jimbo_audition",
     "lineupOrder": false,
-    "performers": [],
-    "eventNotice": "出演者は発表され次第更新します",
+    "performers": [
+      "ZAZY",
+      "佐川ピン芸人",
+      "パピヨン",
+      "スカイサーキット",
+      "つつがないね",
+      "そっとしといてくれ",
+      "おとうふ",
+      "ピュンパティ"
+    ],
+    "performerLabel": "出演予定者（出演部未定）",
+    "eventNotice": "※出演部・その他出演者は発表され次第更新します",
+    "sessions": [
+      {
+        "label": "第一部",
+        "date": "2026-10-17",
+        "openTime": "16:45",
+        "time": "17:00",
+        "endTime": "19:00",
+        "ticketUrl": "https://ticket.fany.lol/event/detail/19985/51910",
+        "performers": []
+      },
+      {
+        "label": "第二部",
+        "date": "2026-10-17",
+        "openTime": "20:00",
+        "time": "20:15",
+        "endTime": "22:15",
+        "ticketUrl": "https://ticket.fany.lol/event/detail/19985/51911",
+        "performers": []
+      },
+      {
+        "label": "第三部",
+        "date": "2026-10-18",
+        "openTime": "16:45",
+        "time": "17:00",
+        "endTime": "19:00",
+        "ticketUrl": "https://ticket.fany.lol/event/detail/19985/51912",
+        "performers": []
+      },
+      {
+        "label": "第四部",
+        "date": "2026-10-18",
+        "openTime": "20:00",
+        "time": "20:15",
+        "endTime": "22:15",
+        "ticketUrl": "https://ticket.fany.lol/event/detail/19985/51913",
+        "performers": []
+      }
+    ],
     "ticket": {
       "priceInfo": "前売2,300円｜当日2,800円",
-      "saleInfo": "一般発売：9月5日(土) 10:00",
-      "url": "https://ticket.fany.lol/event/detail/19985/51910",
-      "linkLabel": "会場チケット"
-    }
-  },
-  {
-    "id": "2026-10-17-2015-kiwami-grand-battle-east-二",
-    "eventType": "kiwami-grand-battle-east",
-    "title": "グランドバトルEAST 第二部",
-    "date": "2026-10-17",
-    "month": 10,
-    "day": 17,
-    "time": "20:15",
-    "timeMinutes": 1215,
-    "openTime": "20:00",
-    "endTime": "22:15",
-    "venue": "渋谷よしもと漫才劇場",
-    "sourceAccount": "@jimbo_audition",
-    "lineupOrder": false,
-    "performers": [],
-    "eventNotice": "出演者は発表され次第更新します",
-    "ticket": {
-      "priceInfo": "前売2,300円｜当日2,800円",
-      "saleInfo": "一般発売：9月5日(土) 10:00",
-      "url": "https://ticket.fany.lol/event/detail/19985/51911",
-      "linkLabel": "会場チケット"
-    }
-  },
-  {
-    "id": "2026-10-18-1700-kiwami-grand-battle-east-三",
-    "eventType": "kiwami-grand-battle-east",
-    "title": "グランドバトルEAST 第三部",
-    "date": "2026-10-18",
-    "month": 10,
-    "day": 18,
-    "time": "17:00",
-    "timeMinutes": 1020,
-    "openTime": "16:45",
-    "endTime": "19:00",
-    "venue": "渋谷よしもと漫才劇場",
-    "sourceAccount": "@jimbo_audition",
-    "lineupOrder": false,
-    "performers": [],
-    "eventNotice": "出演者は発表され次第更新します",
-    "ticket": {
-      "priceInfo": "前売2,300円｜当日2,800円",
-      "saleInfo": "一般発売：9月5日(土) 10:00",
-      "url": "https://ticket.fany.lol/event/detail/19985/51912",
-      "linkLabel": "会場チケット"
-    }
-  },
-  {
-    "id": "2026-10-18-2015-kiwami-grand-battle-east-四",
-    "eventType": "kiwami-grand-battle-east",
-    "title": "グランドバトルEAST 第四部",
-    "date": "2026-10-18",
-    "month": 10,
-    "day": 18,
-    "time": "20:15",
-    "timeMinutes": 1215,
-    "openTime": "20:00",
-    "endTime": "22:15",
-    "venue": "渋谷よしもと漫才劇場",
-    "sourceAccount": "@jimbo_audition",
-    "lineupOrder": false,
-    "performers": [],
-    "eventNotice": "出演者は発表され次第更新します",
-    "ticket": {
-      "priceInfo": "前売2,300円｜当日2,800円",
-      "saleInfo": "一般発売：9月5日(土) 10:00",
-      "url": "https://ticket.fany.lol/event/detail/19985/51913",
-      "linkLabel": "会場チケット"
+      "saleInfo": "一般発売：9月5日(土) 10:00"
     }
   }
 ]

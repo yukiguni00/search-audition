@@ -14,13 +14,16 @@ function formatDisplayDate(ev) {
   const dateObj = new Date(ev.date);
   const weekday = weekdays[dateObj.getDay()];
   const startLabel = `${ev.month}月${ev.day}日(${weekday})`;
+  const sessions = getEventSessions(ev);
 
   if (ev.dateEnd && ev.dateEnd !== ev.date) {
     const endObj = new Date(ev.dateEnd);
     const endWeekday = weekdays[endObj.getDay()];
     const endLabel = `${endObj.getMonth() + 1}月${endObj.getDate()}日(${endWeekday})`;
-    return `${startLabel}〜${endLabel} ${ev.time}`;
+    return sessions.length ? `${startLabel}〜${endLabel}` : `${startLabel}〜${endLabel} ${ev.time}`;
   }
+
+  if (sessions.length > 1) return startLabel;
 
   if (ev.time === "出演公演未定" || ev.time === "未定") {
     return `${startLabel} ${ev.time}`;
@@ -182,8 +185,23 @@ function getFavoritePerformersSet() {
 
 function eventHasFavorite(ev) {
   const favorites = getFavoritePerformersSet();
-  if (!favorites.size || !Array.isArray(ev.performers)) return false;
-  return ev.performers.some(name => favorites.has(normalizeText(name)));
+  if (!favorites.size) return false;
+  return getEventPerformerNames(ev).some((name) => favorites.has(normalizeText(name)));
+}
+
+function eventHasFavoriteForFilters(ev, filters) {
+  const favorites = getFavoritePerformersSet();
+  if (!favorites.size) return false;
+
+  const unassignedHit = (Array.isArray(ev.performers) ? ev.performers : [])
+    .some((name) => favorites.has(normalizeText(name)));
+  if (unassignedHit) return true;
+
+  return getEventSessions(ev).some((session) => {
+    const hasFavorite = (Array.isArray(session.performers) ? session.performers : [])
+      .some((name) => favorites.has(normalizeText(name)));
+    return hasFavorite && occurrenceMatchesDateTimeFilters(getSessionOccurrence(session, ev), filters);
+  });
 }
 
 function updateFavoritesOnlyButton() {
@@ -256,7 +274,48 @@ function getEventDateParts(ev) {
   return dates;
 }
 
+function getEventSessions(ev) {
+  return Array.isArray(ev.sessions)
+    ? ev.sessions.filter((session) => session && session.date && session.time)
+    : [];
+}
+
+function getEventPerformerNames(ev) {
+  const names = [];
+  const seen = new Set();
+  const add = (name) => {
+    const key = normalizeText(name);
+    if (!key || seen.has(key)) return;
+    seen.add(key);
+    names.push(name);
+  };
+
+  (Array.isArray(ev.performers) ? ev.performers : []).forEach(add);
+  getEventSessions(ev).forEach((session) => {
+    (Array.isArray(session.performers) ? session.performers : []).forEach(add);
+  });
+
+  return names;
+}
+
+function getSessionOccurrence(session, ev) {
+  const dateObj = new Date(session.date);
+  if (Number.isNaN(dateObj.getTime())) return null;
+
+  return {
+    date: session.date,
+    month: dateObj.getMonth() + 1,
+    day: dateObj.getDate(),
+    timeMinutes: timeToMinutes(session.time) ?? ev.timeMinutes ?? 0,
+  };
+}
+
 function getEventOccurrences(ev) {
+  const sessions = getEventSessions(ev);
+  if (sessions.length) {
+    return sessions.map((session) => getSessionOccurrence(session, ev)).filter(Boolean);
+  }
+
   const ticketLinks = getEventTicketLinks(ev);
 
   if (ticketLinks.length) {
@@ -281,6 +340,14 @@ function getEventOccurrences(ev) {
   }));
 }
 
+function occurrenceMatchesDateTimeFilters(occurrence, filters) {
+  if (!occurrence) return false;
+  if (filters.month !== "all" && occurrence.month !== Number(filters.month)) return false;
+  if (filters.day !== "all" && occurrence.day !== Number(filters.day)) return false;
+  if (filters.hour !== "all" && occurrence.timeMinutes !== null && occurrence.timeMinutes < Number(filters.hour) * 60) return false;
+  return true;
+}
+
 function eventMatchesDateTimeFilters(ev, filters) {
   const hasDateTimeFilter =
     filters.month !== "all" ||
@@ -289,13 +356,7 @@ function eventMatchesDateTimeFilters(ev, filters) {
 
   if (!hasDateTimeFilter) return true;
 
-  return getEventOccurrences(ev).some((occurrence) => {
-    if (filters.month !== "all" && occurrence.month !== Number(filters.month)) return false;
-    if (filters.day !== "all" && occurrence.day !== Number(filters.day)) return false;
-    if (filters.hour !== "all" && occurrence.timeMinutes !== null && occurrence.timeMinutes < Number(filters.hour) * 60) return false;
-
-    return true;
-  });
+  return getEventOccurrences(ev).some((occurrence) => occurrenceMatchesDateTimeFilters(occurrence, filters));
 }
 
 function eventMatchesFilters(ev, filters, includePast = false, options = {}) {
@@ -308,11 +369,17 @@ function eventMatchesFilters(ev, filters, includePast = false, options = {}) {
   if (!eventMatchesDateTimeFilters(ev, filters)) return false;
 
   if (!ignoreNameQuery && filters.nameQuery) {
-    const hit = (ev.performers || []).some((name) => normalizeText(name).includes(filters.nameQuery));
-    if (!hit) return false;
+    const unassignedHit = (Array.isArray(ev.performers) ? ev.performers : [])
+      .some((name) => normalizeText(name).includes(filters.nameQuery));
+    const sessionHit = getEventSessions(ev).some((session) => {
+      const nameHit = (Array.isArray(session.performers) ? session.performers : [])
+        .some((name) => normalizeText(name).includes(filters.nameQuery));
+      return nameHit && occurrenceMatchesDateTimeFilters(getSessionOccurrence(session, ev), filters);
+    });
+    if (!unassignedHit && !sessionHit) return false;
   }
 
-  if (!ignoreFavoritesOnly && favoritesOnlyMode && !eventHasFavorite(ev)) return false;
+  if (!ignoreFavoritesOnly && favoritesOnlyMode && !eventHasFavoriteForFilters(ev, filters)) return false;
 
   return true;
 }
@@ -321,7 +388,7 @@ function pickRandomPerformer() {
   const favorites = new Set(getFavorites());
 
   const allNames = [...new Set(
-    events.flatMap((ev) => Array.isArray(ev.performers) ? ev.performers : [])
+    events.flatMap((ev) => getEventPerformerNames(ev))
   )].filter((name) => name && name.trim());
 
   const pool = allNames.filter((name) => !favorites.has(normalizeText(name)));
@@ -345,8 +412,7 @@ function pickRandomPerformer() {
   const selectedKey = normalizeText(selected);
   const hasPastHit = events.some((ev) =>
     (ev.dateEnd || ev.date) < today &&
-    Array.isArray(ev.performers) &&
-    ev.performers.some((name) => normalizeText(name) === selectedKey)
+    getEventPerformerNames(ev).some((name) => normalizeText(name) === selectedKey)
   );
 
   setArchiveOpen(hasPastHit);
@@ -379,8 +445,7 @@ function filterEvents(list, includePast = false) {
 
 function findPerformerDisplayName(key) {
   for (const ev of events) {
-    if (!Array.isArray(ev.performers)) continue;
-    const found = ev.performers.find((name) => normalizeText(name) === key);
+    const found = getEventPerformerNames(ev).find((name) => normalizeText(name) === key);
     if (found) return found;
   }
   return key;
@@ -399,9 +464,7 @@ function getFavoriteScheduleData() {
   const eventGroups = [];
 
   futureEvents.forEach((ev) => {
-    if (!Array.isArray(ev.performers)) return;
-
-    const matchedNames = ev.performers.filter((name) => {
+    const matchedNames = getEventPerformerNames(ev).filter((name) => {
       const key = normalizeText(name);
       return favoriteSet.has(key);
     });
@@ -909,7 +972,7 @@ function hasPublishedStageDetails(result) {
     const evEnd = ev.dateEnd || evStart;
     if (!evStart || evEnd < rangeStart || evStart > rangeEnd) return;
 
-    (Array.isArray(ev.performers) ? ev.performers : []).forEach((name) => {
+    getEventPerformerNames(ev).forEach((name) => {
       const key = normalizeText(name);
       if (key) published.add(key);
     });
@@ -920,6 +983,10 @@ function hasPublishedStageDetails(result) {
 
 function filtersAllowPendingStageCard(filters, result) {
   if (!result || !result.nextEventType) return false;
+
+  const pendingEndDate = result.nextDateEnd || result.nextDate || "";
+  if (pendingEndDate && pendingEndDate < todayString()) return false;
+
   if (hasPublishedStageDetails(result)) return false;
   if (filters.eventType !== "all" && filters.eventType !== result.nextEventType) return false;
 
@@ -1156,6 +1223,53 @@ function getEventDetailHTML(ev, targetId) {
 }
 
 
+function formatSessionDateLabel(dateString) {
+  if (!dateString) return "";
+  const weekdays = ["日", "月", "火", "水", "木", "金", "土"];
+  const dateObj = new Date(dateString);
+  if (Number.isNaN(dateObj.getTime())) return "";
+  return `${dateObj.getMonth() + 1}/${dateObj.getDate()}(${weekdays[dateObj.getDay()]})`;
+}
+
+function buildEventSessionsHTML(ev, targetId, favorites) {
+  const sessions = getEventSessions(ev);
+  if (!sessions.length) return "";
+
+  return `
+    <div class="event-sessions">
+      <div class="card-section-label">公演日程</div>
+      <div class="event-session-list">
+        ${sessions.map((session) => {
+          const timeParts = [];
+          if (session.openTime) timeParts.push(`開場${escapeHTML(session.openTime)}`);
+          if (session.time) timeParts.push(`開演${escapeHTML(session.time)}`);
+          if (session.endTime) timeParts.push(`終演${escapeHTML(session.endTime)}`);
+          const sessionPerformers = buildPerformerChipsHTML(session.performers, favorites);
+          const ticketLink = targetId === "results" && session.ticketUrl
+            ? `<a class="event-session-ticket" href="${escapeHTML(session.ticketUrl)}" target="_blank" rel="noopener noreferrer">会場チケット</a>`
+            : "";
+
+          return `
+            <div class="event-session-row">
+              <div class="event-session-summary">
+                <div class="event-session-heading">
+                  <strong>${escapeHTML(session.label || "公演")}</strong>
+                  <span>${escapeHTML(formatSessionDateLabel(session.date))}</span>
+                </div>
+                <div class="event-session-times">${timeParts.join("｜")}</div>
+                ${ticketLink}
+              </div>
+              ${sessionPerformers
+                ? `<div class="event-session-performers"><div class="event-session-performer-label">出演者</div><div class="performers">${sessionPerformers}</div></div>`
+                : ""}
+            </div>
+          `;
+        }).join("")}
+      </div>
+    </div>
+  `;
+}
+
 function getTicketInfo(ev) {
   const ticket = ev.ticket || {};
 
@@ -1273,25 +1387,28 @@ function buildEventCardHTML(ev, targetId, favorites) {
   const performers = buildPerformerChipsHTML(ev.performers, favorites);
   const stageResults = getStageResultsHTML(ev, favorites);
   const eventDetails = getEventDetailHTML(ev, targetId);
+  const sessionDetails = buildEventSessionsHTML(ev, targetId, favorites);
   const eventNotice = getEventNoticeHTML(ev);
   const ticketLink = getTicketLinkHTML(ev, targetId);
+  const performerLabel = ev.performerLabel || "出演者";
   const performerSection = performers
     ? `
       <div class="performer-section ${stageResults ? "has-qualified" : ""}">
-        <div class="card-section-label">出演者</div>
+        <div class="card-section-label">${escapeHTML(performerLabel)}</div>
         <div class="performers">${performers}</div>
       </div>
     `
     : "";
 
   return `
-    <article class="result-card" id="event-${escapeHTML(ev.id)}">
+    <article class="result-card ${getEventSessions(ev).length ? "has-sessions" : ""}" id="event-${escapeHTML(ev.id)}">
       <div class="datetime-venue">
         <div>${escapeHTML(formatDisplayDate(ev))}</div>
         <div class="venue-line">会場：${escapeHTML(ev.venue)}</div>
       </div>
       <h3>${escapeHTML(ev.title)}</h3>
       ${eventDetails}
+      ${sessionDetails}
       ${stageResults}
       ${eventNotice}
       ${performerSection}
