@@ -1555,7 +1555,33 @@
       "saleInfo": "一般発売：8月26日(水) 10:00",
       "url": "https://ticket.fany.lol/reception/63152/50691"
     },
-    "openTime": "13:15"
+    "openTime": "13:15",
+    "stageResults": [
+      {
+        "status": "advanced",
+        "label": "極グランドバトルEAST進出者",
+        "nextEventType": "kiwami-grand-battle-east",
+        "nextEventTitle": "極グランドバトルEAST",
+        "performers": [
+          "ZAZY",
+          "佐川ピン芸人"
+        ]
+      },
+      {
+        "status": "advanced",
+        "label": "翔チャレンジバトルEAST進出者",
+        "nextEventType": "kakeru-challenge-east",
+        "nextEventTitle": "Kakeru翔チャレンジバトルEAST",
+        "performers": [
+          "七色フラン",
+          "エリー",
+          "寿司東京",
+          "魔界拳法",
+          "ライダーキック",
+          "ストロングブルジュニア"
+        ]
+      }
+    ]
   },
   {
     "id": "2026-08-28-1630-audition-2nd-east-2",
@@ -1599,7 +1625,19 @@
       "saleInfo": "一般発売：8月26日(水) 10:00",
       "url": "https://ticket.fany.lol/reception/63152/50692"
     },
-    "openTime": "16:15"
+    "openTime": "16:15",
+    "stageResults": [
+      {
+        "status": "advanced",
+        "label": "翔チャレンジバトルEAST進出者",
+        "nextEventType": "kakeru-challenge-east",
+        "nextEventTitle": "Kakeru翔チャレンジバトルEAST",
+        "performers": [
+          "サクラダ前線",
+          "序盤に"
+        ]
+      }
+    ]
   },
   {
     "id": "2026-08-28-1930-audition-2nd-east-3",
@@ -1644,6 +1682,37 @@
       "saleInfo": "一般発売：8月26日(水) 10:00",
       "url": "https://ticket.fany.lol/reception/63152/50693"
     },
-    "openTime": "19:15"
+    "openTime": "19:15",
+    "stageResults": [
+      {
+        "status": "advanced",
+        "label": "極グランドバトルEAST進出者",
+        "nextEventType": "kiwami-grand-battle-east",
+        "nextEventTitle": "極グランドバトルEAST",
+        "performers": [
+          "パピヨン",
+          "スカイサーキット",
+          "つつがないね",
+          "そっとしといてくれ",
+          "おとうふ",
+          "ピュンパティ"
+        ]
+      },
+      {
+        "status": "advanced",
+        "label": "翔チャレンジバトルEAST進出者",
+        "nextEventType": "kakeru-challenge-east",
+        "nextEventTitle": "Kakeru翔チャレンジバトルEAST",
+        "performers": [
+          "たまゆら学園",
+          "キンジトウ",
+          "帝国タクシー",
+          "デジタルバッハ",
+          "ラクダ人生",
+          "マシン語感",
+          "パウリスタ"
+        ]
+      }
+    ]
   }
 ]
