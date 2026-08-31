@@ -1561,11 +1561,15 @@
         "status": "advanced",
         "label": "極グランドバトルEAST進出者",
         "nextEventType": "kiwami-grand-battle-east",
-        "nextEventTitle": "極グランドバトルEAST",
+        "nextEventTitle": "グランドバトルEAST",
         "performers": [
           "ZAZY",
           "佐川ピン芸人"
-        ]
+        ],
+        "nextDate": "2026-10-17",
+        "nextDateEnd": "2026-10-18",
+        "nextTime": "出演公演未定",
+        "nextVenue": "渋谷よしもと漫才劇場"
       },
       {
         "status": "advanced",
@@ -1579,7 +1583,10 @@
           "魔界拳法",
           "ライダーキック",
           "ストロングブルジュニア"
-        ]
+        ],
+        "nextDate": "2026-09-04",
+        "nextTime": "19:30",
+        "nextVenue": "渋谷よしもと漫才劇場"
       }
     ]
   },
@@ -1635,7 +1642,10 @@
         "performers": [
           "サクラダ前線",
           "序盤に"
-        ]
+        ],
+        "nextDate": "2026-09-04",
+        "nextTime": "19:30",
+        "nextVenue": "渋谷よしもと漫才劇場"
       }
     ]
   },
@@ -1688,7 +1698,7 @@
         "status": "advanced",
         "label": "極グランドバトルEAST進出者",
         "nextEventType": "kiwami-grand-battle-east",
-        "nextEventTitle": "極グランドバトルEAST",
+        "nextEventTitle": "グランドバトルEAST",
         "performers": [
           "パピヨン",
           "スカイサーキット",
@@ -1696,7 +1706,11 @@
           "そっとしといてくれ",
           "おとうふ",
           "ピュンパティ"
-        ]
+        ],
+        "nextDate": "2026-10-17",
+        "nextDateEnd": "2026-10-18",
+        "nextTime": "出演公演未定",
+        "nextVenue": "渋谷よしもと漫才劇場"
       },
       {
         "status": "advanced",
@@ -1711,7 +1725,10 @@
           "ラクダ人生",
           "マシン語感",
           "パウリスタ"
-        ]
+        ],
+        "nextDate": "2026-09-04",
+        "nextTime": "19:30",
+        "nextVenue": "渋谷よしもと漫才劇場"
       }
     ]
   }

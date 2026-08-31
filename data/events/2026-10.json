@@ -1,0 +1,94 @@
+[
+  {
+    "id": "2026-10-17-1700-kiwami-grand-battle-east-一",
+    "eventType": "kiwami-grand-battle-east",
+    "title": "グランドバトルEAST 第一部",
+    "date": "2026-10-17",
+    "month": 10,
+    "day": 17,
+    "time": "17:00",
+    "timeMinutes": 1020,
+    "openTime": "16:45",
+    "endTime": "19:00",
+    "venue": "渋谷よしもと漫才劇場",
+    "sourceAccount": "@jimbo_audition",
+    "lineupOrder": false,
+    "performers": [],
+    "eventNotice": "出演者は発表され次第更新します",
+    "ticket": {
+      "priceInfo": "前売2,300円｜当日2,800円",
+      "saleInfo": "一般発売：9月5日(土) 10:00",
+      "url": "https://ticket.fany.lol/event/detail/19985/51910",
+      "linkLabel": "会場チケット"
+    }
+  },
+  {
+    "id": "2026-10-17-2015-kiwami-grand-battle-east-二",
+    "eventType": "kiwami-grand-battle-east",
+    "title": "グランドバトルEAST 第二部",
+    "date": "2026-10-17",
+    "month": 10,
+    "day": 17,
+    "time": "20:15",
+    "timeMinutes": 1215,
+    "openTime": "20:00",
+    "endTime": "22:15",
+    "venue": "渋谷よしもと漫才劇場",
+    "sourceAccount": "@jimbo_audition",
+    "lineupOrder": false,
+    "performers": [],
+    "eventNotice": "出演者は発表され次第更新します",
+    "ticket": {
+      "priceInfo": "前売2,300円｜当日2,800円",
+      "saleInfo": "一般発売：9月5日(土) 10:00",
+      "url": "https://ticket.fany.lol/event/detail/19985/51911",
+      "linkLabel": "会場チケット"
+    }
+  },
+  {
+    "id": "2026-10-18-1700-kiwami-grand-battle-east-三",
+    "eventType": "kiwami-grand-battle-east",
+    "title": "グランドバトルEAST 第三部",
+    "date": "2026-10-18",
+    "month": 10,
+    "day": 18,
+    "time": "17:00",
+    "timeMinutes": 1020,
+    "openTime": "16:45",
+    "endTime": "19:00",
+    "venue": "渋谷よしもと漫才劇場",
+    "sourceAccount": "@jimbo_audition",
+    "lineupOrder": false,
+    "performers": [],
+    "eventNotice": "出演者は発表され次第更新します",
+    "ticket": {
+      "priceInfo": "前売2,300円｜当日2,800円",
+      "saleInfo": "一般発売：9月5日(土) 10:00",
+      "url": "https://ticket.fany.lol/event/detail/19985/51912",
+      "linkLabel": "会場チケット"
+    }
+  },
+  {
+    "id": "2026-10-18-2015-kiwami-grand-battle-east-四",
+    "eventType": "kiwami-grand-battle-east",
+    "title": "グランドバトルEAST 第四部",
+    "date": "2026-10-18",
+    "month": 10,
+    "day": 18,
+    "time": "20:15",
+    "timeMinutes": 1215,
+    "openTime": "20:00",
+    "endTime": "22:15",
+    "venue": "渋谷よしもと漫才劇場",
+    "sourceAccount": "@jimbo_audition",
+    "lineupOrder": false,
+    "performers": [],
+    "eventNotice": "出演者は発表され次第更新します",
+    "ticket": {
+      "priceInfo": "前売2,300円｜当日2,800円",
+      "saleInfo": "一般発売：9月5日(土) 10:00",
+      "url": "https://ticket.fany.lol/event/detail/19985/51913",
+      "linkLabel": "会場チケット"
+    }
+  }
+]

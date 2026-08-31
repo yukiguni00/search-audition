@@ -634,3 +634,11 @@ a:focus-visible{outline:3px solid #1769aa;outline-offset:3px}
     font-size:.8rem;
   }
 }
+
+
+.ticket-price-info{
+  margin:4px 0 8px;
+  font-weight:700;
+  color:#333;
+  line-height:1.7;
+}

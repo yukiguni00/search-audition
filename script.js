@@ -292,7 +292,7 @@ function eventMatchesDateTimeFilters(ev, filters) {
   return getEventOccurrences(ev).some((occurrence) => {
     if (filters.month !== "all" && occurrence.month !== Number(filters.month)) return false;
     if (filters.day !== "all" && occurrence.day !== Number(filters.day)) return false;
-    if (filters.hour !== "all" && occurrence.timeMinutes < Number(filters.hour) * 60) return false;
+    if (filters.hour !== "all" && occurrence.timeMinutes !== null && occurrence.timeMinutes < Number(filters.hour) * 60) return false;
 
     return true;
   });
@@ -436,6 +436,7 @@ function getFavoriteScheduleData() {
         eventType: group.nextEventType,
         title: group.nextEventTitle,
         date: group.nextDate || today,
+        dateEnd: group.nextDateEnd || group.nextDate || today,
         month: Number.isNaN(dateObj.getTime()) ? 0 : dateObj.getMonth() + 1,
         day: Number.isNaN(dateObj.getTime()) ? 0 : dateObj.getDate(),
         time: group.nextTime || "未定",
@@ -797,6 +798,7 @@ function getStageResults(ev) {
         nextEventType: result.nextEventType || "",
         nextEventTitle: result.nextEventTitle || "",
         nextDate: result.nextDate || "",
+        nextDateEnd: result.nextDateEnd || "",
         nextTime: result.nextTime || "",
         nextVenue: result.nextVenue || "",
         performers: Array.isArray(result.performers) ? result.performers : [],
@@ -895,17 +897,25 @@ function getQualifiedPerformersHTML(ev, favorites) {
 }
 
 function hasPublishedStageDetails(result) {
-  if (!result || !result.nextEventType || !result.nextDate) return false;
+  if (!result || !result.nextEventType || !result.nextDate || !result.performers.length) return false;
 
-  return events.some((ev) => {
-    if (ev.eventType !== result.nextEventType) return false;
-    if (!Array.isArray(ev.performers) || !ev.performers.length) return false;
+  const rangeStart = result.nextDate;
+  const rangeEnd = result.nextDateEnd || result.nextDate;
+  const published = new Set();
 
-    if (ev.date === result.nextDate) return true;
-    if (ev.dateEnd && ev.date <= result.nextDate && result.nextDate <= ev.dateEnd) return true;
+  events.forEach((ev) => {
+    if (ev.eventType !== result.nextEventType) return;
+    const evStart = ev.date || "";
+    const evEnd = ev.dateEnd || evStart;
+    if (!evStart || evEnd < rangeStart || evStart > rangeEnd) return;
 
-    return false;
+    (Array.isArray(ev.performers) ? ev.performers : []).forEach((name) => {
+      const key = normalizeText(name);
+      if (key) published.add(key);
+    });
   });
+
+  return result.performers.every((name) => published.has(normalizeText(name)));
 }
 
 function filtersAllowPendingStageCard(filters, result) {
@@ -921,24 +931,31 @@ function filtersAllowPendingStageCard(filters, result) {
   if (!hasDateTimeFilter) return true;
   if (!result.nextDate) return false;
 
-  const dateObj = new Date(result.nextDate);
-  if (Number.isNaN(dateObj.getTime())) return false;
+  const start = new Date(result.nextDate);
+  const end = new Date(result.nextDateEnd || result.nextDate);
+  if (Number.isNaN(start.getTime()) || Number.isNaN(end.getTime())) return false;
 
-  const occurrence = {
-    month: dateObj.getMonth() + 1,
-    day: dateObj.getDate(),
-    timeMinutes: timeToMinutes(result.nextTime) ?? 0,
-  };
+  const occurrences = [];
+  const cursor = new Date(start);
+  while (cursor <= end && occurrences.length < 31) {
+    occurrences.push({
+      month: cursor.getMonth() + 1,
+      day: cursor.getDate(),
+      timeMinutes: timeToMinutes(result.nextTime),
+    });
+    cursor.setDate(cursor.getDate() + 1);
+  }
 
-  if (filters.month !== "all" && occurrence.month !== Number(filters.month)) return false;
-  if (filters.day !== "all" && occurrence.day !== Number(filters.day)) return false;
-  if (filters.hour !== "all" && occurrence.timeMinutes < Number(filters.hour) * 60) return false;
-
-  return true;
+  return occurrences.some((occurrence) => {
+    if (filters.month !== "all" && occurrence.month !== Number(filters.month)) return false;
+    if (filters.day !== "all" && occurrence.day !== Number(filters.day)) return false;
+    if (filters.hour !== "all" && occurrence.timeMinutes !== null && occurrence.timeMinutes < Number(filters.hour) * 60) return false;
+    return true;
+  });
 }
 
 function getPendingStageEventId(group) {
-  return `pending-${group.nextEventType || "stage"}-${group.nextDate || "undecided"}`;
+  return `pending-${group.nextEventType || "stage"}-${group.nextDate || "undecided"}-${group.nextDateEnd || group.nextDate || "undecided"}`;
 }
 
 function getPendingStageGroups(filters, options = {}) {
@@ -956,6 +973,7 @@ function getPendingStageGroups(filters, options = {}) {
       const groupKey = [
         result.nextEventType || "",
         result.nextDate || "",
+        result.nextDateEnd || "",
         result.nextEventTitle || result.label || "",
       ].join("|");
 
@@ -965,6 +983,7 @@ function getPendingStageGroups(filters, options = {}) {
           nextEventType: result.nextEventType || "",
           nextEventTitle: result.nextEventTitle || result.label || "次ステージ",
           nextDate: result.nextDate || "",
+          nextDateEnd: result.nextDateEnd || "",
           nextTime: result.nextTime || "",
           venue: result.nextVenue || "詳細未定",
           label: result.label || "出演予定者",
@@ -1001,9 +1020,18 @@ function getPendingStageGroups(filters, options = {}) {
     );
 }
 
+function formatPendingStageDate(group) {
+  const startLabel = formatDateLabel(group.nextDate) || "日程未定";
+  if (!group.nextDateEnd || group.nextDateEnd === group.nextDate) return startLabel;
+  const endLabel = formatDateLabel(group.nextDateEnd) || "";
+  return endLabel ? `${startLabel}〜${endLabel}` : startLabel;
+}
+
 function buildPendingStageCardHTML(group, favorites) {
-  const dateLabel = formatDateLabel(group.nextDate) || "日程未定";
-  const timeLabel = group.nextTime ? `開演${escapeHTML(group.nextTime)}` : "開演時間未定";
+  const dateLabel = formatPendingStageDate(group);
+  const timeLabel = group.nextTime === "出演公演未定"
+    ? "出演公演未定"
+    : (group.nextTime ? `開演${escapeHTML(group.nextTime)}` : "開演時間未定");
 
   return `
     <article class="result-card pending-stage-card" id="event-${group.id}">
@@ -1013,7 +1041,7 @@ function buildPendingStageCardHTML(group, favorites) {
       </div>
       <h3>${escapeHTML(group.nextEventTitle)}</h3>
       <p class="pending-stage-note">
-        ※詳しい公演情報が公開され次第更新します
+        ※出演公演・出演部などの詳細は発表され次第更新します
       </p>
       <div class="performer-section">
         <div class="card-section-label">出演予定者</div>
@@ -1079,7 +1107,7 @@ function renderMainEvents(targetId, list, filters) {
     })),
     ...pendingStageGroups.map((group) => ({
       date: group.nextDate || "9999-99-99",
-      // 開演時間未定は、同じ日の時刻確定済み公演より後ろに並べる。
+      // 開演時間・出演部未定は、同じ日の時刻確定済み公演より後ろに並べる。
       timeMinutes: timeToMinutes(group.nextTime) ?? 24 * 60,
       title: group.nextEventTitle || "",
       html: buildPendingStageCardHTML(group, favorites),
@@ -1100,6 +1128,7 @@ function renderMainEvents(targetId, list, filters) {
   target.innerHTML = renderItems.map((item) => item.html).join("");
   bindStarButtons(target);
 }
+
 
 function getEventDetailHTML(ev, targetId) {
   if (targetId !== "results") return "";
@@ -1132,11 +1161,13 @@ function getTicketInfo(ev) {
 
   return {
     purchaseNote: ticket.purchaseNote ?? ev.ticketNote ?? "",
+    priceInfo: ticket.priceInfo ?? ev.ticketPriceInfo ?? "",
     saleInfo: ticket.saleInfo ?? ev.ticketSaleInfo ?? "",
     links: Array.isArray(ticket.links)
       ? ticket.links
       : (Array.isArray(ev.ticketLinks) ? ev.ticketLinks : []),
     url: ticket.url ?? ticket.ticketUrl ?? ev.ticketUrl ?? "",
+    linkLabel: ticket.linkLabel ?? ev.ticketLinkLabel ?? "",
     streamingUrl: ticket.streamingUrl ?? ev.streamingUrl ?? "",
     streamingLabel: ticket.streamingLabel ?? ev.streamingLabel ?? "配信",
     streamingNote: ticket.streamingNote ?? ev.streamingNote ?? "",
@@ -1180,7 +1211,14 @@ function getTicketLinkHTML(ev, targetId) {
       </div>
     `;
   } else if (ticket.url) {
-    if (ticket.purchaseNote) {
+    if (ticket.linkLabel) {
+      linkPart = `
+        <div class="ticket-purchase-link">
+          購入：
+          <a href="${escapeHTML(ticket.url)}" target="_blank" rel="noopener noreferrer">${escapeHTML(ticket.linkLabel)}</a>
+        </div>
+      `;
+    } else if (ticket.purchaseNote) {
       linkPart = `
         <div class="ticket-purchase-link">
           購入：
@@ -1216,11 +1254,15 @@ function getTicketLinkHTML(ev, targetId) {
       ? `<div class="ticket-streaming-note">${escapeHTML(ticket.streamingNote)}</div>`
       : "");
 
+  const pricePart = ticket.priceInfo
+    ? `<div class="ticket-price-info">料金：${escapeHTML(ticket.priceInfo)}</div>`
+    : "";
+
   const salePart = ticket.saleInfo
     ? `<div class="ticket-sale-info">${escapeHTML(ticket.saleInfo)}</div>`
     : "";
 
-  const parts = [notePart, linkPart, streamingPart, salePart].filter((part) => part && part.trim());
+  const parts = [notePart, pricePart, linkPart, streamingPart, salePart].filter((part) => part && part.trim());
 
   if (!parts.length) return "";
 
@@ -1233,6 +1275,14 @@ function buildEventCardHTML(ev, targetId, favorites) {
   const eventDetails = getEventDetailHTML(ev, targetId);
   const eventNotice = getEventNoticeHTML(ev);
   const ticketLink = getTicketLinkHTML(ev, targetId);
+  const performerSection = performers
+    ? `
+      <div class="performer-section ${stageResults ? "has-qualified" : ""}">
+        <div class="card-section-label">出演者</div>
+        <div class="performers">${performers}</div>
+      </div>
+    `
+    : "";
 
   return `
     <article class="result-card" id="event-${escapeHTML(ev.id)}">
@@ -1244,10 +1294,7 @@ function buildEventCardHTML(ev, targetId, favorites) {
       ${eventDetails}
       ${stageResults}
       ${eventNotice}
-      <div class="performer-section ${stageResults ? "has-qualified" : ""}">
-        <div class="card-section-label">出演者</div>
-        <div class="performers">${performers}</div>
-      </div>
+      ${performerSection}
       ${ticketLink}
     </article>
   `;

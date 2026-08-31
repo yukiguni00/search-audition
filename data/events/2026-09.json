@@ -1,0 +1,51 @@
+[
+  {
+    "id": "2026-09-04-1930-kakeru-challenge-east",
+    "eventType": "kakeru-challenge-east",
+    "title": "Kakeru翔チャレンジバトルEAST",
+    "date": "2026-09-04",
+    "month": 9,
+    "day": 4,
+    "time": "19:30",
+    "timeMinutes": 1170,
+    "openTime": "19:15",
+    "endTime": "22:00",
+    "venue": "渋谷よしもと漫才劇場",
+    "sourceAccount": "@jimbo_audition",
+    "lineupOrder": false,
+    "performers": [
+      "たまゆら学園",
+      "キンジトウ",
+      "サクラダ前線",
+      "七色フラン",
+      "帝国タクシー",
+      "デジタルバッハ",
+      "ラクダ人生",
+      "エリー",
+      "マシン語感",
+      "序盤に",
+      "寿司東京",
+      "パウリスタ",
+      "魔界拳法",
+      "ライダーキック",
+      "ストロングブルジュニア",
+      "小虎",
+      "しんや",
+      "イザナミン",
+      "青いデルタ",
+      "DOG FOOD PARTY",
+      "ボダリキボバイ",
+      "フジーズ",
+      "ウィークリー習慣",
+      "き展",
+      "ブリタニカ"
+    ],
+    "ticket": {
+      "priceInfo": "前売1,500円｜当日1,800円｜配信1,500円",
+      "url": "https://ticket.fany.lol/event/detail/19060/50088",
+      "linkLabel": "会場チケット",
+      "streamingUrl": "https://online-ticket.yoshimoto.co.jp/products/kakeru%E7%BF%94%E3%83%81%E3%83%A3%E3%83%AC%E3%83%B3%E3%82%B8%E3%83%90%E3%83%88%E3%83%ABeast-9-4-19-30",
+      "streamingLabel": "配信"
+    }
+  }
+]
