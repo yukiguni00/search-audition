@@ -12,18 +12,7 @@
     "venue": "渋谷よしもと漫才劇場",
     "sourceAccount": "@jimbo_audition",
     "lineupOrder": false,
-    "performers": [
-      "ZAZY",
-      "佐川ピン芸人",
-      "パピヨン",
-      "スカイサーキット",
-      "つつがないね",
-      "そっとしといてくれ",
-      "おとうふ",
-      "ピュンパティ"
-    ],
-    "performerLabel": "出演予定者（出演部未定）",
-    "eventNotice": "※出演部・その他出演者は発表され次第更新します",
+    "performers": [],
     "sessions": [
       {
         "label": "第一部",
@@ -32,7 +21,10 @@
         "time": "17:00",
         "endTime": "19:00",
         "ticketUrl": "https://ticket.fany.lol/event/detail/19985/51910",
-        "performers": []
+        "performers": [
+          "そっとしといてくれ",
+          "ピュンパティ"
+        ]
       },
       {
         "label": "第二部",
@@ -41,7 +33,10 @@
         "time": "20:15",
         "endTime": "22:15",
         "ticketUrl": "https://ticket.fany.lol/event/detail/19985/51911",
-        "performers": []
+        "performers": [
+          "パピヨン",
+          "おとうふ"
+        ]
       },
       {
         "label": "第三部",
@@ -50,7 +45,10 @@
         "time": "17:00",
         "endTime": "19:00",
         "ticketUrl": "https://ticket.fany.lol/event/detail/19985/51912",
-        "performers": []
+        "performers": [
+          "佐川ピン芸人",
+          "スカイサーキット"
+        ]
       },
       {
         "label": "第四部",
@@ -59,7 +57,10 @@
         "time": "20:15",
         "endTime": "22:15",
         "ticketUrl": "https://ticket.fany.lol/event/detail/19985/51913",
-        "performers": []
+        "performers": [
+          "ZAZY",
+          "つつがないね"
+        ]
       }
     ],
     "ticket": {
