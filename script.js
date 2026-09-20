@@ -584,7 +584,6 @@ function renderFavoriteSchedule() {
     ${upcomingHTML}
     ${noUpcomingHTML}
     ${moreButtonHTML}
-    <button id="favoriteBackupBtn" class="favorite-backup-link" type="button">お気に入りをバックアップ・復元</button>
   `;
 
 
@@ -593,11 +592,6 @@ function renderFavoriteSchedule() {
       jumpToEventCard(btn.dataset.eventId);
     });
   });
-
-  const backupBtn = document.getElementById("favoriteBackupBtn");
-  if (backupBtn) {
-    backupBtn.addEventListener("click", openFavoriteBackup);
-  }
 
   const toggleBtn = document.getElementById("favoriteScheduleToggleBtn");
   if (toggleBtn) {
@@ -783,6 +777,8 @@ function restoreFavoriteBackupCode() {
 }
 
 function bindFavoriteBackup() {
+  const backupBtn = document.getElementById("favoriteBackupBtn");
+  if (backupBtn) backupBtn.addEventListener("click", openFavoriteBackup);
 
   const createBtn = document.getElementById("createBackupBtn");
   if (createBtn) createBtn.addEventListener("click", createFavoriteBackupCode);
