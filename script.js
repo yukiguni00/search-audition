@@ -535,7 +535,13 @@ function getFavoriteScheduleData() {
 function renderFavoriteSchedule() {
   const panel = document.getElementById("favoritePanel");
   const target = document.getElementById("favoriteSchedule");
+  const backupBtn = document.getElementById("favoriteBackupBtn");
+  const backupHome = document.getElementById("favoriteBackupHome");
   if (!panel || !target) return;
+
+  if (backupBtn && backupHome && backupBtn.parentElement !== backupHome) {
+    backupHome.appendChild(backupBtn);
+  }
 
   const favorites = getFavorites();
 
@@ -586,6 +592,9 @@ function renderFavoriteSchedule() {
     ${moreButtonHTML}
   `;
 
+  if (backupBtn) {
+    target.appendChild(backupBtn);
+  }
 
   target.querySelectorAll(".favorite-jump-btn").forEach((btn) => {
     btn.addEventListener("click", () => {
