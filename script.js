@@ -1353,12 +1353,20 @@ function getTicketLinkHTML(ev, targetId) {
             からご購入ください
           </div>
         `
-        : `
-          <div class="ticket-purchase-link">
-            チケットは取り置き、もしくは
-            <a href="${escapeHTML(ticket.url)}" target="_blank" rel="noopener noreferrer">FANYチケット</a>から
-          </div>
-        `;
+        : ev.eventType === "audition-1st-east"
+          ? `
+            <div class="ticket-purchase-link">
+              チケットは
+              <a href="${escapeHTML(ticket.url)}" target="_blank" rel="noopener noreferrer">FANY</a>
+              もしくは出演芸人への取り置きも可能です
+            </div>
+          `
+          : `
+            <div class="ticket-purchase-link">
+              チケットは取り置き、もしくは
+              <a href="${escapeHTML(ticket.url)}" target="_blank" rel="noopener noreferrer">FANYチケット</a>から
+            </div>
+          `;
     }
   }
 
