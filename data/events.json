@@ -5577,7 +5577,12 @@
         "originalOrder": 1,
         "status": "blacked-out-in-latest-lineup"
       }
-    ]
+    ],
+    "qualifiedPerformers": [
+      "ネネネ",
+      "アダン"
+    ],
+    "qualifiedNextStageDate": "2026-10-30"
   },
   {
     "id": "2026-09-25-1830-audition-1st-east",
