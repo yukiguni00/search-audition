@@ -5471,7 +5471,11 @@
       "サクラダ前線",
       "サターン",
       "ヴェスプッチ"
-    ]
+    ],
+    "qualifiedPerformers": [
+      "サクラダ前線"
+    ],
+    "qualifiedNextStageDate": "2026-10-30"
   },
   {
     "id": "2026-09-24-1830-audition-1st-east",
@@ -5508,7 +5512,12 @@
       "まえだかっこかり",
       "JAM",
       "ピンゲゴー"
-    ]
+    ],
+    "qualifiedPerformers": [
+      "ニセほっけ",
+      "まえだかっこかり"
+    ],
+    "qualifiedNextStageDate": "2026-10-30"
   },
   {
     "id": "2026-09-25-1600-audition-1st-east",
