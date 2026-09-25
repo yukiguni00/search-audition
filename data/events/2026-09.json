@@ -87,7 +87,14 @@
     "qualifiedPerformers": [
       "サクラダ前線"
     ],
-    "qualifiedNextStageDate": "2026-10-30"
+    "qualifiedNextStageDate": "2026-10-30",
+    "lineupReferencePerformers": [
+      {
+        "name": "武の極み 士龍",
+        "originalOrder": 13,
+        "status": "blacked-out-in-latest-lineup"
+      }
+    ]
   },
   {
     "id": "2026-09-24-1830-audition-1st-east",
@@ -127,7 +134,19 @@
       "ニセほっけ",
       "まえだかっこかり"
     ],
-    "qualifiedNextStageDate": "2026-10-30"
+    "qualifiedNextStageDate": "2026-10-30",
+    "lineupReferencePerformers": [
+      {
+        "name": "スリーマンス松根",
+        "originalOrder": 2,
+        "status": "blacked-out-in-latest-lineup"
+      },
+      {
+        "name": "膝野サラ",
+        "originalOrder": 6,
+        "status": "blacked-out-in-latest-lineup"
+      }
+    ]
   },
   {
     "id": "2026-09-25-1600-audition-1st-east",
@@ -164,6 +183,13 @@
       "物デーモン",
       "ザ・ITO",
       "天狗キャニオン"
+    ],
+    "lineupReferencePerformers": [
+      {
+        "name": "なごみ御膳",
+        "originalOrder": 1,
+        "status": "blacked-out-in-latest-lineup"
+      }
     ]
   },
   {
@@ -312,6 +338,18 @@
       "サソリオレンジ",
       "細井ジェントルマメ",
       "峰岸"
+    ],
+    "lineupReferencePerformers": [
+      {
+        "name": "ライダーキック",
+        "originalOrder": 13,
+        "status": "blacked-out-in-latest-lineup"
+      },
+      {
+        "name": "タイサンボク",
+        "originalOrder": 21,
+        "status": "blacked-out-in-latest-lineup"
+      }
     ]
   },
   {
@@ -348,6 +386,13 @@
       "清水雅典",
       "カムナ",
       "桂馬大ジャンプ"
+    ],
+    "lineupReferencePerformers": [
+      {
+        "name": "ナイスボム",
+        "originalOrder": 7,
+        "status": "blacked-out-in-latest-lineup"
+      }
     ]
   }
 ]
