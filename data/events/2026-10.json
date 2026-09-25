@@ -109,6 +109,13 @@
       "原山ッテルゼ",
       "林怜志",
       "おいしい水"
+    ],
+    "lineupReferencePerformers": [
+      {
+        "name": "仲平",
+        "originalOrder": 17,
+        "status": "blacked-out-in-latest-lineup"
+      }
     ]
   },
   {
@@ -370,6 +377,13 @@
       "つぐみ",
       "フジタカ",
       "ピーチキャッスル"
+    ],
+    "lineupReferencePerformers": [
+      {
+        "name": "女優",
+        "originalOrder": 8,
+        "status": "blacked-out-in-latest-lineup"
+      }
     ]
   },
   {
@@ -519,6 +533,13 @@
       "キカシ",
       "永遠沙汰",
       "やさしい王様"
+    ],
+    "lineupReferencePerformers": [
+      {
+        "name": "ロリポップキャンディたけお",
+        "originalOrder": 11,
+        "status": "blacked-out-in-latest-lineup"
+      }
     ]
   },
   {
@@ -593,6 +614,13 @@
       "竹内ゴート",
       "毛極蜂 空芯蝶々 虻火鉢",
       "ペリカンせいじん"
+    ],
+    "lineupReferencePerformers": [
+      {
+        "name": "金ピカの10円",
+        "originalOrder": 9,
+        "status": "blacked-out-in-latest-lineup"
+      }
     ]
   },
   {
