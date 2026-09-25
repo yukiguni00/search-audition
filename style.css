@@ -724,3 +724,22 @@ a:focus-visible{outline:3px solid #1769aa;outline-offset:3px}
     grid-row:1;
   }
 }
+
+
+.archive-context-message a{
+  font-weight:700;
+  text-underline-offset:2px;
+}
+
+.footer{
+  scroll-margin-top:20px;
+}
+
+.footer-contact-links{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:0 .35em;
+  font-weight:700;
+}
