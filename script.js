@@ -1667,7 +1667,17 @@ function renderSiteAlert(alertData) {
   }
 
   heading.textContent = alertData.heading || "";
-  message.textContent = alertData.message || "";
+  const alertMessage = alertData.message || "";
+  const alertLinkLabel = alertData.linkLabel || "";
+  const alertLinkHref = alertData.linkHref || "";
+  const alertMessageSuffix = alertData.messageSuffix || "";
+
+  if (alertLinkLabel && alertLinkHref) {
+    message.innerHTML =
+      `${escapeHTML(alertMessage)}<a href="${escapeHTML(alertLinkHref)}">${escapeHTML(alertLinkLabel)}</a>${escapeHTML(alertMessageSuffix)}`;
+  } else {
+    message.textContent = alertMessage;
+  }
   note.textContent = alertData.note ? `※${alertData.note}` : "";
   note.hidden = !alertData.note;
   wrapper.hidden = !(alertData.heading || alertData.message || alertData.note);
