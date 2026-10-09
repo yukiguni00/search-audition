@@ -6423,7 +6423,11 @@
     ],
     "ticket": {
       "url": "https://ticket.fany.lol/event/detail/21077"
-    }
+    },
+    "qualifiedPerformers": [
+      "たまゆら学園"
+    ],
+    "qualifiedNextStageDate": "2026-10-30"
   },
   {
     "id": "2026-10-09-1830-audition-1st-east",
@@ -6469,7 +6473,11 @@
     ],
     "ticket": {
       "url": "https://ticket.fany.lol/event/detail/21077"
-    }
+    },
+    "qualifiedPerformers": [
+      "やさしい王様"
+    ],
+    "qualifiedNextStageDate": "2026-10-30"
   },
   {
     "id": "2026-10-13-1600-audition-1st-east",
