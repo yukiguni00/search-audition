@@ -958,7 +958,12 @@
     ],
     "ticket": {
       "url": "https://ticket.fany.lol/event/detail/21077"
-    }
+    },
+    "qualifiedPerformers": [
+      "コロネケン",
+      "ことぶき"
+    ],
+    "qualifiedNextStageDate": "2026-10-30"
   },
   {
     "id": "2026-10-16-1830-audition-1st-east",
@@ -998,7 +1003,13 @@
     ],
     "ticket": {
       "url": "https://ticket.fany.lol/event/detail/21077"
-    }
+    },
+    "qualifiedPerformers": [
+      "しず音",
+      "はるかぜとともに",
+      "濡れカバ"
+    ],
+    "qualifiedNextStageDate": "2026-10-30"
   },
   {
     "id": "2026-10-17-18-kiwami-grand-battle-east",
