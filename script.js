@@ -829,11 +829,34 @@ function getQualifiedStageLabel(ev) {
     : "2nd進出者 (日程未定)";
 }
 
-function buildPerformerChipsHTML(names, favorites) {
+// 2ndステージの正式香盤公開後も、元の1st公演で確定した追加合格区分を引き継ぐ。
+function getAdditionalQualifiedKeysForSecondStage(ev, sessionDate = "") {
+  if (ev.eventType !== "audition-2nd-east") return new Set();
+
+  const dates = sessionDate
+    ? [sessionDate]
+    : getEventOccurrences(ev).map((occurrence) => occurrence.date).filter(Boolean);
+  const matchingDates = new Set(dates);
+  const additionalKeys = new Set();
+
+  events.forEach((source) => {
+    if (!matchingDates.has(source.qualifiedNextStageDate)) return;
+
+    (Array.isArray(source.additionalQualifiedPerformers) ? source.additionalQualifiedPerformers : [])
+      .forEach((name) => additionalKeys.add(normalizeText(name)));
+  });
+
+  return additionalKeys;
+}
+
+function buildPerformerChipsHTML(names, favorites, additionalQualifiedKeys = new Set()) {
   return (names || []).map((name) => {
     const normalizedName = normalizeText(name);
     const isFavorite = favorites.includes(normalizedName);
     const nameHTML = getPerformerNameHTML(name);
+    const additionalBadge = additionalQualifiedKeys.has(normalizedName)
+      ? '<span class="additional-qualified-badge">追加合格者</span>'
+      : "";
 
     return `
       <span class="performer ${isFavorite ? "favorite" : ""}">
@@ -846,6 +869,7 @@ function buildPerformerChipsHTML(names, favorites) {
           aria-label="${escapeHTML(getFavoriteAriaLabel(name, isFavorite))}"
         >${isFavorite ? "★" : "☆"}</button>
         ${nameHTML}
+        ${additionalBadge}
       </span>
     `;
   }).join("");
@@ -871,6 +895,7 @@ function getStageResults(ev) {
         nextVenue: result.nextVenue || "",
         performers: Array.isArray(result.performers) ? result.performers : [],
         displayStyle: result.displayStyle || "next-stage",
+        isAdditionalQualifier: result.isAdditionalQualifier === true,
       }))
       .filter((result) => result.status === "none" || result.performers.length);
   }
@@ -886,17 +911,19 @@ function getStageResults(ev) {
       .filter((result) => result.performers.length);
   }
 
+  const results = [];
+
   if (ev.qualifiedResult === "none") {
-    return [{
+    results.push({
       status: "none",
-      label: "2nd進出者",
+      label: Array.isArray(ev.additionalQualifiedPerformers) && ev.additionalQualifiedPerformers.length
+        ? "当初の2nd進出者"
+        : "2nd進出者",
       performers: [],
       displayStyle: "qualified",
-    }];
-  }
-
-  if (Array.isArray(ev.qualifiedPerformers) && ev.qualifiedPerformers.length) {
-    return [{
+    });
+  } else if (Array.isArray(ev.qualifiedPerformers) && ev.qualifiedPerformers.length) {
+    results.push({
       status: "advanced",
       label: getQualifiedStageLabel(ev),
       nextEventType: "audition-2nd-east",
@@ -904,10 +931,25 @@ function getStageResults(ev) {
       nextDate: ev.qualifiedNextStageDate || "",
       performers: ev.qualifiedPerformers,
       displayStyle: "qualified",
-    }];
+    });
   }
 
-  return [];
+  if (Array.isArray(ev.additionalQualifiedPerformers) && ev.additionalQualifiedPerformers.length) {
+    const nextDate = formatDateLabel(ev.qualifiedNextStageDate);
+
+    results.push({
+      status: "advanced",
+      label: nextDate ? `追加合格者 (${nextDate}出演予定)` : "追加合格者 (日程未定)",
+      nextEventType: "audition-2nd-east",
+      nextEventTitle: "オーディション2ndステージ EAST",
+      nextDate: ev.qualifiedNextStageDate || "",
+      performers: ev.additionalQualifiedPerformers,
+      displayStyle: "qualified",
+      isAdditionalQualifier: true,
+    });
+  }
+
+  return results;
 }
 
 function getQualifiedStageResultsHTML(results, favorites) {
@@ -917,7 +959,7 @@ function getQualifiedStageResultsHTML(results, favorites) {
       : `<div class="performers qualified-list">${buildPerformerChipsHTML(result.performers, favorites)}</div>`;
 
     return `
-      <div class="qualified-performers">
+      <div class="qualified-performers ${result.isAdditionalQualifier ? "is-additional-qualified" : ""}">
         <div class="card-section-label">${escapeHTML(result.label)}</div>
         ${content}
       </div>
@@ -1060,7 +1102,9 @@ function getPendingStageGroups(filters, options = {}) {
           venue: result.nextVenue || "詳細未定",
           label: result.label || "出演予定者",
           names: [],
+          additionalQualifiedNames: [],
           seen: new Set(),
+          additionalSeen: new Set(),
         });
       }
 
@@ -1068,10 +1112,16 @@ function getPendingStageGroups(filters, options = {}) {
       result.performers.forEach((name) => {
         const key = normalizeText(name);
 
-        if (!key || group.seen.has(key)) return;
+        if (!key) return;
         if (filters.nameQuery && !key.includes(filters.nameQuery)) return;
         if (useFavoritesOnly && !favorites.has(key)) return;
 
+        if (result.isAdditionalQualifier && !group.additionalSeen.has(key)) {
+          group.additionalQualifiedNames.push(name);
+          group.additionalSeen.add(key);
+        }
+
+        if (group.seen.has(key)) return;
         group.names.push(name);
         group.seen.add(key);
       });
@@ -1083,6 +1133,7 @@ function getPendingStageGroups(filters, options = {}) {
     .map((group) => {
       group.id = getPendingStageEventId(group);
       delete group.seen;
+      delete group.additionalSeen;
       return group;
     })
     .sort((a, b) =>
@@ -1105,6 +1156,12 @@ function buildPendingStageCardHTML(group, favorites) {
     ? "出演公演未定"
     : (group.nextTime ? `開演${escapeHTML(group.nextTime)}` : "開演時間未定");
 
+  const additionalKeys = new Set(
+    (group.additionalQualifiedNames || []).map((name) => normalizeText(name))
+  );
+  const regularNames = group.names.filter((name) => !additionalKeys.has(normalizeText(name)));
+  const additionalNames = group.names.filter((name) => additionalKeys.has(normalizeText(name)));
+
   return `
     <article class="result-card pending-stage-card" id="event-${group.id}">
       <div class="datetime-venue">
@@ -1116,8 +1173,16 @@ function buildPendingStageCardHTML(group, favorites) {
         ※出演公演・出演部などの詳細は発表され次第更新します
       </p>
       <div class="performer-section">
-        <div class="card-section-label">出演予定者</div>
-        <div class="performers">${buildPerformerChipsHTML(group.names, favorites)}</div>
+        ${regularNames.length ? `
+          <div class="card-section-label">${additionalNames.length ? "通常合格者" : "出演予定者"}</div>
+          <div class="performers">${buildPerformerChipsHTML(regularNames, favorites)}</div>
+        ` : ""}
+        ${additionalNames.length ? `
+          <div class="pending-additional-qualified">
+            <div class="card-section-label">追加合格者 (${additionalNames.length}組)</div>
+            <div class="performers">${buildPerformerChipsHTML(additionalNames, favorites)}</div>
+          </div>
+        ` : ""}
       </div>
     </article>
   `;
@@ -1249,7 +1314,9 @@ function buildEventSessionsHTML(ev, targetId, favorites) {
           if (session.openTime) timeParts.push(`開場${escapeHTML(session.openTime)}`);
           if (session.time) timeParts.push(`開演${escapeHTML(session.time)}`);
           if (session.endTime) timeParts.push(`終演${escapeHTML(session.endTime)}`);
-          const sessionPerformers = buildPerformerChipsHTML(session.performers, favorites);
+          const sessionPerformers = buildPerformerChipsHTML(
+            session.performers, favorites, getAdditionalQualifiedKeysForSecondStage(ev, session.date)
+          );
           const ticketLink = targetId === "results" && session.ticketUrl
             ? `<a class="event-session-ticket" href="${escapeHTML(session.ticketUrl)}" target="_blank" rel="noopener noreferrer">会場チケット</a>`
             : "";
@@ -1397,7 +1464,9 @@ function getTicketLinkHTML(ev, targetId) {
 }
 
 function buildEventCardHTML(ev, targetId, favorites) {
-  const performers = buildPerformerChipsHTML(ev.performers, favorites);
+  const performers = buildPerformerChipsHTML(
+    ev.performers, favorites, getAdditionalQualifiedKeysForSecondStage(ev)
+  );
   const stageResults = getStageResultsHTML(ev, favorites);
   const eventDetails = getEventDetailHTML(ev, targetId);
   const sessionDetails = buildEventSessionsHTML(ev, targetId, favorites);
