@@ -89,7 +89,10 @@
       "ライダーキック",
       "スーズ"
     ],
-    "qualifiedNextStageDate": "2026-10-30"
+    "qualifiedNextStageDate": "2026-10-30",
+    "additionalQualifiedPerformers": [
+      "イザナミン"
+    ]
   },
   {
     "id": "2026-10-02-1600-audition-1st-east",
@@ -141,7 +144,10 @@
     "qualifiedPerformers": [
       "また会えると思ったから"
     ],
-    "qualifiedNextStageDate": "2026-10-30"
+    "qualifiedNextStageDate": "2026-10-30",
+    "additionalQualifiedPerformers": [
+      "うるち"
+    ]
   },
   {
     "id": "2026-10-02-1830-audition-1st-east",
@@ -275,7 +281,11 @@
       "タケゾウ",
       "ミックストマトジュース"
     ],
-    "qualifiedNextStageDate": "2026-10-30"
+    "qualifiedNextStageDate": "2026-10-30",
+    "additionalQualifiedPerformers": [
+      "オーディン",
+      "ミロデジャネイロ"
+    ]
   },
   {
     "id": "2026-10-06-1600-audition-1st-east",
@@ -360,7 +370,12 @@
     ],
     "ticket": {
       "url": "https://ticket.fany.lol/event/detail/21077"
-    }
+    },
+    "additionalQualifiedPerformers": [
+      "ガチ銀河",
+      "坂田光"
+    ],
+    "qualifiedNextStageDate": "2026-10-30"
   },
   {
     "id": "2026-10-07-1600-audition-1st-east",
@@ -546,7 +561,11 @@
       "トニーフランク",
       "ジンガ"
     ],
-    "qualifiedNextStageDate": "2026-10-30"
+    "qualifiedNextStageDate": "2026-10-30",
+    "additionalQualifiedPerformers": [
+      "ゲジヒト",
+      "野球とサッカー"
+    ]
   },
   {
     "id": "2026-10-09-1600-audition-1st-east",
@@ -591,7 +610,10 @@
     "qualifiedPerformers": [
       "たまゆら学園"
     ],
-    "qualifiedNextStageDate": "2026-10-30"
+    "qualifiedNextStageDate": "2026-10-30",
+    "additionalQualifiedPerformers": [
+      "けいごステファニー"
+    ]
   },
   {
     "id": "2026-10-09-1830-audition-1st-east",
@@ -641,7 +663,10 @@
     "qualifiedPerformers": [
       "やさしい王様"
     ],
-    "qualifiedNextStageDate": "2026-10-30"
+    "qualifiedNextStageDate": "2026-10-30",
+    "additionalQualifiedPerformers": [
+      "ケンシン"
+    ]
   },
   {
     "id": "2026-10-13-1600-audition-1st-east",
@@ -917,7 +942,10 @@
       "バイバイスプリット",
       "月面ビート"
     ],
-    "qualifiedNextStageDate": "2026-10-30"
+    "qualifiedNextStageDate": "2026-10-30",
+    "additionalQualifiedPerformers": [
+      "グライシンガー"
+    ]
   },
   {
     "id": "2026-10-16-1600-audition-1st-east",
@@ -1009,7 +1037,13 @@
       "はるかぜとともに",
       "濡れカバ"
     ],
-    "qualifiedNextStageDate": "2026-10-30"
+    "qualifiedNextStageDate": "2026-10-30",
+    "additionalQualifiedPerformers": [
+      "七色フラン",
+      "ある遊泳団",
+      "泳ぐサメジマ",
+      "ばら組"
+    ]
   },
   {
     "id": "2026-10-17-18-kiwami-grand-battle-east",
@@ -1306,7 +1340,10 @@
     "qualifiedPerformers": [
       "巨牛"
     ],
-    "qualifiedNextStageDate": "2026-10-30"
+    "qualifiedNextStageDate": "2026-10-30",
+    "additionalQualifiedPerformers": [
+      "甘口メンマ"
+    ]
   },
   {
     "id": "2026-10-21-1830-audition-1st-east",
@@ -1351,6 +1388,9 @@
     "qualifiedPerformers": [
       "シングシング"
     ],
-    "qualifiedNextStageDate": "2026-10-30"
+    "qualifiedNextStageDate": "2026-10-30",
+    "additionalQualifiedPerformers": [
+      "そいそ〜す"
+    ]
   }
 ]
