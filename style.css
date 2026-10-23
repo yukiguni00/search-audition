@@ -49,9 +49,9 @@ a:focus-visible{outline:3px solid #1769aa;outline-offset:3px}
 .datetime-venue{font-size:1.05rem;font-weight:700;margin:0 0 10px}
 .result-card.audition-2nd-stage .venue-line{
   margin-top:2px;
-  color:#666;
-  font-size:.9rem;
-  font-weight:400;
+  color:#555;
+  font-size:1rem;
+  font-weight:700;
   line-height:1.45;
 }
 @media (max-width:720px){
