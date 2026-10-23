@@ -32,6 +32,11 @@ function formatDisplayDate(ev) {
   return `${startLabel} 開演${ev.time}`;
 }
 
+// 正式会場名は venue に保持し、カード・お気に入り欄は同じ表示名を参照する。
+function getDisplayVenue(ev) {
+  return ev.venueDisplayName || ev.venue || "";
+}
+
 function normalizeTextWithoutAliases(text) {
   return (text || "")
     .trim()
@@ -563,7 +568,7 @@ function renderFavoriteSchedule() {
       <div class="favorite-list">
         ${visibleGroups.map(({ event, names }) => `
           <button class="favorite-item favorite-jump-btn" type="button" data-event-id="${escapeHTML(event.id)}">
-            <div class="favorite-meta favorite-event-line">${escapeHTML(formatDisplayDate(event))} ${escapeHTML(event.venue)}</div>
+            <div class="favorite-meta favorite-event-line">${escapeHTML(formatDisplayDate(event))} ${escapeHTML(getDisplayVenue(event))}</div>
             <div class="favorite-name">${names.map((name) => escapeHTML(name)).join("／")}</div>
           </button>
         `).join("")}
@@ -1543,7 +1548,7 @@ function buildEventCardHTML(ev, targetId, favorites) {
     <article class="result-card ${ev.eventType === "audition-2nd-east" ? "audition-2nd-stage" : ""} ${getEventSessions(ev).length ? "has-sessions" : ""}" id="event-${escapeHTML(ev.id)}">
       <div class="datetime-venue">
         <div>${escapeHTML(formatDisplayDate(ev))}</div>
-        <div class="venue-line">会場：${escapeHTML(ev.venueDisplayName || ev.venue)}</div>
+        <div class="venue-line">会場：${escapeHTML(getDisplayVenue(ev))}</div>
       </div>
       <h3>${escapeHTML(ev.title)}</h3>
       ${eventDetails}
