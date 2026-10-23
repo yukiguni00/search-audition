@@ -7273,9 +7273,11 @@
     ],
     "ticket": {
       "purchaseNote": "前売1,500円｜当日2,000円",
-      "saleInfo": "一般発売：10月24日(土)10:00〜10月29日(木)23:59",
+      "saleInfo": "一般発売開始：10月24日(土)10:00",
       "url": "https://ticket.fany.lol/reception/67769/53893"
-    }
+    },
+    "venueDisplayName": "R'sアートコート",
+    "hideOpenTime": true
   },
   {
     "id": "2026-10-30-1630-audition-2nd-east-2",
@@ -7317,9 +7319,11 @@
     ],
     "ticket": {
       "purchaseNote": "前売1,500円｜当日2,000円",
-      "saleInfo": "一般発売：10月24日(土)10:00〜10月29日(木)23:59",
+      "saleInfo": "一般発売開始：10月24日(土)10:00",
       "url": "https://ticket.fany.lol/reception/67769/53894"
-    }
+    },
+    "venueDisplayName": "R'sアートコート",
+    "hideOpenTime": true
   },
   {
     "id": "2026-10-30-1930-audition-2nd-east-3",
@@ -7360,8 +7364,10 @@
     ],
     "ticket": {
       "purchaseNote": "前売1,500円｜当日2,000円",
-      "saleInfo": "一般発売：10月24日(土)10:00〜10月29日(木)23:59",
+      "saleInfo": "一般発売開始：10月24日(土)10:00",
       "url": "https://ticket.fany.lol/reception/67769/53895"
-    }
+    },
+    "venueDisplayName": "R'sアートコート",
+    "hideOpenTime": true
   }
 ]
