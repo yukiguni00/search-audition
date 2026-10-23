@@ -7228,5 +7228,65 @@
     "additionalQualifiedPerformers": [
       "そいそ〜す"
     ]
+  },
+  {
+    "id": "2026-10-30-1330-audition-2nd-east-1",
+    "eventType": "audition-2nd-east",
+    "title": "オーディション2ndステージ EAST 第一部",
+    "date": "2026-10-30",
+    "month": 10,
+    "day": 30,
+    "time": "13:30",
+    "timeMinutes": 810,
+    "openTime": "13:15",
+    "venue": "R'sアートコート（労音大久保会館）",
+    "sourceAccount": "@jimbo_audition",
+    "performers": [],
+    "eventNotice": "出演者・出演部の振り分けは未発表です。正式な香盤が発表され次第、更新します。",
+    "ticket": {
+      "purchaseNote": "前売1,500円｜当日2,000円",
+      "saleInfo": "一般発売：10月24日(土)10:00〜10月29日(木)23:59",
+      "url": "https://ticket.fany.lol/reception/67769/53893"
+    }
+  },
+  {
+    "id": "2026-10-30-1630-audition-2nd-east-2",
+    "eventType": "audition-2nd-east",
+    "title": "オーディション2ndステージ EAST 第二部",
+    "date": "2026-10-30",
+    "month": 10,
+    "day": 30,
+    "time": "16:30",
+    "timeMinutes": 990,
+    "openTime": "16:15",
+    "venue": "R'sアートコート（労音大久保会館）",
+    "sourceAccount": "@jimbo_audition",
+    "performers": [],
+    "eventNotice": "出演者・出演部の振り分けは未発表です。正式な香盤が発表され次第、更新します。",
+    "ticket": {
+      "purchaseNote": "前売1,500円｜当日2,000円",
+      "saleInfo": "一般発売：10月24日(土)10:00〜10月29日(木)23:59",
+      "url": "https://ticket.fany.lol/reception/67769/53894"
+    }
+  },
+  {
+    "id": "2026-10-30-1930-audition-2nd-east-3",
+    "eventType": "audition-2nd-east",
+    "title": "オーディション2ndステージ EAST 第三部",
+    "date": "2026-10-30",
+    "month": 10,
+    "day": 30,
+    "time": "19:30",
+    "timeMinutes": 1170,
+    "openTime": "19:15",
+    "venue": "R'sアートコート（労音大久保会館）",
+    "sourceAccount": "@jimbo_audition",
+    "performers": [],
+    "eventNotice": "出演者・出演部の振り分けは未発表です。正式な香盤が発表され次第、更新します。",
+    "ticket": {
+      "purchaseNote": "前売1,500円｜当日2,000円",
+      "saleInfo": "一般発売：10月24日(土)10:00〜10月29日(木)23:59",
+      "url": "https://ticket.fany.lol/reception/67769/53895"
+    }
   }
 ]
