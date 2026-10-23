@@ -1150,10 +1150,8 @@ function formatPendingStageDate(group) {
   return endLabel ? `${startLabel}〜${endLabel}` : startLabel;
 }
 
-function buildPendingStageCardHTML(group, favorites) {
-  const dateLabel = formatPendingStageDate(group);
-  // 開催枠だけ先に判明している場合は、日時・会場と出演部未定を区別する。
-  const confirmedSlots = events
+function getConfirmedStageSlots(group) {
+  return events
     .filter((ev) =>
       ev.eventType === group.nextEventType &&
       ev.date === group.nextDate &&
@@ -1162,19 +1160,32 @@ function buildPendingStageCardHTML(group, favorites) {
       ev.time !== "出演公演未定"
     )
     .sort((a, b) => (a.timeMinutes ?? 0) - (b.timeMinutes ?? 0));
-  const timeLabel = group.nextTime === "出演公演未定"
-    ? "出演公演未定"
-    : group.nextTime
-      ? `開演${escapeHTML(group.nextTime)}`
-      : confirmedSlots.length ? "出演部未定" : "開演時間未定";
+}
+
+function isLineupOverviewGroup(group) {
+  return (!group.nextTime || group.nextTime === "出演公演未定") &&
+    getConfirmedStageSlots(group).length > 0;
+}
+
+function buildPendingStageCardHTML(group, favorites) {
+  const dateLabel = formatPendingStageDate(group);
+  const confirmedSlots = getConfirmedStageSlots(group);
+  const lineupOverview = isLineupOverviewGroup(group);
+  const timeLabel = lineupOverview
+    ? ""
+    : group.nextTime === "出演公演未定"
+      ? "出演公演未定"
+      : (group.nextTime ? `開演${escapeHTML(group.nextTime)}` : "開演時間未定");
   const knownVenues = [...new Set(confirmedSlots.map((ev) => ev.venue).filter(Boolean))];
   const venue = group.venue && group.venue !== "詳細未定"
     ? group.venue
     : knownVenues.length === 1 ? knownVenues[0] : (group.venue || "詳細未定");
   const publishedTimes = [...new Set(confirmedSlots.map((ev) => ev.time))];
-  const pendingNote = !group.nextTime && publishedTimes.length
-    ? `※この日は${publishedTimes.join("／")}開演の${publishedTimes.length}部構成。各組の出演部・出演順は未発表です。`
-    : "※出演公演・出演部などの詳細は発表され次第更新します";
+  const pendingNote = lineupOverview
+    ? `※各組の出演部・出演順は正式な香盤発表後に更新します。公演時間（${publishedTimes.join("／")}開演）とチケットは下の${publishedTimes.length}公演をご確認ください。`
+    : !group.nextTime && publishedTimes.length
+      ? `※この日は${publishedTimes.join("／")}開演の${publishedTimes.length}部構成。各組の出演部・出演順は未発表です。`
+      : "※出演公演・出演部などの詳細は発表され次第更新します";
 
   const additionalKeys = new Set(
     (group.additionalQualifiedNames || []).map((name) => normalizeText(name))
@@ -1183,16 +1194,21 @@ function buildPendingStageCardHTML(group, favorites) {
   const additionalNames = group.names.filter((name) => additionalKeys.has(normalizeText(name)));
 
   return `
-    <article class="result-card pending-stage-card" id="event-${group.id}">
+    <article class="result-card pending-stage-card ${lineupOverview ? "lineup-overview-card" : ""}" id="event-${group.id}">
       <div class="datetime-venue">
-        <div>${dateLabel} ${timeLabel}</div>
+        <div>${escapeHTML(dateLabel)}${timeLabel ? ` ${timeLabel}` : ""}</div>
         <div class="venue-line">会場：${escapeHTML(venue)}</div>
       </div>
       <h3>${escapeHTML(group.nextEventTitle)}</h3>
-      <p class="pending-stage-note">${escapeHTML(pendingNote)}</p>
+      ${lineupOverview ? `
+        <div class="lineup-overview-heading">
+          <span>${group.nextEventType === "audition-2nd-east" ? "2nd進出者" : "出演予定者"}</span>
+          <strong>${group.names.length}組</strong>
+        </div>
+      ` : `<p class="pending-stage-note">${escapeHTML(pendingNote)}</p>`}
       <div class="performer-section">
         ${regularNames.length ? `
-          <div class="card-section-label">${additionalNames.length ? "通常合格者" : "出演予定者"}</div>
+          <div class="card-section-label">${additionalNames.length ? `通常合格者 (${regularNames.length}組)` : "出演予定者"}</div>
           <div class="performers">${buildPerformerChipsHTML(regularNames, favorites)}</div>
         ` : ""}
         ${additionalNames.length ? `
@@ -1202,6 +1218,7 @@ function buildPendingStageCardHTML(group, favorites) {
           </div>
         ` : ""}
       </div>
+      ${lineupOverview ? `<p class="pending-stage-note lineup-overview-note">${escapeHTML(pendingNote)}</p>` : ""}
     </article>
   `;
 }
@@ -1223,7 +1240,9 @@ function isLineupOrderedEvent(ev) {
 function getResultNoteMessage(futureResults, pendingStageCards) {
   if (pendingStageCards && !futureResults.length) return "";
 
-  const hasLineupOrderedEvent = futureResults.some((ev) => isLineupOrderedEvent(ev));
+  const hasLineupOrderedEvent = futureResults.some((ev) =>
+    isLineupOrderedEvent(ev) && getEventPerformerNames(ev).length > 0
+  );
   if (!hasLineupOrderedEvent) return "";
 
   const hasUnorderedEvent = futureResults.some((ev) => !isLineupOrderedEvent(ev));
@@ -1262,8 +1281,10 @@ function renderMainEvents(targetId, list, filters) {
     })),
     ...pendingStageGroups.map((group) => ({
       date: group.nextDate || "9999-99-99",
-      // 開演時間・出演部未定は、同じ日の時刻確定済み公演より後ろに並べる。
-      timeMinutes: timeToMinutes(group.nextTime) ?? 24 * 60,
+      // 出演部が未決定でも、開催枠が判明している場合は出演者一覧を先頭に表示。
+      timeMinutes: isLineupOverviewGroup(group)
+        ? -1
+        : (timeToMinutes(group.nextTime) ?? 24 * 60),
       title: group.nextEventTitle || "",
       html: buildPendingStageCardHTML(group, favorites),
     })),
@@ -1488,7 +1509,17 @@ function buildEventCardHTML(ev, targetId, favorites) {
   const stageResults = getStageResultsHTML(ev, favorites);
   const eventDetails = getEventDetailHTML(ev, targetId);
   const sessionDetails = buildEventSessionsHTML(ev, targetId, favorites);
-  const eventNotice = getEventNoticeHTML(ev);
+  // 全進出者の一覧が同じ日の上部にある間は、各部で「未発表」を繰り返さない。
+  const hasUnassignedLineupOverview = targetId === "results" &&
+    ev.eventType === "audition-2nd-east" &&
+    getEventPerformerNames(ev).length === 0 &&
+    events.some((source) =>
+      source.qualifiedNextStageDate === ev.date &&
+      ((source.qualifiedPerformers || []).length || (source.additionalQualifiedPerformers || []).length)
+    );
+  const eventNotice = hasUnassignedLineupOverview
+    ? '<p class="event-notice">出演者一覧は上の「2nd進出者」カードをご覧ください。</p>'
+    : getEventNoticeHTML(ev);
   const ticketLink = getTicketLinkHTML(ev, targetId);
   const performerLabel = ev.performerLabel || "出演者";
   const performerSection = performers
