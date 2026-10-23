@@ -1152,9 +1152,29 @@ function formatPendingStageDate(group) {
 
 function buildPendingStageCardHTML(group, favorites) {
   const dateLabel = formatPendingStageDate(group);
+  // 開催枠だけ先に判明している場合は、日時・会場と出演部未定を区別する。
+  const confirmedSlots = events
+    .filter((ev) =>
+      ev.eventType === group.nextEventType &&
+      ev.date === group.nextDate &&
+      ev.time &&
+      ev.time !== "未定" &&
+      ev.time !== "出演公演未定"
+    )
+    .sort((a, b) => (a.timeMinutes ?? 0) - (b.timeMinutes ?? 0));
   const timeLabel = group.nextTime === "出演公演未定"
     ? "出演公演未定"
-    : (group.nextTime ? `開演${escapeHTML(group.nextTime)}` : "開演時間未定");
+    : group.nextTime
+      ? `開演${escapeHTML(group.nextTime)}`
+      : confirmedSlots.length ? "出演部未定" : "開演時間未定";
+  const knownVenues = [...new Set(confirmedSlots.map((ev) => ev.venue).filter(Boolean))];
+  const venue = group.venue && group.venue !== "詳細未定"
+    ? group.venue
+    : knownVenues.length === 1 ? knownVenues[0] : (group.venue || "詳細未定");
+  const publishedTimes = [...new Set(confirmedSlots.map((ev) => ev.time))];
+  const pendingNote = !group.nextTime && publishedTimes.length
+    ? `※この日は${publishedTimes.join("／")}開演の${publishedTimes.length}部構成。各組の出演部・出演順は未発表です。`
+    : "※出演公演・出演部などの詳細は発表され次第更新します";
 
   const additionalKeys = new Set(
     (group.additionalQualifiedNames || []).map((name) => normalizeText(name))
@@ -1166,12 +1186,10 @@ function buildPendingStageCardHTML(group, favorites) {
     <article class="result-card pending-stage-card" id="event-${group.id}">
       <div class="datetime-venue">
         <div>${dateLabel} ${timeLabel}</div>
-        <div class="venue-line">会場：${escapeHTML(group.venue)}</div>
+        <div class="venue-line">会場：${escapeHTML(venue)}</div>
       </div>
       <h3>${escapeHTML(group.nextEventTitle)}</h3>
-      <p class="pending-stage-note">
-        ※出演公演・出演部などの詳細は発表され次第更新します
-      </p>
+      <p class="pending-stage-note">${escapeHTML(pendingNote)}</p>
       <div class="performer-section">
         ${regularNames.length ? `
           <div class="card-section-label">${additionalNames.length ? "通常合格者" : "出演予定者"}</div>
