@@ -855,7 +855,7 @@ function buildPerformerChipsHTML(names, favorites, additionalQualifiedKeys = new
     const isFavorite = favorites.includes(normalizedName);
     const nameHTML = getPerformerNameHTML(name);
     const additionalBadge = additionalQualifiedKeys.has(normalizedName)
-      ? '<span class="additional-qualified-badge">追加合格者</span>'
+      ? '<abbr class="additional-qualified-badge" title="追加合格者">追加</abbr>'
       : "";
 
     return `
@@ -1311,9 +1311,11 @@ function getEventDetailHTML(ev, targetId) {
 
   const details = [];
 
-  if (ev.openTime || ev.endTime) {
+  // 開場時刻の原本は保存し、必要な公演だけ画面から省略する。
+  const visibleOpenTime = ev.hideOpenTime === true ? "" : ev.openTime;
+  if (visibleOpenTime || ev.endTime) {
     const timeParts = [];
-    if (ev.openTime) timeParts.push(`開場${escapeHTML(ev.openTime)}`);
+    if (visibleOpenTime) timeParts.push(`開場${escapeHTML(visibleOpenTime)}`);
     if (ev.endTime) timeParts.push(`終演${escapeHTML(ev.endTime)}`);
     if (timeParts.length) details.push(timeParts.join("｜"));
   }
@@ -1503,9 +1505,13 @@ function getTicketLinkHTML(ev, targetId) {
 }
 
 function buildEventCardHTML(ev, targetId, favorites) {
+  const additionalQualifiedKeys = getAdditionalQualifiedKeysForSecondStage(ev);
   const performers = buildPerformerChipsHTML(
-    ev.performers, favorites, getAdditionalQualifiedKeysForSecondStage(ev)
+    ev.performers, favorites, additionalQualifiedKeys
   );
+  const hasAdditionalQualifiedPerformers =
+    ev.eventType === "audition-2nd-east" &&
+    (ev.performers || []).some((name) => additionalQualifiedKeys.has(normalizeText(name)));
   const stageResults = getStageResultsHTML(ev, favorites);
   const eventDetails = getEventDetailHTML(ev, targetId);
   const sessionDetails = buildEventSessionsHTML(ev, targetId, favorites);
@@ -1525,17 +1531,19 @@ function buildEventCardHTML(ev, targetId, favorites) {
   const performerSection = performers
     ? `
       <div class="performer-section ${stageResults ? "has-qualified" : ""}">
-        <div class="card-section-label">${escapeHTML(performerLabel)}</div>
+        <div class="card-section-label">${escapeHTML(performerLabel)}${hasAdditionalQualifiedPerformers
+          ? '<span class="additional-qualified-legend">「追加」は追加合格者</span>'
+          : ""}</div>
         <div class="performers">${performers}</div>
       </div>
     `
     : "";
 
   return `
-    <article class="result-card ${getEventSessions(ev).length ? "has-sessions" : ""}" id="event-${escapeHTML(ev.id)}">
+    <article class="result-card ${ev.eventType === "audition-2nd-east" ? "audition-2nd-stage" : ""} ${getEventSessions(ev).length ? "has-sessions" : ""}" id="event-${escapeHTML(ev.id)}">
       <div class="datetime-venue">
         <div>${escapeHTML(formatDisplayDate(ev))}</div>
-        <div class="venue-line">会場：${escapeHTML(ev.venue)}</div>
+        <div class="venue-line">会場：${escapeHTML(ev.venueDisplayName || ev.venue)}</div>
       </div>
       <h3>${escapeHTML(ev.title)}</h3>
       ${eventDetails}
