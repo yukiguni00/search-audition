@@ -291,7 +291,9 @@ a:focus-visible{outline:3px solid #1769aa;outline-offset:3px}
 
 
 .favorite-backup-link{
-  display:inline-block;
+  display:inline-flex;
+  align-items:center;
+  min-height:44px;
   margin-top:12px;
   padding:0;
   border:0;
