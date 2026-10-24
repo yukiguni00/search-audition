@@ -39,11 +39,7 @@ jobs:
         run: npm run check
 
       - name: Install Chromium headless shell and system dependencies
-        env:
-          PLAYWRIGHT_BROWSERS_PATH: ${{ runner.temp }}/playwright-browsers
         run: npx --no-install playwright install --with-deps --only-shell chromium
 
       - name: Run browser regression tests
-        env:
-          PLAYWRIGHT_BROWSERS_PATH: ${{ runner.temp }}/playwright-browsers
         run: npm run test:browser

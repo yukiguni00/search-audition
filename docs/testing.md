@@ -41,7 +41,7 @@ Ruleset自体の設定変更やマージ操作は行わない。チェック名�
 
 権限は `contents: read` のみ、チェックアウト後にGitHub認証情報を残さない。更新が続いた同じPRの古い実行はキャンセルする。
 Actionsキャッシュ、artifact保存、マトリクス、定期実行、デプロイは追加しない。setup-nodeの `package-manager-cache: false` も維持。
-ブラウザは `PLAYWRIGHT_BROWSERS_PATH=${{ runner.temp }}/playwright-browsers` の一時領域へ置き、ジョブ終了後に永続化しない。スクリーンショット保存の環境変数もCIでは設定しない。
+`PLAYWRIGHT_BROWSERS_PATH` は指定せず、Playwright標準のブラウザインストール先を使う。この領域はランナー内の一時データであり、Actionsキャッシュやartifactとして保存しない。スクリーンショット保存の環境変数もCIでは設定しない。
 
 **費用上の前提と停止条件**：GitHub公式の現行ルールで、Publicリポジトリの標準GitHub-hosted runnerは無料。ジョブに `github.event.repository.private == false` を維持し、Privateになった場合はランナーを起動しない（SKIPPEDであり、テスト済みのPASSではない）。
 大型・有料ランナー、課金設定、成果物・キャッシュ保存、外部有料CIは導入しない。
