@@ -141,6 +141,7 @@ a:focus-visible{outline:3px solid #1769aa;outline-offset:3px}
 }
 .archive-toggle{
   width:100%;
+  min-height:44px;
   display:flex;
   justify-content:space-between;
   align-items:center;
