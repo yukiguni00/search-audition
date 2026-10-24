@@ -106,7 +106,7 @@ for (const width of [1280,390,375,320]) {
   test(`バックアップ操作領域 ${width}px: 移動前後・閉じるボタンは縦横44px以上、CSSバージョン・下線を確認`, {timeout:30000}, async () => {
     const {context, page, errors} = await openPage(width);
     try {
-      assert.equal(await page.locator('link[rel="stylesheet"]').getAttribute('href'), 'style.css?v=20261024-1');
+      assert.equal(await page.locator('link[rel="stylesheet"]').getAttribute('href'), 'style.css?v=20261024-2');
       const metrics = [];
       const checkLink = async locator => {
         const style = await locator.evaluate(el => {
@@ -142,7 +142,7 @@ for (const width of [1280,390,375,320]) {
     } finally { await context.close(); }
   });
   test(`レイアウト ${width}px: 横スクロール・文字はみ出し・タップ領域`, {timeout:30000}, async () => {
-    const {context,page} = await openPage(width);
+    const {context,page,errors} = await openPage(width);
     try {
       await filterSecondStage(page);
       await page.locator(`#event-${stages[0].id} .star`).first().click();
@@ -164,6 +164,38 @@ for (const width of [1280,390,375,320]) {
       assert.ok(layout.scrollWidth <= layout.width, JSON.stringify(layout));
       assert.deepEqual(layout.clipped, [], '文字コンテナのはみ出し');
       assert.deepEqual(layout.small, [], '24 CSS px未満の操作対象 (44px推奨とは別の最低検知閾値)');
+      await page.locator('#clearBtn').click();
+      const toggle = page.locator('#archiveToggleBtn');
+      const rect = await toggle.boundingBox();
+      assert.ok(rect && rect.height >= 44, `過去の開催: ${JSON.stringify(rect)}`);
+      assert.equal(await toggle.getAttribute('aria-expanded'), 'false');
+      assert.equal(await page.locator('#archiveBody').isHidden(), true);
+      if (process.env.TEST_SCREENSHOT_DIR) {
+        await page.locator('#archive').screenshot({path:path.join(process.env.TEST_SCREENSHOT_DIR, `archive-closed-${width}.png`)});
+      }
+      await toggle.click();
+      assert.equal(await toggle.getAttribute('aria-expanded'), 'true');
+      assert.equal(await page.locator('#archiveBody').isVisible(), true);
+      assert.equal(await toggle.locator('.archive-toggle-icon').textContent(), '−');
+      assert.ok(await page.locator('#archiveResults .archive-month').count() > 0);
+      const archiveLayout = await page.locator('#archive').evaluate(el => ({
+        width:innerWidth, scrollWidth:document.documentElement.scrollWidth,
+        clipped:[...el.querySelectorAll('button, summary, .archive-message')]
+          .filter(node => node.getClientRects().length && node.clientWidth > 0 && node.scrollWidth > node.clientWidth + 1)
+          .map(node => node.textContent.trim()),
+      }));
+      assert.ok(archiveLayout.scrollWidth <= archiveLayout.width, JSON.stringify(archiveLayout));
+      assert.deepEqual(archiveLayout.clipped, [], '開いたアーカイブの文字はみ出し');
+      if (process.env.TEST_SCREENSHOT_DIR) {
+        await page.locator('#archive').screenshot({path:path.join(process.env.TEST_SCREENSHOT_DIR, `archive-open-${width}.png`)});
+      }
+      await toggle.click();
+      assert.equal(await toggle.getAttribute('aria-expanded'), 'false');
+      assert.equal(await page.locator('#archiveBody').isHidden(), true);
+      assert.equal(await toggle.locator('.archive-toggle-icon').textContent(), '＋');
+      console.log(`archive ${width}px: height=${rect.height}; ${JSON.stringify(archiveLayout)}`);
+      assert.deepEqual(errors, []);
+
     } finally { await context.close(); }
   });
 }

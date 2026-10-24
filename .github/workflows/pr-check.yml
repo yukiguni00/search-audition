@@ -32,5 +32,14 @@ jobs:
           node-version: '22'
           package-manager-cache: false
 
+      - name: Install locked development dependencies
+        run: npm ci
+
       - name: Check data and run Node tests
         run: npm run check
+
+      - name: Install Chromium headless shell and system dependencies
+        run: npx --no-install playwright install --with-deps --only-shell chromium
+
+      - name: Run browser regression tests
+        run: npm run test:browser
