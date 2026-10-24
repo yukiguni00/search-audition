@@ -1,7 +1,7 @@
 # 自動テストと更新手順
 
 Node.js 22で検証。基本チェックはNode標準の `node:test` を使い、`npm install` は不要。
-ブラウザテストは任意の既存Playwright / Chrome環境を使う。依存パッケージやブラウザは本リポジトリに追加していない。
+ブラウザテストはdevDependencyの `playwright: 1.62.1` を使用し、`package-lock.json` で推移的依存まで固定する。テストランナーは引き続きNode標準の `node:test`。`@playwright/test` は追加せず、ブラウザバイナリをGitへ保存しない。
 
 ## コマンドと役割分担
 
@@ -26,23 +26,43 @@ npm run check
 
 ## GitHub Actions（PRの自動チェック・ゼロコスト設計）
 
-`.github/workflows/pr-check.yml` は、`main` 宛てPRの作成・コミット追加・再オープン・Draft解除時に `npm run check` を実行する。
-GitHub標準の `ubuntu-24.04` runner と Node.js 22を使用する。追加の `npm install`、ブラウザのダウンロード、成果物アップロード、キャッシュ保存は行わない。
-権限は `contents: read` のみ、チェックアウト後にGitHub認証情報を残さない。更新が続いた同じPRの古い実行はキャンセルする。
-`npm run test:browser` はCIに含めず、Playwrightを使用できる環境で別途確認する。
+`.github/workflows/pr-check.yml` は、`main` 宛てPRの作成・コミット追加・再オープン・Draft解除時に、既存ジョブ内で以下を順に実行する。
 
-**費用上の前提と停止条件**：GitHub公式の現行ルールで、Publicリポジトリの標準GitHub-hosted runnerは無料。ジョブに `github.event.repository.private == false` を設定し、Privateになった場合はランナーを起動しない（チェックはSKIPPEDでありPASSではない）。
-大型の有料ランナー、成果物・キャッシュ保存、外部の有料CIは導入しない。
-リポジトリの公開状態、課金規約、ワークフローの変更時には再確認すること。GitHub Actionsが無効・承認待ち・環境エラー等で実行されなかった場合もPASS扱いにはしない。
-参考：[GitHub Actionsの課金](https://docs.github.com/en/billing/concepts/product-billing/github-actions)、[ランナーの種類](https://docs.github.com/en/actions/how-tos/write-workflows/choose-where-workflows-run/choose-the-runner-for-a-job)。
+1. GitHub標準 `ubuntu-24.04` runner / Node.js 22を準備。
+2. `npm ci` で開発依存をlockfileどおりに導入。
+3. `npm run check` でデータ同期とNodeテスト13件を確認。
+4. `npx --no-install playwright install --with-deps --only-shell chromium` でChromium headless shellと必要なOSライブラリを導入。Firefox/WebKit・通常のGUI版Chromiumは導入しない。
+5. `npm run test:browser` でブラウザテスト45件を実行。
+
+ジョブ名 **`Data integrity and Node tests`** とジョブID `check` を維持する。
+既存の有効なRuleset `main-ci-guard` がこのチェック名を必須にしているため、Node・ブラウザのどちらかが失敗すれば同じ必須チェックがFAILとなる。
+依存導入・ブラウザ導入の失敗や10分のジョブタイムアウトも成功扱いにしない。`continue-on-error`、テストスキップ、失敗を無視する処理は追加しない。
+Ruleset自体の設定変更やマージ操作は行わない。チェック名を変える場合は必須ルールとの不一致に注意すること。
+
+権限は `contents: read` のみ、チェックアウト後にGitHub認証情報を残さない。更新が続いた同じPRの古い実行はキャンセルする。
+Actionsキャッシュ、artifact保存、マトリクス、定期実行、デプロイは追加しない。setup-nodeの `package-manager-cache: false` も維持。
+ブラウザは `PLAYWRIGHT_BROWSERS_PATH=${{ runner.temp }}/playwright-browsers` の一時領域へ置き、ジョブ終了後に永続化しない。スクリーンショット保存の環境変数もCIでは設定しない。
+
+**費用上の前提と停止条件**：GitHub公式の現行ルールで、Publicリポジトリの標準GitHub-hosted runnerは無料。ジョブに `github.event.repository.private == false` を維持し、Privateになった場合はランナーを起動しない（SKIPPEDであり、テスト済みのPASSではない）。
+大型・有料ランナー、課金設定、成果物・キャッシュ保存、外部有料CIは導入しない。
+リポジトリの公開状態、課金規約、ワークフローの変更時には再確認すること。Actions無効・承認待ち・通信/環境エラー等もテスト成功と報告しない。
+参考：[GitHub Actionsの課金](https://docs.github.com/en/billing/concepts/product-billing/github-actions)、[PlaywrightのCI](https://playwright.dev/docs/ci)、[Chromium headless shell](https://playwright.dev/docs/browsers#chromium-headless-shell)。
 
 ## ブラウザテスト
 
-Playwrightとそのブラウザがすでに使える環境なら以下で実行する。
+CIと同じバージョンでローカル再現する場合は、Node.js 22で以下を実行する（LinuxではOSライブラリ導入に管理者権限が必要な場合がある）。
 
 ```sh
+npm ci
+npm run check
+npx --no-install playwright install --with-deps --only-shell chromium
 npm run test:browser
 ```
+
+`npm run test:browser` の実体は `node --test tests/browser/*.test.cjs`。`npx playwright test` へ置き換えない。
+基本の `npm run check` だけなら依存導入は不要。ブラウザテストには上記の依存・ブラウザ導入が必要。
+固定版更新時はpackage.jsonとlockfileを一緒に更新し、Chromiumも再導入して両テストを実行する。
+推移的依存は `playwright-core: 1.62.1` と、macOSのみのoptional依存 `fsevents: 2.3.2`。Ubuntuではfseventsは導入されない。
 
 別ディレクトリのPlaywrightや既存Chromeを使う場合は指定できる。
 
@@ -118,5 +138,5 @@ node tests/helpers/unknown-qualifier-probe.cjs
 - コンテナ幅・操作領域の検査は完全なアクセシビリティ適合、すべての重なり、画像比較を保証しない。画像の基準比較は導入していない。
 - 10/30の人数は依頼の検証値、URL・時刻は既存データと表示ガイドが基準。公式香盤全順序や販売可否を外部ページで再確認していない。
 - テスト用の簡易DOMは描画出力の確認用。CSS・イベント配線はブラウザテストが担当する。
-- GitHub ActionsではPRごとに `npm run check` を実行。ブラウザテストと実機確認は別途実施。
+- GitHub Actionsでは両テストを実行するが、Ubuntu/Chromiumの結果は実機iPhone/Safariの動作保証ではない。ネットワーク・npm/CDN・OSライブラリ供給やrunner更新により環境要因で失敗する場合がある。失敗を隠さずログから原因を確認する。
 - HTMLのCSS読み込みは `style.css?v=20261024-1`。ブラウザテストでも読み込み先のバージョンを確認する。今後CSSを更新した際は公開前にバージョンも更新する。

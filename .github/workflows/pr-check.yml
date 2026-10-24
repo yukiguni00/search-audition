@@ -20,6 +20,8 @@ jobs:
     if: ${{ github.event.repository.private == false }}
     runs-on: ubuntu-24.04
     timeout-minutes: 10
+    env:
+      PLAYWRIGHT_BROWSERS_PATH: ${{ runner.temp }}/playwright-browsers
     steps:
       - name: Check out code
         uses: actions/checkout@v5
@@ -32,5 +34,14 @@ jobs:
           node-version: '22'
           package-manager-cache: false
 
+      - name: Install locked development dependencies
+        run: npm ci
+
       - name: Check data and run Node tests
         run: npm run check
+
+      - name: Install Chromium headless shell and system dependencies
+        run: npx --no-install playwright install --with-deps --only-shell chromium
+
+      - name: Run browser regression tests
+        run: npm run test:browser
