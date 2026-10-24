@@ -178,6 +178,88 @@ function getCurrentFilters() {
   };
 }
 
+// Only these search controls are shareable; device-specific favorites never enter URLs.
+const SHARED_SEARCH_FIELDS = [
+  ["name", "nameQuery"], ["eventType", "eventType"],
+  ["month", "month"], ["day", "day"], ["hour", "hour"],
+];
+
+function getShareableSearchFilters() {
+  return Object.fromEntries(SHARED_SEARCH_FIELDS.map(([, id]) =>
+    [id, document.getElementById(id).value]
+  ));
+}
+
+function buildSharedSearchURL(baseURL, filters) {
+  const url = new URL(baseURL);
+  url.search = "";
+  url.hash = "";
+  SHARED_SEARCH_FIELDS.forEach(([parameter, id]) => {
+    const value = filters[id];
+    if (typeof value === "string" && value && (id === "nameQuery" || value !== "all")) {
+      url.searchParams.set(parameter, value);
+    }
+  });
+  return url;
+}
+
+function restoreSearchFiltersFromURL() {
+  const params = new URL(window.location.href).searchParams;
+  SHARED_SEARCH_FIELDS.forEach(([parameter, id]) => {
+    const control = document.getElementById(id);
+    // Ambiguous repeated parameters are ignored rather than choosing one silently.
+    const values = params.getAll(parameter);
+    const value = values.length === 1 ? values[0] : "";
+    if (id === "nameQuery") {
+      control.value = value;
+    } else {
+      control.value = Array.from(control.options).some(option => option.value === value)
+        ? value : "all";
+    }
+  });
+}
+
+function resetSearchShareFeedback() {
+  document.getElementById("shareSearchStatus").textContent = "";
+  document.getElementById("shareSearchFallback").hidden = true;
+  document.getElementById("shareSearchURL").value = "";
+}
+
+function updateSearchURL() {
+  const url = buildSharedSearchURL(window.location.href, getShareableSearchFilters());
+  // Keep the test/debug analytics opt-out in this tab, but never copy it for sharing.
+  if (new URL(window.location.href).searchParams.get("noanalytics") === "1") {
+    url.searchParams.set("noanalytics", "1");
+  }
+  if (url.href !== window.location.href) {
+    try {
+      window.history.replaceState(window.history.state, "", url.href);
+    } catch (error) {
+      // A browser restriction on history must not stop search or rendering.
+      return;
+    }
+    resetSearchShareFeedback();
+  }
+}
+
+async function shareCurrentSearch() {
+  const url = buildSharedSearchURL(window.location.href, getShareableSearchFilters()).href;
+  updateSearchURL();
+  resetSearchShareFeedback();
+  const status = document.getElementById("shareSearchStatus");
+  try {
+    await navigator.clipboard.writeText(url);
+    status.textContent = "検索URLをコピーしました。「★のみ」は共有されません。";
+  } catch (error) {
+    document.getElementById("shareSearchFallback").hidden = false;
+    const input = document.getElementById("shareSearchURL");
+    input.value = url;
+    input.focus();
+    input.select();
+    status.textContent = "自動コピーできませんでした。共有URLを選択してコピーしてください。";
+  }
+}
+
 function getFavoritePerformersSet() {
   try {
     const raw = localStorage.getItem(FAVORITE_KEY);
@@ -1599,6 +1681,7 @@ function renderArchiveEvents(targetId, list, openMonths = false) {
 }
 
 function runSearch() {
+  updateSearchURL();
   const filters = getCurrentFilters();
   const futureResults = filterEvents(events, false);
   const pastResults = filterEvents(events, true);
@@ -1641,6 +1724,7 @@ function bindAutoSearch() {
   });
 
   document.getElementById("clearBtn").addEventListener("click", clearFilters);
+  document.getElementById("shareSearchBtn").addEventListener("click", shareCurrentSearch);
   document.getElementById("favoritesOnlyBtn").addEventListener("click", () => {
     favoritesOnlyMode = !favoritesOnlyMode;
     updateFavoritesOnlyButton();
@@ -1860,6 +1944,7 @@ function renderSiteNotice(noticeData) {
 
 async function init() {
   populateSelects();
+  restoreSearchFiltersFromURL();
   bindAutoSearch();
   bindFloatingTop();
   bindFavoriteBackup();
