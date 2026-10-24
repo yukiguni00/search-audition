@@ -187,3 +187,147 @@ test('実DOM: 表示名未設定なら正式会場名へフォールバック', 
     assert.ok((await page.locator('#favoriteSchedule .favorite-meta').first().textContent()).includes(stages[0].venue));
   } finally {await context.close();}
 });
+
+// Exercise the actual backup controls. Payload fixtures use independent UTF-8/Base64
+// encoding so malformed input cannot accidentally use production encoder behavior.
+const backupKey = 'favoritePerformers';
+const backupNames = stages[0].performers.slice(0, 2);
+const replacementName = stages[1].performers[0];
+const encodeFixture = payload => Buffer.from(JSON.stringify(payload), 'utf8').toString('base64');
+async function storageSnapshot(page) {
+  return page.evaluate(() => Object.fromEntries(Object.entries(localStorage).sort(([a], [b]) => a.localeCompare(b))));
+}
+async function clickFavorite(page, name, add) {
+  const action = add ? `${name}をお気に入りに追加` : `${name}をお気に入りから解除`;
+  await page.locator('#results').getByRole('button', {name:action,exact:true}).first().click();
+}
+async function assertBackupState(page, keys, displayNames = keys) {
+  assert.deepEqual(await page.evaluate(key => JSON.parse(localStorage.getItem(key)), backupKey), keys);
+  assert.equal(await page.locator('#favoritePanel').isVisible(), keys.length > 0);
+  if (keys.length) {
+    assert.ok((await page.locator('.favorite-summary').textContent()).startsWith(`お気に入り${keys.length}組中、`));
+    for (const name of displayNames) assert.ok((await page.locator('#favoriteSchedule').textContent()).includes(name), name);
+  }
+  const selected = await page.locator('#results .star[aria-pressed="true"]').evaluateAll(nodes => [...new Set(nodes.map(n => n.dataset.key))].sort());
+  assert.deepEqual(selected, [...keys].sort(), '星の状態も保存内容と一致');
+}
+async function reloadAndCheckBackup(page, keys, names = keys) {
+  await page.reload();
+  await page.locator(`#event-${stages[0].id}`).waitFor();
+  await filterSecondStage(page);
+  await assertBackupState(page, keys, names);
+  assert.equal(await page.evaluate(() => localStorage.getItem('qaBackupGuard')), 'unchanged');
+}
+async function submitValidBackup(page, code, accept) {
+  await page.locator('#backupCodeInput').fill(code);
+  const confirmation = page.waitForEvent('dialog');
+  const click = page.locator('#restoreBackupBtn').click();
+  const dialog = await confirmation;
+  assert.equal(dialog.type(), 'confirm');
+  assert.equal(dialog.message(), '現在のお気に入りを上書きして復元します。よろしいですか？');
+  if (accept) await dialog.accept(); else await dialog.dismiss();
+  await click;
+}
+function backupScenario(width, name, body) {
+  test(`バックアップ復元 ${width}px: ${name}`, {timeout:30000}, async () => {
+    const {context,page,errors} = await openPage(width);
+    try {
+      await filterSecondStage(page);
+      assert.equal(await page.evaluate(key => localStorage.getItem(key), backupKey), null, '独立コンテキストから開始');
+      for (const name of backupNames) await clickFavorite(page, name, true);
+      await page.evaluate(() => localStorage.setItem('qaBackupGuard', 'unchanged'));
+      await assertBackupState(page, backupNames);
+      await page.locator('#favoriteBackupBtn').click();
+      await body(page);
+      assert.deepEqual(errors, [], 'ブラウザの未処理例外・警告なし');
+    } finally { await context.close(); }
+  });
+}
+const invalidBackups = [
+  ['空文字', '', 'バックアップコードが空です'],
+  ['空白のみ', ' \n\t ', 'バックアップコードが空です'],
+  ['Base64でない文字', '%%%not-base64%%%', null],
+  ['破損・切れたBase64', 'a', null],
+  ['Base64の中身が不正JSON', Buffer.from('{"v":1,').toString('base64'), null],
+  ['未対応バージョン', encodeFixture({v:2,favorites:['XYZ']}), 'バックアップコードの形式が正しくありません'],
+  ['バージョンなし', encodeFixture({favorites:['XYZ']}), 'バックアップコードの形式が正しくありません'],
+  ['favoritesなし', encodeFixture({v:1}), 'バックアップコードの形式が正しくありません'],
+  ['favoritesが配列でない', encodeFixture({v:1,favorites:'XYZ'}), 'バックアップコードの形式が正しくありません'],
+  ['nullペイロード', encodeFixture(null), 'バックアップコードの形式が正しくありません'],
+  ['配列内の不正な数値', encodeFixture({v:1,favorites:[123]}), null],
+  ['配列内の不正なオブジェクト', encodeFixture({v:1,favorites:[{}]}), null],
+];
+for (const width of [1280,390]) {
+  backupScenario(width, '実UIで生成したコードから上書き復元・再読込', async page => {
+    await page.locator('#createBackupBtn').click();
+    const code = await page.locator('#backupCodeOutput').inputValue();
+    assert.ok(code.length > 0);
+    const payload = JSON.parse(Buffer.from(code, 'base64').toString('utf8'));
+    assert.equal(payload.v, 1);
+    assert.deepEqual(payload.favorites, backupNames);
+    assert.ok(!Number.isNaN(Date.parse(payload.createdAt)));
+    assert.equal(await page.locator('#backupCreateStatus').textContent(), 'バックアップコードを生成しました（2組）');
+    await page.locator('#closeBackupBtn').click();
+    for (const name of backupNames) await clickFavorite(page, name, false);
+    await clickFavorite(page, replacementName, true);
+    await assertBackupState(page, [replacementName]);
+    await page.locator('#favoriteBackupBtn').click();
+    await submitValidBackup(page, ` \n${code}\n `, true);
+    assert.equal(await page.locator('#backupRestoreStatus').textContent(), 'お気に入りを復元しました（2組）');
+    await assertBackupState(page, backupNames);
+    assert.equal(await page.locator('#favoritesOnlyBtn').getAttribute('aria-pressed'), 'false');
+    if (process.env.TEST_SCREENSHOT_DIR) {
+      await page.locator('#favoritePanel').screenshot({path:path.join(process.env.TEST_SCREENSHOT_DIR, `restored-favorites-${width}.png`)});
+    }
+    await reloadAndCheckBackup(page, backupNames);
+  });
+  backupScenario(width, '復元確認の取消はlocalStorageと表示を保持', async page => {
+    const before = await storageSnapshot(page);
+    await submitValidBackup(page, encodeFixture({v:1,favorites:[replacementName]}), false);
+    assert.deepEqual(await storageSnapshot(page), before);
+    assert.equal(await page.locator('#backupRestoreStatus').textContent(), '');
+    await assertBackupState(page, backupNames);
+    await reloadAndCheckBackup(page, backupNames);
+    assert.deepEqual(await storageSnapshot(page), before);
+  });
+  backupScenario(width, '重複・全角/大小文字・空白は正規化して統合', async page => {
+    await submitValidBackup(page, encodeFixture({v:1,favorites:[' ＸＹＺ ', 'XYZ', 'xyz', backupNames[0], backupNames[0], '', ' \t ']}), true);
+    assert.equal(await page.locator('#backupRestoreStatus').textContent(), 'お気に入りを復元しました（2組）');
+    await assertBackupState(page, ['xyz',backupNames[0]], ['XYZ',backupNames[0]]);
+    await reloadAndCheckBackup(page, ['xyz',backupNames[0]], ['XYZ',backupNames[0]]);
+  });
+  backupScenario(width, '有効な空配列は承認後に0組へ復元し保持', async page => {
+    await submitValidBackup(page, encodeFixture({v:1,favorites:[]}), true);
+    assert.equal(await page.locator('#backupRestoreStatus').textContent(), 'お気に入りを復元しました（0組）');
+    await assertBackupState(page, []);
+    await reloadAndCheckBackup(page, []);
+    await page.locator('#favoriteBackupBtn').click();
+    await page.locator('#createBackupBtn').click();
+    assert.equal(await page.locator('#backupCodeOutput').inputValue(), '');
+    assert.equal(await page.locator('#backupCreateStatus').textContent(), 'お気に入りが登録されていません');
+    assert.ok((await page.locator('#backupCreateStatus').getAttribute('class')).includes('is-error'));
+  });
+  for (const [name, code, expectedMessage] of invalidBackups) {
+    backupScenario(width, `${name}は拒否して既存データを保持`, async page => {
+      const before = await storageSnapshot(page);
+      const dialogs = [];
+      const dismissUnexpected = async dialog => { dialogs.push(dialog.type()); await dialog.dismiss(); };
+      page.on('dialog', dismissUnexpected);
+      try {
+        await page.locator('#backupCodeInput').fill(code);
+        await page.locator('#restoreBackupBtn').click();
+        const status = page.locator('#backupRestoreStatus');
+        assert.ok((await status.getAttribute('class')).includes('is-error'));
+        const message = await status.textContent();
+        assert.ok(message.trim().length > 0);
+        // Native atob/JSON/TypeError wording varies by browser; pin only app messages.
+        if (expectedMessage) assert.equal(message, expectedMessage);
+        assert.deepEqual(dialogs, [], '不正コードでは確認ダイアログを出さない');
+        assert.deepEqual(await storageSnapshot(page), before);
+        await assertBackupState(page, backupNames);
+        await reloadAndCheckBackup(page, backupNames);
+        assert.deepEqual(await storageSnapshot(page), before);
+      } finally { page.off('dialog', dismissUnexpected); }
+    });
+  }
+}
