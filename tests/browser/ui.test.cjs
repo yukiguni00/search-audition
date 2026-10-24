@@ -103,17 +103,18 @@ for (const width of [1280,390,375,320]) {
       assert.deepEqual(errors, []);
     } finally { await context.close(); }
   });
-  test(`バックアップ操作領域 ${width}px: 移動前後・閉じるボタンは44px以上、下線を保持`, {timeout:30000}, async () => {
+  test(`バックアップ操作領域 ${width}px: 移動前後・閉じるボタンは縦横44px以上、CSSバージョン・下線を確認`, {timeout:30000}, async () => {
     const {context, page, errors} = await openPage(width);
     try {
+      assert.equal(await page.locator('link[rel="stylesheet"]').getAttribute('href'), 'style.css?v=20261024-1');
       const metrics = [];
       const checkLink = async locator => {
         const style = await locator.evaluate(el => {
           const css = getComputedStyle(el);
-          return {id:el.id,height:el.getBoundingClientRect().height,underline:css.textDecorationLine,background:css.backgroundColor};
+          return {id:el.id,width:el.getBoundingClientRect().width,height:el.getBoundingClientRect().height,underline:css.textDecorationLine,background:css.backgroundColor};
         });
         metrics.push(style);
-        assert.ok(style.height >= 44, JSON.stringify(style));
+        assert.ok(style.height >= 44 && style.width >= 44, JSON.stringify(style));
         assert.ok(style.underline.includes('underline'), JSON.stringify(style));
         assert.equal(style.background, 'rgba(0, 0, 0, 0)');
       };
