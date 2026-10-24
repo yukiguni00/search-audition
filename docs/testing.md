@@ -24,6 +24,18 @@ npm run check
 データ更新時は月別JSONを編集し、既存の `npm run data:sync` で生成物を更新してからチェックする。
 同期のPASSだけで出演者や表示の正しさが保証されるわけではないため、`npm test` も実行する。
 
+## GitHub Actions（PRの自動チェック・ゼロコスト設計）
+
+`.github/workflows/pr-check.yml` は、`main` 宛てPRの作成・コミット追加・再オープン・Draft解除時に `npm run check` を実行する。
+GitHub標準の `ubuntu-24.04` runner と Node.js 22を使用する。追加の `npm install`、ブラウザのダウンロード、成果物アップロード、キャッシュ保存は行わない。
+権限は `contents: read` のみ、チェックアウト後にGitHub認証情報を残さない。更新が続いた同じPRの古い実行はキャンセルする。
+`npm run test:browser` はCIに含めず、Playwrightを使用できる環境で別途確認する。
+
+**費用上の前提と停止条件**：GitHub公式の現行ルールで、Publicリポジトリの標準GitHub-hosted runnerは無料。ジョブに `github.event.repository.private == false` を設定し、Privateになった場合はランナーを起動しない（チェックはSKIPPEDでありPASSではない）。
+大型の有料ランナー、成果物・キャッシュ保存、外部の有料CIは導入しない。
+リポジトリの公開状態、課金規約、ワークフローの変更時には再確認すること。GitHub Actionsが無効・承認待ち・環境エラー等で実行されなかった場合もPASS扱いにはしない。
+参考：[GitHub Actionsの課金](https://docs.github.com/en/billing/concepts/product-billing/github-actions)、[ランナーの種類](https://docs.github.com/en/actions/how-tos/write-workflows/choose-where-workflows-run/choose-the-runner-for-a-job)。
+
 ## ブラウザテスト
 
 Playwrightとそのブラウザがすでに使える環境なら以下で実行する。
@@ -87,5 +99,5 @@ node tests/helpers/unknown-qualifier-probe.cjs
 - コンテナ幅・操作領域の検査は完全なアクセシビリティ適合、すべての重なり、画像比較を保証しない。画像の基準比較は導入していない。
 - 10/30の人数は依頼の検証値、URL・時刻は既存データと表示ガイドが基準。公式香盤全順序や販売可否を外部ページで再確認していない。
 - テスト用の簡易DOMは描画出力の確認用。CSS・イベント配線はブラウザテストが担当する。
-- CI設定は追加していない。将来CIから `npm run check` を呼べる構成。
+- GitHub ActionsではPRごとに `npm run check` を実行。ブラウザテストと実機確認は別途実施。
 - HTMLのCSS読み込みは `style.css?v=20261024-1`。ブラウザテストでも読み込み先のバージョンを確認する。今後CSSを更新した際は公開前にバージョンも更新する。
