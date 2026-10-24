@@ -44,7 +44,7 @@
     }
   </script>
   
-  <link rel="stylesheet" href="style.css?v=20261024-2">
+  <link rel="stylesheet" href="style.css?v=20261024-3">
 </head>
 <body>
   <main class="container">
@@ -124,8 +124,18 @@
         </div>
       </div>
       <div class="button-row">
-        <button id="favoritesOnlyBtn" class="secondary-btn" type="button" aria-pressed="false">★のみ</button>
+        <button id="favoritesOnlyBtn" class="secondary-btn" type="button" aria-pressed="false" aria-describedby="shareSearchNote">★のみ</button>
         <button id="clearBtn" class="secondary-btn" type="button">条件クリア</button>
+      </div>
+
+      <div class="share-search">
+        <button id="shareSearchBtn" class="secondary-btn share-search-btn" type="button" aria-describedby="shareSearchNote">この検索を共有</button>
+        <p id="shareSearchNote" class="note">芸人名・ライブ名・月・日・時間を共有します。「★のみ」とお気に入り登録情報は共有されません。</p>
+        <p id="shareSearchStatus" class="share-search-status" role="status" aria-live="polite"></p>
+        <div id="shareSearchFallback" hidden>
+          <label for="shareSearchURL">共有URL（選択してコピー）</label>
+          <input id="shareSearchURL" type="text" readonly spellcheck="false">
+        </div>
       </div>
 
       <p class="note">
@@ -187,6 +197,6 @@
     </footer>
     
   </main>
-  <script src="script.js?v=20261023-4"></script>
+  <script src="script.js?v=20261024-3"></script>
 </body>
 </html>
