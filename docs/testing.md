@@ -30,9 +30,9 @@ npm run check
 
 1. GitHub標準 `ubuntu-24.04` runner / Node.js 22を準備。
 2. `npm ci` で開発依存をlockfileどおりに導入。
-3. `npm run check` でデータ同期とNodeテスト18件を確認。
+3. `npm run check` でデータ同期とNodeテスト19件を確認。
 4. `npx --no-install playwright install --with-deps --only-shell chromium` でChromium headless shellと必要なOSライブラリを導入。Firefox/WebKit・通常のGUI版Chromiumは導入しない。
-5. `npm run test:browser` でブラウザテスト57件を実行。
+5. `npm run test:browser` でブラウザテスト59件を実行。
 
 ジョブ名 **`Data integrity and Node tests`** とジョブID `check` を維持する。
 既存の有効なRuleset `main-ci-guard` がこのチェック名を必須にしているため、Node・ブラウザのどちらかが失敗すれば同じ必須チェックがFAILとなる。
@@ -122,7 +122,7 @@ URLからはselect項目生成後に検索欄を復元し、データ読込後�
 
 同じ既知パラメータが複数回指定された場合は、その項目全体を初期値へ戻す。selectにない値も初期値へ戻す。
 未知パラメータは検索に使用せず、最初の検索実行時にURLから削除する。名前はHTMLとして挿入しない。
-URL更新時は既存の `noanalytics=1` だけをこのタブで保持する。URLのfragmentも共有対象にしない。
+通常のURL更新では現在のfragment（例: `#contact`）と既存の `noanalytics=1` をこのタブで保持する。初期表示・条件変更・条件クリア後もページ内リンクを維持し、コピーする共有URLだけfragmentを除去する。
 
 「この検索を共有」はクリック時点の検索欄からURLを作り、Clipboard APIへ渡す。入力待ち時間中でも最新の値を使う。
 コピーするURLからは `noanalytics`、未知query、fragmentを除き、検索5項目だけを含める。
@@ -175,4 +175,4 @@ node tests/helpers/unknown-qualifier-probe.cjs
 - 10/30の人数は依頼の検証値、URL・時刻は既存データと表示ガイドが基準。公式香盤全順序や販売可否を外部ページで再確認していない。
 - テスト用の簡易DOMは描画出力の確認用。CSS・イベント配線はブラウザテストが担当する。
 - GitHub Actionsでは両テストを実行するが、Ubuntu/Chromiumの結果は実機iPhone/Safariの動作保証ではない。ネットワーク・npm/CDN・OSライブラリ供給やrunner更新により環境要因で失敗する場合がある。失敗を隠さずログから原因を確認する。
-- JS/CSSの読み込みはそれぞれ `script.js?v=20261024-3` / `style.css?v=20261024-3`。ブラウザテストでも読み込み先のバージョンを確認する。今後CSSを更新した際は公開前にバージョンも更新する。
+- JS/CSSの読み込みはそれぞれ `script.js?v=20261025-1` / `style.css?v=20261024-3`。ブラウザテストでも読み込み先のバージョンを確認する。今後CSSを更新した際は公開前にバージョンも更新する。

@@ -44,3 +44,16 @@ test('history APIが拒否されても検索URL更新処理は例外を外へ出
   a.element('nameQuery').value='サンライズ';state.history.replaceState=()=>{throw new Error('restricted');};
   assert.doesNotThrow(()=>a.context.updateSearchURL());
 });
+
+test('通常URLは初期化・条件変更・クリアでhash保持。共有URLだけhashを除去', () => {
+  const a=loadApp();const state=prepare(a,'https://example.test/?noanalytics=1&unknown=drop#contact');
+  a.context.restoreSearchFiltersFromURL();a.context.updateSearchURL();
+  assert.equal(state.location.href,'https://example.test/?noanalytics=1#contact');
+  a.element('nameQuery').value='サンライズ';a.element('month').value='10';a.context.updateSearchURL();
+  const updated=new URL(state.location.href);
+  assert.equal(updated.hash,'#contact');assert.equal(updated.searchParams.get('name'),'サンライズ');
+  const share=a.context.buildSharedSearchURL(state.location.href,a.context.getShareableSearchFilters());
+  assert.equal(share.hash,'');assert.equal(share.searchParams.get('noanalytics'),null);
+  a.element('nameQuery').value='';a.element('month').value='all';a.context.updateSearchURL();
+  assert.equal(state.location.href,'https://example.test/?noanalytics=1#contact');
+});

@@ -226,9 +226,12 @@ function resetSearchShareFeedback() {
 }
 
 function updateSearchURL() {
-  const url = buildSharedSearchURL(window.location.href, getShareableSearchFilters());
+  const currentURL = new URL(window.location.href);
+  const url = buildSharedSearchURL(currentURL.href, getShareableSearchFilters());
+  // In-page anchors belong to this tab; only copied share URLs omit the hash.
+  url.hash = currentURL.hash;
   // Keep the test/debug analytics opt-out in this tab, but never copy it for sharing.
-  if (new URL(window.location.href).searchParams.get("noanalytics") === "1") {
+  if (currentURL.searchParams.get("noanalytics") === "1") {
     url.searchParams.set("noanalytics", "1");
   }
   if (url.href !== window.location.href) {

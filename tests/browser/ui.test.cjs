@@ -484,6 +484,39 @@ for (const width of [1280,320]) {
       } finally {await context.close();}
     });
   }
+  test(`共有検索 ${width}px: 初期表示・条件変更・クリアは#contact保持、コピーには含めない`, {timeout:30000}, async () => {
+    const {context,page,errors}=await openPage(width);
+    try {
+      await openSearchURL(page,`${baseURL}/?noanalytics=1&month=10&unknown=drop#contact`);
+      assert.equal(new URL(page.url()).hash,'#contact');
+      assert.equal(new URL(page.url()).searchParams.get('unknown'),null);
+      assert.equal(await page.locator('script[src^="script.js?"]').getAttribute('src'),'script.js?v=20261025-1');
+      await page.locator('#day').selectOption('30');
+      await page.locator('#nameQuery').fill(backupNames[0]);
+      await page.waitForFunction(name=>new URL(location.href).searchParams.get('name')===name,backupNames[0]);
+      assert.equal(new URL(page.url()).hash,'#contact');
+      await clickFavorite(page,backupNames[0],true);
+      await page.locator('#favoritesOnlyBtn').click();
+      const before=await storageSnapshot(page);
+      await captureSearchCopy(page);await page.locator('#shareSearchBtn').click();
+      const copied=new URL(await page.evaluate(()=>window.copiedSearchURL));
+      assert.deepEqual([...copied.searchParams.keys()],['name','month','day']);
+      assert.equal(copied.hash,'');assert.equal(copied.searchParams.get('noanalytics'),null);
+      assert.equal(copied.searchParams.get('favoritePerformers'),null);
+      assert.equal(copied.searchParams.get('favoritesOnly'),null);
+      assert.equal(copied.searchParams.get('backup'),null);
+      assert.equal(new URL(page.url()).hash,'#contact');
+      assert.deepEqual(await storageSnapshot(page),before);
+      await page.locator('#clearBtn').click();
+      assert.equal(new URL(page.url()).search,'?noanalytics=1');
+      assert.equal(new URL(page.url()).hash,'#contact');
+      assert.equal(await page.locator('#favoritesOnlyBtn').getAttribute('aria-pressed'),'false');
+      await page.reload();await readySearchPage(page);
+      assert.equal(new URL(page.url()).hash,'#contact');
+      assert.equal(new URL(page.url()).search,'?noanalytics=1');
+      assert.deepEqual(await storageSnapshot(page),before);assert.deepEqual(errors,[]);
+    } finally {await context.close();}
+  });
   test(`共有検索 ${width}px: 過去公演の再現とランダム芸人検索もURLを更新`, {timeout:30000}, async () => {
     const {context,page,errors}=await openPage(width);
     try {
