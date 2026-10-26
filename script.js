@@ -52,6 +52,30 @@ function normalizeText(text) {
   return performerRenameAliases.get(normalized) || normalized;
 }
 
+// Both filtering and visual emphasis use the same normalized partial match.
+function performerMatchesNameQuery(name, normalizedQuery) {
+  return Boolean(normalizedQuery) && normalizeText(name).includes(normalizedQuery);
+}
+
+function emphasizeSearchMatches(target, normalizedQuery) {
+  target.querySelectorAll(".performer").forEach((chip) => {
+    const star = chip.querySelector(".star");
+    if (!star || !performerMatchesNameQuery(star.dataset.name, normalizedQuery)) return;
+    chip.classList.add("search-match");
+    const description = document.createElement("span");
+    description.className = "visually-hidden";
+    description.textContent = "（芸人名の検索条件に一致）";
+    chip.appendChild(description);
+  });
+}
+
+function updateSearchResultSummary(futureResults, pendingCount, pastResults, filters) {
+  const summary = document.getElementById("searchResultSummary");
+  if (summary) summary.textContent = `今後の開催：${futureResults.length}件 ／ 進出者・出演予定者一覧：${pendingCount}件 ／ 過去の開催：${pastResults.length}件`;
+  const legend = document.getElementById("searchMatchLegend");
+  if (legend) legend.hidden = !filters.nameQuery;
+}
+
 function buildPerformerAliasMap(data) {
   const aliasMap = new Map();
   const groups = data && Array.isArray(data.aliases) ? data.aliases : [];
@@ -460,10 +484,10 @@ function eventMatchesFilters(ev, filters, includePast = false, options = {}) {
 
   if (!ignoreNameQuery && filters.nameQuery) {
     const unassignedHit = (Array.isArray(ev.performers) ? ev.performers : [])
-      .some((name) => normalizeText(name).includes(filters.nameQuery));
+      .some((name) => performerMatchesNameQuery(name, filters.nameQuery));
     const sessionHit = getEventSessions(ev).some((session) => {
       const nameHit = (Array.isArray(session.performers) ? session.performers : [])
-        .some((name) => normalizeText(name).includes(filters.nameQuery));
+        .some((name) => performerMatchesNameQuery(name, filters.nameQuery));
       return nameHit && occurrenceMatchesDateTimeFilters(getSessionOccurrence(session, ev), filters);
     });
     if (!unassignedHit && !sessionHit) return false;
@@ -1203,7 +1227,7 @@ function getPendingStageGroups(filters, options = {}) {
         const key = normalizeText(name);
 
         if (!key) return;
-        if (filters.nameQuery && !key.includes(filters.nameQuery)) return;
+        if (filters.nameQuery && !performerMatchesNameQuery(name, filters.nameQuery)) return;
         if (useFavoritesOnly && !favorites.has(key)) return;
 
         if (result.isAdditionalQualifier && !group.additionalSeen.has(key)) {
@@ -1388,11 +1412,13 @@ function renderMainEvents(targetId, list, filters) {
     target.innerHTML = targetId === "results"
       ? '<p class="empty">該当する今後の開催はありません</p>'
       : '<p class="empty"></p>';
-    return;
+    return pendingStageGroups.length;
   }
 
   target.innerHTML = renderItems.map((item) => item.html).join("");
   bindStarButtons(target);
+  emphasizeSearchMatches(target, filters.nameQuery);
+  return pendingStageGroups.length;
 }
 
 
@@ -1681,6 +1707,7 @@ function renderArchiveEvents(targetId, list, openMonths = false) {
   }).join("");
 
   bindStarButtons(target);
+  emphasizeSearchMatches(target, getCurrentFilters().nameQuery);
 }
 
 function runSearch() {
@@ -1691,7 +1718,8 @@ function runSearch() {
   const activeFilters = hasActiveFilters(filters);
   const pastOnlyHit = activeFilters && futureResults.length === 0 && pastResults.length > 0;
 
-  renderMainEvents("results", futureResults, filters);
+  const pendingCount = renderMainEvents("results", futureResults, filters);
+  updateSearchResultSummary(futureResults, pendingCount, pastResults, filters);
 
   if (pastOnlyHit) {
     setArchiveOpen(true);
