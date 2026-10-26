@@ -44,7 +44,7 @@
     }
   </script>
   
-  <link rel="stylesheet" href="style.css?v=20261024-3">
+  <link rel="stylesheet" href="style.css?v=20261026-1">
 </head>
 <body>
   <main class="container">
@@ -156,6 +156,9 @@
 
     <section class="panel">
       <h2>検索結果</h2>
+      <p id="searchResultSummary" class="search-result-summary" role="status" aria-live="polite" aria-atomic="true"></p>
+      <p class="search-result-help">件数は出演組数ではなく掲載情報の数です。複数セッションの公演も1件として数え、進出者・出演予定者一覧は開催件数に含めません。過去の開催は下の欄を開いて確認できます。</p>
+      <p id="searchMatchLegend" class="search-match-legend" hidden>青い枠・下線：芸人名の検索条件に一致（黄色はお気に入り）</p>
       <p id="resultNote" class="result-note">
         ※出演者は香盤順です<br>
       </p>
@@ -197,6 +200,6 @@
     </footer>
     
   </main>
-  <script src="script.js?v=20261025-1"></script>
+  <script src="script.js?v=20261026-1"></script>
 </body>
 </html>

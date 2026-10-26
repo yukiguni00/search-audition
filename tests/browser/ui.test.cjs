@@ -108,7 +108,7 @@ for (const width of [1280,390,375,320]) {
   test(`バックアップ操作領域 ${width}px: 移動前後・閉じるボタンは縦横44px以上、CSSバージョン・下線を確認`, {timeout:30000}, async () => {
     const {context, page, errors} = await openPage(width);
     try {
-      assert.equal(await page.locator('link[rel="stylesheet"]').getAttribute('href'), 'style.css?v=20261024-3');
+      assert.equal(await page.locator('link[rel="stylesheet"]').getAttribute('href'), 'style.css?v=20261026-1');
       const metrics = [];
       const checkLink = async locator => {
         const style = await locator.evaluate(el => {
@@ -490,7 +490,7 @@ for (const width of [1280,320]) {
       await openSearchURL(page,`${baseURL}/?noanalytics=1&month=10&unknown=drop#contact`);
       assert.equal(new URL(page.url()).hash,'#contact');
       assert.equal(new URL(page.url()).searchParams.get('unknown'),null);
-      assert.equal(await page.locator('script[src^="script.js?"]').getAttribute('src'),'script.js?v=20261025-1');
+      assert.equal(await page.locator('script[src^="script.js?"]').getAttribute('src'),'script.js?v=20261026-1');
       await page.locator('#day').selectOption('30');
       await page.locator('#nameQuery').fill(backupNames[0]);
       await page.waitForFunction(name=>new URL(location.href).searchParams.get('name')===name,backupNames[0]);
@@ -533,6 +533,102 @@ for (const width of [1280,320]) {
       await page.reload();await readySearchPage(page);
       assert.equal(await page.locator('#nameQuery').inputValue(),selected);
       assert.deepEqual(await searchCardIDs(page),ids);assert.deepEqual(errors,[]);
+    } finally {await context.close();}
+  });
+}
+
+async function assertVisibleCounts(page) {
+  // Open the archive to compare the summary to every matching rendered card.
+  if(await page.locator('#archiveBody').isHidden()) await page.locator('#archiveToggleBtn').click();
+  const future=await page.locator('#results .result-card:not(.pending-stage-card)').count();
+  const pending=await page.locator('#results .pending-stage-card').count();
+  const past=await page.locator('#archiveResults .result-card').count();
+  assert.equal(await page.locator('#searchResultSummary').textContent(),`今後の開催：${future}件 ／ 進出者・出演予定者一覧：${pending}件 ／ 過去の開催：${past}件`);
+  return {future,pending,past};
+}
+async function assertMatchChips(page) {
+  const state=await page.evaluate(()=>{
+    const query=getCurrentFilters().nameQuery;
+    return [...document.querySelectorAll('#results .performer, #archiveResults .performer')].map(chip=>({
+      expected:performerMatchesNameQuery(chip.querySelector('.star').dataset.name,query),
+      actual:chip.classList.contains('search-match'),
+      description:chip.querySelector('.visually-hidden')?.textContent,
+    }));
+  });
+  for(const chip of state){assert.equal(chip.actual,chip.expected);if(chip.expected)assert.equal(chip.description,'（芸人名の検索条件に一致）');}
+  return state.filter(c=>c.actual).length;
+}
+for(const width of [1280,390,375,320]) {
+  test(`結果視認性 ${width}px: 実データの件数・正規化一致・お気に入り・URL復元・クリア・0件`,{timeout:30000},async()=>{
+    const {context,page,errors}=await openPage(width);
+    try {
+      assert.deepEqual(await assertVisibleCounts(page),{future:3,pending:0,past:156});
+      assert.equal(await page.locator('#searchMatchLegend').isHidden(),true);
+      assert.equal(await assertMatchChips(page),0);
+      await page.locator('#nameQuery').fill(' ｚａｚｙ ');
+      await page.waitForFunction(()=>getCurrentFilters().nameQuery==='zazy'&&document.querySelector('.search-match'));
+      await page.locator('#month').selectOption('10');await page.locator('#day').selectOption('30');
+      assert.deepEqual(await assertVisibleCounts(page),{future:1,pending:0,past:0});
+      assert.ok(await assertMatchChips(page)>0);
+      const chip=page.locator('#results .search-match').first();
+      const profile=await chip.locator('.performer-profile-link').getAttribute('href');
+      const order=await page.locator('#results .star').evaluateAll(nodes=>nodes.map(n=>n.dataset.name));
+      await chip.locator('.star').focus();await page.keyboard.press('Enter');
+      assert.equal(await page.locator('#results .search-match.favorite').count(),1);
+      assert.equal(await page.locator('#results .search-match .star').getAttribute('aria-pressed'),'true');
+      assert.deepEqual(await page.locator('#results .star').evaluateAll(nodes=>nodes.map(n=>n.dataset.name)),order);
+      assert.equal(await page.locator('#results .search-match .performer-profile-link').getAttribute('href'),profile);
+      const colors=await page.locator('#results .search-match.favorite').evaluate(el=>({bg:getComputedStyle(el).backgroundColor,border:getComputedStyle(el).outlineColor}));
+      assert.equal(colors.bg,'rgb(255, 245, 157)');assert.equal(colors.border,'rgb(24, 90, 157)');
+      await page.reload();await readySearchPage(page);
+      assert.equal(await page.locator('#nameQuery').inputValue(),' ｚａｚｙ ');
+      await assertVisibleCounts(page);assert.ok(await assertMatchChips(page)>0);
+      assert.equal(await page.locator('#searchResultSummary').getAttribute('role'),'status');
+      assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true);
+      const overflow=await page.locator('#results .performer, #searchResultSummary, #searchMatchLegend').evaluateAll(nodes=>nodes.filter(el=>el.scrollWidth>el.clientWidth+1).length);
+      assert.equal(overflow,0);
+      for(const id of ['shareSearchBtn','favoriteBackupBtn','archiveToggleBtn']) {const rect=await page.locator('#'+id).boundingBox();assert.ok(rect.height>=44&&rect.width>=44,id);}
+      if(process.env.TEST_SCREENSHOT_DIR)await page.screenshot({path:path.join(process.env.TEST_SCREENSHOT_DIR,`visibility-${width}.png`),fullPage:true});
+      await page.locator('#clearBtn').click();assert.equal(await assertMatchChips(page),0);
+      assert.equal(await page.locator('#searchMatchLegend').isHidden(),true);
+      await page.locator('#nameQuery').fill('存在しない視認性テスト');
+      await page.waitForFunction(()=>document.querySelector('#searchResultSummary').textContent==='今後の開催：0件 ／ 進出者・出演予定者一覧：0件 ／ 過去の開催：0件');
+      assert.deepEqual(await assertVisibleCounts(page),{future:0,pending:0,past:0});assert.deepEqual(errors,[]);
+    } finally {await context.close();}
+  });
+  test(`結果視認性 ${width}px: 過去のみ・改名表記・日本語部分一致`,{timeout:30000},async()=>{
+    const {context,page,errors}=await openPage(width);
+    try {
+      await openSearchURL(page,`${baseURL}/?noanalytics=1&name=${encodeURIComponent('竹迫ゆうじ')}&month=4`);
+      const counts=await assertVisibleCounts(page);assert.equal(counts.future,0);assert.equal(counts.pending,0);assert.ok(counts.past>0);
+      assert.ok(await assertMatchChips(page)>0);assert.equal(await page.locator('#archiveBody').isVisible(),true);
+      await page.locator('#clearBtn').click();await page.locator('#nameQuery').fill('野球');
+      await page.waitForFunction(()=>getCurrentFilters().nameQuery==='野球'&&document.querySelector('.search-match'));
+      await assertVisibleCounts(page);assert.ok(await assertMatchChips(page)>0);assert.deepEqual(errors,[]);
+    } finally {await context.close();}
+  });
+  test(`結果視認性 ${width}px: 合成データで進出一覧のみ・複数セッション・安全な名前表示`,{timeout:30000},async()=>{
+    const {context,page,errors}=await openPage(width);
+    try {
+      // In-memory fixture only: never writes any production JSON.
+      await page.evaluate(()=>{
+        events=[
+          {id:'qa-source',date:'2026-10-01',month:10,day:1,time:'13:00',timeMinutes:780,eventType:'audition-1st-east',title:'検証用進出元',performers:['テストＡ'],qualifiedPerformers:['テストＡ'],additionalQualifiedPerformers:['テストＢ'],qualifiedNextStageDate:'2026-11-01'},
+          {id:'qa-sessions',date:'2026-12-01',dateEnd:'2026-12-02',month:12,day:1,time:'13:00',eventType:'standup',title:'検証用複数セッション',performers:[],sessions:[{date:'2026-12-01',time:'13:00',performers:['テストＡ','別の出演者']},{date:'2026-12-02',time:'19:00',performers:['テストＡ','<img src=x onerror="window.visibilityXSS=true">']}]}
+        ];runSearch();
+      });
+      assert.deepEqual(await assertVisibleCounts(page),{future:1,pending:1,past:1});
+      await page.locator('#month').selectOption('11');await page.locator('#nameQuery').fill(' テストａ ');
+      await page.waitForFunction(()=>document.querySelector('#results .search-match'));
+      assert.deepEqual(await assertVisibleCounts(page),{future:0,pending:1,past:0});assert.equal(await assertMatchChips(page),1);
+      await page.locator('#clearBtn').click();await page.locator('#month').selectOption('12');await page.locator('#nameQuery').fill('テスト');
+      await page.waitForFunction(()=>document.querySelectorAll('#results .search-match').length===2);
+      assert.deepEqual(await assertVisibleCounts(page),{future:1,pending:0,past:0});assert.equal(await assertMatchChips(page),2);
+      assert.equal(await page.locator('#results .event-session-row').count(),2);
+      assert.equal(await page.locator('#results .performer').count(),4);
+      assert.equal(await page.evaluate(()=>window.visibilityXSS),undefined);assert.equal(await page.locator('#results img').count(),0);
+      await page.locator('#clearBtn').click();assert.equal(await assertMatchChips(page),0);
+      assert.deepEqual(errors,[]);
     } finally {await context.close();}
   });
 }
