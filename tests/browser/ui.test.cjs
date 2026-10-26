@@ -88,6 +88,8 @@ for (const width of [1280,390,375,320]) {
       await page.reload();
       await page.locator('#favoritePanel').waitFor({state:'visible'});
       assert.deepEqual(await page.evaluate(() => JSON.parse(localStorage.getItem('favoritePerformers'))), [name]);
+      // Reload now restores search from the URL; reset it before the three-card check.
+      await page.locator('#clearBtn').click();
       await filterSecondStage(page);
       await page.locator('#favoriteSchedule [data-event-id]').first().click();
       assert.equal(await page.locator('#eventType').inputValue(), 'all');
@@ -106,7 +108,7 @@ for (const width of [1280,390,375,320]) {
   test(`バックアップ操作領域 ${width}px: 移動前後・閉じるボタンは縦横44px以上、CSSバージョン・下線を確認`, {timeout:30000}, async () => {
     const {context, page, errors} = await openPage(width);
     try {
-      assert.equal(await page.locator('link[rel="stylesheet"]').getAttribute('href'), 'style.css?v=20261024-2');
+      assert.equal(await page.locator('link[rel="stylesheet"]').getAttribute('href'), 'style.css?v=20261024-3');
       const metrics = [];
       const checkLink = async locator => {
         const style = await locator.evaluate(el => {
@@ -362,4 +364,175 @@ for (const width of [1280,390]) {
       } finally { page.off('dialog', dismissUnexpected); }
     });
   }
+}
+
+async function readySearchPage(page) {
+  await page.waitForFunction(() => document.querySelector('#results').childElementCount > 0);
+}
+async function openSearchURL(page, url) {
+  await page.goto(url);
+  await readySearchPage(page);
+}
+async function currentSearchControls(page) {
+  return page.evaluate(() => Object.fromEntries(['nameQuery','eventType','month','day','hour'].map(id=>[id,document.getElementById(id).value])));
+}
+async function searchCardIDs(page, target = '#results') {
+  return page.locator(`${target} .result-card`).evaluateAll(cards=>cards.map(card=>card.id));
+}
+async function captureSearchCopy(page) {
+  await page.evaluate(() => Object.defineProperty(navigator,'clipboard',{configurable:true,value:{writeText:async value=>{window.copiedSearchURL=value;}}}));
+}
+for (const width of [1280,320]) {
+  test(`共有検索 ${width}px: 日本語・空白と複数条件のURL更新、遷移なし、再読込復元`, {timeout:30000}, async () => {
+    const {context,page,errors}=await openPage(width);
+    try {
+      const origin=await page.evaluate(()=>performance.timeOrigin);
+      const length=await page.evaluate(()=>history.length);
+      await filterSecondStage(page);
+      await page.locator('#hour').selectOption('13');
+      await page.locator('#nameQuery').fill('  野球とサッカー  ');
+      await page.waitForFunction(()=>new URL(location.href).searchParams.get('name')==='  野球とサッカー  ');
+      const url=new URL(page.url());
+      assert.equal(url.searchParams.get('noanalytics'),'1');
+      assert.equal(url.searchParams.get('eventType'),'audition-2nd-east');
+      assert.equal(url.searchParams.get('month'),'10'); assert.equal(url.searchParams.get('day'),'30'); assert.equal(url.searchParams.get('hour'),'13');
+      assert.equal(await page.evaluate(()=>performance.timeOrigin),origin);
+      assert.equal(await page.evaluate(()=>history.length),length);
+      const controls=await currentSearchControls(page);const ids=await searchCardIDs(page);
+      assert.deepEqual(ids,[`event-${stages[0].id}`]);
+      await page.reload(); await readySearchPage(page);
+      assert.deepEqual(await currentSearchControls(page),controls); assert.deepEqual(await searchCardIDs(page),ids);
+      assert.deepEqual(errors,[]);
+    } finally {await context.close();}
+  });
+  test(`共有検索 ${width}px: コピーは検索のみ、★のみ・保存・バックアップ・解析フラグを漏らさない`, {timeout:30000}, async () => {
+    const {context,page,errors}=await openPage(width);
+    let recipient;
+    try {
+      await filterSecondStage(page);
+      await clickFavorite(page,backupNames[0],true);
+      await page.locator('#favoriteBackupBtn').click(); await page.locator('#createBackupBtn').click();
+      const backup=await page.locator('#backupCodeOutput').inputValue();assert.ok(backup);
+      await page.locator('#closeBackupBtn').click();
+      await page.locator('#nameQuery').fill(backupNames[0]);
+      await page.waitForFunction(name=>new URL(location.href).searchParams.get('name')===name,backupNames[0]);
+      await page.locator('#favoritesOnlyBtn').click();
+      const before=await storageSnapshot(page);
+      await page.evaluate(code=>history.replaceState(null,'',`${location.pathname}?noanalytics=1&favoritePerformers=SECRET&backup=${encodeURIComponent(code)}#private`),backup);
+      await captureSearchCopy(page);await page.locator('#shareSearchBtn').click();
+      const copied=await page.evaluate(()=>window.copiedSearchURL);const shared=new URL(copied);
+      assert.deepEqual([...shared.searchParams.keys()],['name','eventType','month','day']);
+      assert.equal(shared.hash,'');assert.equal(shared.searchParams.get('noanalytics'),null);
+      assert.ok(!copied.includes('SECRET'));assert.ok(!copied.includes(backup));
+      assert.deepEqual(await storageSnapshot(page),before);
+      assert.equal(await page.locator('#favoritesOnlyBtn').getAttribute('aria-pressed'),'true');
+      assert.ok((await page.locator('#shareSearchNote').textContent()).includes('「★のみ」とお気に入り登録情報は共有されません'));
+      assert.ok((await page.locator('#shareSearchStatus').textContent()).includes('コピーしました'));
+      assert.equal(await page.locator('#shareSearchFallback').isHidden(),true);
+      recipient=await openPage(width);
+      // Shared URLs intentionally omit noanalytics; satisfy analytics scripts locally
+      // without network traffic or console noise in this separate empty context.
+      await recipient.context.route('**/*', route=>new URL(route.request().url()).origin===baseURL
+        ? route.continue() : route.fulfill({body:'',contentType:'text/javascript'}));
+      await openSearchURL(recipient.page,copied);
+      assert.equal(await recipient.page.locator('#nameQuery').inputValue(),backupNames[0]);
+      assert.deepEqual(await searchCardIDs(recipient.page),[`event-${stages[0].id}`]);
+      assert.equal(await recipient.page.locator('#favoritesOnlyBtn').getAttribute('aria-pressed'),'false');
+      assert.equal(await recipient.page.evaluate(()=>localStorage.getItem('favoritePerformers')),null);
+      assert.equal(await recipient.page.locator('#favoritePanel').isHidden(),true);
+      assert.deepEqual(errors,[]);assert.deepEqual(recipient.errors,[]);
+    } finally {if(recipient)await recipient.context.close();await context.close();}
+  });
+  test(`共有検索 ${width}px: 不正・未知・重複パラメータを無視し、条件クリアで検索パラメータを除去`, {timeout:30000}, async () => {
+    const {context,page,errors}=await openPage(width);
+    try {
+      await openSearchURL(page,`${baseURL}/?noanalytics=1&name=a&name=b&eventType=unknown&month=13&day=-1&hour=NaN&favoritesOnly=1&backup=SECRET`);
+      assert.deepEqual(await currentSearchControls(page),{nameQuery:'',eventType:'all',month:'all',day:'all',hour:'all'});
+      assert.equal(new URL(page.url()).search,'?noanalytics=1');
+      const malicious='<img src=x onerror="window.searchXSS=true"> 日本語 空白';
+      await openSearchURL(page,`${baseURL}/?noanalytics=1&name=${encodeURIComponent(malicious)}&month=10`);
+      assert.equal(await page.locator('#nameQuery').inputValue(),malicious);
+      assert.equal(await page.evaluate(()=>window.searchXSS),undefined);
+      await openSearchURL(page,`${baseURL}/?noanalytics=1&name=%E0%A4%A&day=30&day=31`);
+      assert.equal(await page.locator('#day').inputValue(),'all');
+      await page.locator('#clearBtn').click();
+      assert.equal(new URL(page.url()).search,'?noanalytics=1');
+      assert.deepEqual(await currentSearchControls(page),{nameQuery:'',eventType:'all',month:'all',day:'all',hour:'all'});
+      assert.ok((await searchCardIDs(page)).length>0); assert.deepEqual(errors,[]);
+    } finally {await context.close();}
+  });
+  for (const mode of ['missing','rejected']) {
+    test(`共有検索 ${width}px: clipboard ${mode}でも44pxボタンと手動コピー欄で共有`, {timeout:30000}, async () => {
+      const {context,page,errors}=await openPage(width);
+      try {
+        await page.evaluate(mode=>Object.defineProperty(navigator,'clipboard',{configurable:true,value:mode==='missing'?undefined:{writeText:async()=>{throw new Error('denied');}}}),mode);
+        await page.locator('#nameQuery').fill(' 日本語 空白 ');
+        // Copy immediately, without waiting for the search debounce.
+        await page.locator('#shareSearchBtn').click();
+        assert.equal(await page.locator('#shareSearchFallback').isVisible(),true);
+        const input=page.locator('#shareSearchURL');const value=await input.inputValue();
+        assert.equal(new URL(value).searchParams.get('name'),' 日本語 空白 ');
+        assert.equal(new URL(value).searchParams.get('noanalytics'),null);
+        assert.equal(await input.getAttribute('readonly'),'');
+        const selection=await input.evaluate(el=>[el.selectionStart,el.selectionEnd]);assert.deepEqual(selection,[0,value.length]);
+        const rect=await page.locator('#shareSearchBtn').boundingBox();assert.ok(rect.width>=44&&rect.height>=44);
+        assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true);
+        if(process.env.TEST_SCREENSHOT_DIR)await page.locator('.share-search').screenshot({path:path.join(process.env.TEST_SCREENSHOT_DIR,`share-${mode}-${width}.png`)});
+        await page.locator('#clearBtn').click();
+        assert.equal(await page.locator('#shareSearchFallback').isHidden(),true);
+        assert.equal(await page.locator('#shareSearchStatus').textContent(),'');assert.deepEqual(errors,[]);
+      } finally {await context.close();}
+    });
+  }
+  test(`共有検索 ${width}px: 初期表示・条件変更・クリアは#contact保持、コピーには含めない`, {timeout:30000}, async () => {
+    const {context,page,errors}=await openPage(width);
+    try {
+      await openSearchURL(page,`${baseURL}/?noanalytics=1&month=10&unknown=drop#contact`);
+      assert.equal(new URL(page.url()).hash,'#contact');
+      assert.equal(new URL(page.url()).searchParams.get('unknown'),null);
+      assert.equal(await page.locator('script[src^="script.js?"]').getAttribute('src'),'script.js?v=20261025-1');
+      await page.locator('#day').selectOption('30');
+      await page.locator('#nameQuery').fill(backupNames[0]);
+      await page.waitForFunction(name=>new URL(location.href).searchParams.get('name')===name,backupNames[0]);
+      assert.equal(new URL(page.url()).hash,'#contact');
+      await clickFavorite(page,backupNames[0],true);
+      await page.locator('#favoritesOnlyBtn').click();
+      const before=await storageSnapshot(page);
+      await captureSearchCopy(page);await page.locator('#shareSearchBtn').click();
+      const copied=new URL(await page.evaluate(()=>window.copiedSearchURL));
+      assert.deepEqual([...copied.searchParams.keys()],['name','month','day']);
+      assert.equal(copied.hash,'');assert.equal(copied.searchParams.get('noanalytics'),null);
+      assert.equal(copied.searchParams.get('favoritePerformers'),null);
+      assert.equal(copied.searchParams.get('favoritesOnly'),null);
+      assert.equal(copied.searchParams.get('backup'),null);
+      assert.equal(new URL(page.url()).hash,'#contact');
+      assert.deepEqual(await storageSnapshot(page),before);
+      await page.locator('#clearBtn').click();
+      assert.equal(new URL(page.url()).search,'?noanalytics=1');
+      assert.equal(new URL(page.url()).hash,'#contact');
+      assert.equal(await page.locator('#favoritesOnlyBtn').getAttribute('aria-pressed'),'false');
+      await page.reload();await readySearchPage(page);
+      assert.equal(new URL(page.url()).hash,'#contact');
+      assert.equal(new URL(page.url()).search,'?noanalytics=1');
+      assert.deepEqual(await storageSnapshot(page),before);assert.deepEqual(errors,[]);
+    } finally {await context.close();}
+  });
+  test(`共有検索 ${width}px: 過去公演の再現とランダム芸人検索もURLを更新`, {timeout:30000}, async () => {
+    const {context,page,errors}=await openPage(width);
+    try {
+      await openSearchURL(page,`${baseURL}/?noanalytics=1&eventType=audition-1st-east&month=4`);
+      assert.equal(await page.locator('#archiveBody').isVisible(),true);
+      const archive=await searchCardIDs(page,'#archiveResults');assert.ok(archive.length>0);
+      await page.reload();await readySearchPage(page);
+      assert.deepEqual(await searchCardIDs(page,'#archiveResults'),archive);
+      await page.locator('#randomPerformerBtn').click();
+      const selected=await page.locator('#nameQuery').inputValue();assert.ok(selected);
+      const url=new URL(page.url());assert.equal(url.searchParams.get('name'),selected);
+      assert.deepEqual([...url.searchParams.keys()],['name','noanalytics']);
+      const ids=await searchCardIDs(page);
+      await page.reload();await readySearchPage(page);
+      assert.equal(await page.locator('#nameQuery').inputValue(),selected);
+      assert.deepEqual(await searchCardIDs(page),ids);assert.deepEqual(errors,[]);
+    } finally {await context.close();}
+  });
 }

@@ -829,3 +829,10 @@ a:focus-visible{outline:3px solid #1769aa;outline-offset:3px}
   gap:0 .35em;
   font-weight:700;
 }
+
+.share-search{margin-top:16px;min-width:0}
+.share-search-btn{min-height:44px;min-width:44px;max-width:100%;white-space:normal}
+.share-search-status{font-size:.85rem;color:#555;overflow-wrap:anywhere}
+.share-search-status:empty{display:none}
+#shareSearchFallback label{display:block;margin:8px 0;font-size:.85rem}
+#shareSearchURL{min-width:0;max-width:100%}
