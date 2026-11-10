@@ -844,3 +844,5 @@ a:focus-visible{outline:3px solid #1769aa;outline-offset:3px}
 .event-mc{margin:8px 0 12px;line-height:1.6;overflow-wrap:anywhere}
 .mc-name.search-match{outline:2px solid #185a9d;outline-offset:2px;text-decoration:underline;text-underline-offset:3px}
 .lineup-order-note{font-weight:400;color:#666;font-size:.85rem}
+
+#clearBtn{min-height:44px;min-width:44px}
