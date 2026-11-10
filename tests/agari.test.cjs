@@ -4,7 +4,7 @@ const { createHash } = require('node:crypto');
 const { loadApp, readJSON } = require('./helpers/app.cjs');
 const all = readJSON('data/events.json');
 const added = all.filter(e => e.eventType === 'agari-stage');
-const publishedResultEventIDs = new Set(['2026-11-02-1700-agari-stage','2026-11-02-1930-agari-stage','2026-11-04-1700-agari-stage','2026-11-04-1930-agari-stage','2026-11-05-1700-agari-stage','2026-11-05-1930-agari-stage']); 
+const publishedResultEventIDs = new Set(['2026-11-02-1700-agari-stage','2026-11-02-1930-agari-stage','2026-11-04-1700-agari-stage','2026-11-04-1930-agari-stage','2026-11-05-1700-agari-stage','2026-11-05-1930-agari-stage']);
 const filters = { nameQuery:'', eventType:'agari-stage', month:'11', day:'all', hour:'all' };
 
 test('既存164公演は全フィールド不変、アガり30公演追加で194公演', () => {
