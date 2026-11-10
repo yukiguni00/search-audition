@@ -163,7 +163,7 @@ for (const width of [1280,390,375,320]) {
   test(`バックアップ操作領域 ${width}px: 移動前後・閉じるボタンは縦横44px以上、CSSバージョン・下線を確認`, {timeout:30000}, async () => {
     const {context, page, errors} = await openPage(width);
     try {
-      assert.equal(await page.locator('link[rel="stylesheet"]').getAttribute('href'), 'style.css?v=20261111-v6-2');
+      assert.equal(await page.locator('link[rel="stylesheet"]').getAttribute('href'), 'style.css?v=20261111-v6-3');
       const metrics = [];
       const checkLink = async locator => {
         const style = await locator.evaluate(el => {
@@ -907,7 +907,7 @@ for(const width of [1280,320]){
 for(const width of [1280,390,375,320]){
  test(`v6 ${width}px: MC検索・過去MC・順序・短い案内・URL復元・SR件数・既存保存`,{timeout:60000},async()=>{
  const {context,page,errors}=await openPage(width,'2026-11-11T03:00:00Z');try{
- assert.equal(await page.locator('h1').textContent(),'オーディション EAST・アガり！ステージ出演者検索（非公式）');assert.equal(await page.locator('h1 br').count(),1);assert.equal(await page.locator('.hero p,#shareSearchBtn,#shareSearchFallback,#resultNote').count(),0);
+ assert.equal(await page.locator('h1').textContent(),'オーディション EAST・アガり！ステージ出演者検索（非公式）');assert.equal(await page.locator('h1 br').count(),1);assert.equal(await page.locator('.hero-title-main').evaluate(el=>{const range=document.createRange();range.selectNodeContents(el);return range.getClientRects().length;}),1,'タイトル先頭行は折り返さない');assert.equal(await page.locator('.hero p,#shareSearchBtn,#shareSearchFallback,#resultNote').count(),0);
  assert.equal(await page.locator('#searchResultSummary').getAttribute('class'),'visually-hidden');assert.equal(await page.locator('#searchResultSummary').getAttribute('role'),'status');assert.equal(await page.locator('footer a[href="https://x.com/agaristage"]').count(),1);
  await page.locator('#eventType').selectOption('agari-stage');await page.locator('#month').selectOption('11');await page.locator('#day').selectOption('2');await page.locator('#nameQuery').fill(' サンライズ ');
  await page.waitForFunction(()=>new URL(location.href).searchParams.get('name')===' サンライズ ');await page.locator('#archiveBody').waitFor({state:'visible'});
