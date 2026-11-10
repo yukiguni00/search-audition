@@ -1,0 +1,74 @@
+[
+  {
+    "id": "2026-12-12-1700-kiwami-grand-battle-east-1",
+    "eventType": "kiwami-grand-battle-east",
+    "title": "グランドバトルEAST 第一部",
+    "date": "2026-12-12",
+    "month": 12,
+    "day": 12,
+    "time": "17:00",
+    "timeMinutes": 1020,
+    "venue": "渋谷よしもと漫才劇場",
+    "lineupOrder": false,
+    "performers": [],
+    "eventNotice": "公演枠のみ掲載。2ndステージからの進出者6組の出演部・出演順は未発表です。劇場所属芸人の出演者情報は掲載対象外です。",
+    "ticket": {
+      "url": "https://ticket.fany.lol/reception/71579/56356",
+      "linkLabel": "FANYチケット"
+    }
+  },
+  {
+    "id": "2026-12-12-2015-kiwami-grand-battle-east-2",
+    "eventType": "kiwami-grand-battle-east",
+    "title": "グランドバトルEAST 第二部",
+    "date": "2026-12-12",
+    "month": 12,
+    "day": 12,
+    "time": "20:15",
+    "timeMinutes": 1215,
+    "venue": "渋谷よしもと漫才劇場",
+    "lineupOrder": false,
+    "performers": [],
+    "eventNotice": "公演枠のみ掲載。2ndステージからの進出者6組の出演部・出演順は未発表です。劇場所属芸人の出演者情報は掲載対象外です。",
+    "ticket": {
+      "url": "https://ticket.fany.lol/reception/71579/56357",
+      "linkLabel": "FANYチケット"
+    }
+  },
+  {
+    "id": "2026-12-13-1700-kiwami-grand-battle-east-3",
+    "eventType": "kiwami-grand-battle-east",
+    "title": "グランドバトルEAST 第三部",
+    "date": "2026-12-13",
+    "month": 12,
+    "day": 13,
+    "time": "17:00",
+    "timeMinutes": 1020,
+    "venue": "渋谷よしもと漫才劇場",
+    "lineupOrder": false,
+    "performers": [],
+    "eventNotice": "公演枠のみ掲載。2ndステージからの進出者6組の出演部・出演順は未発表です。劇場所属芸人の出演者情報は掲載対象外です。",
+    "ticket": {
+      "url": "https://ticket.fany.lol/reception/71579/56358",
+      "linkLabel": "FANYチケット"
+    }
+  },
+  {
+    "id": "2026-12-13-2015-kiwami-grand-battle-east-4",
+    "eventType": "kiwami-grand-battle-east",
+    "title": "グランドバトルEAST 第四部",
+    "date": "2026-12-13",
+    "month": 12,
+    "day": 13,
+    "time": "20:15",
+    "timeMinutes": 1215,
+    "venue": "渋谷よしもと漫才劇場",
+    "lineupOrder": false,
+    "performers": [],
+    "eventNotice": "公演枠のみ掲載。2ndステージからの進出者6組の出演部・出演順は未発表です。劇場所属芸人の出演者情報は掲載対象外です。",
+    "ticket": {
+      "url": "https://ticket.fany.lol/reception/71579/56359",
+      "linkLabel": "FANYチケット"
+    }
+  }
+]
