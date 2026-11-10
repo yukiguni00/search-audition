@@ -1,0 +1,48 @@
+{
+  "originalEventsSHA256": "afdef78f434c71e0854129d77711751fed5cbabe87c269366a4a501572af5643",
+  "novemberEventId": "2026-11-06-1930-kakeru-challenge-east",
+  "decemberEventIds": [
+    "2026-12-12-1700-kiwami-grand-battle-east-1",
+    "2026-12-12-2015-kiwami-grand-battle-east-2",
+    "2026-12-13-1700-kiwami-grand-battle-east-3",
+    "2026-12-13-2015-kiwami-grand-battle-east-4"
+  ],
+  "auditionKakeru": [
+    "ゾンビのアトリエ",
+    "山下野村",
+    "イザナミン",
+    "ことぶき",
+    "七色フラン",
+    "ボダリキボバイ",
+    "キイロイゾウサン",
+    "スライダー",
+    "タケゾウ",
+    "ガチ銀河",
+    "エリー",
+    "ネネネ",
+    "ライダーキック",
+    "湘南ブースト",
+    "ミックストマトジュース"
+  ],
+  "auditionKiwami": [
+    "パピヨン",
+    "ZAZY",
+    "スーズ",
+    "コロネケン",
+    "ジェーン",
+    "そいそ〜す"
+  ],
+  "promoted": [
+    "ミックストマトジュース",
+    "ボダリキボバイ",
+    "湘南ブースト"
+  ],
+  "officialResultURL": "https://shibuya-manzaigekijyo.yoshimoto.co.jp/2026/11/94kakerueast.html",
+  "novemberTicketURL": "https://ticket.fany.lol/event/detail/21350",
+  "decemberTicketURLs": [
+    "https://ticket.fany.lol/reception/71579/56356",
+    "https://ticket.fany.lol/reception/71579/56357",
+    "https://ticket.fany.lol/reception/71579/56358",
+    "https://ticket.fany.lol/reception/71579/56359"
+  ]
+}

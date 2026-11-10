@@ -1,0 +1,23 @@
+[
+  {
+    "eventId": "2026-10-15-1600-audition-1st-east",
+    "performerName": "ZAZY",
+    "field": "qualifiedPerformers",
+    "reason": "公式合格発表に基づく登録を優先する。既存香盤への不在は確認済みの既知例外として扱い、出演者一覧・合格者情報を変更しない。",
+    "evidence": "2026-10-24のユーザー確認・指示。公式資料の独立再確認は今回未実施。"
+  },
+  {
+    "eventId": "2026-10-19-1830-audition-1st-east",
+    "performerName": "烏骨鶏",
+    "field": "qualifiedPerformers",
+    "reason": "公式合格発表に基づく登録を優先する。既存香盤への不在は確認済みの既知例外として扱い、出演者一覧・合格者情報を変更しない。",
+    "evidence": "2026-10-24のユーザー確認・指示。公式資料の独立再確認は今回未実施。"
+  },
+  {
+    "eventId": "2026-10-20-1830-audition-1st-east",
+    "performerName": "つつがないね",
+    "field": "qualifiedPerformers",
+    "reason": "公式合格発表に基づく登録を優先する。既存香盤への不在は確認済みの既知例外として扱い、出演者一覧・合格者情報を変更しない。",
+    "evidence": "2026-10-24のユーザー確認・指示。公式資料の独立再確認は今回未実施。"
+  }
+]

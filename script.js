@@ -1,0 +1,2028 @@
+let favoritesOnlyMode = false;
+const FAVORITE_KEY = "favoritePerformers";
+const FALLBACK_PERFORMER_ALIAS_DATA = {
+  aliases: [{ currentName: "竹迫ゆうじだ！！！", aliases: ["竹迫ゆうじ"] }],
+};
+let performerRenameAliases = new Map();
+let performerIdentities = new Map();
+
+// Candidate spellings are search hints, never confirmed identity aliases.
+function buildPerformerIdentities(eventList) {
+  const identities = new Map();
+  eventList.forEach(ev => (ev.lineup || []).forEach(entry => {
+    if (entry.entryKey) identities.set(normalizeTextWithoutAliases(entry.name), entry);
+  }));
+  return identities;
+}
+let events = [];
+let performerProfiles = new Map();
+let archiveOpen = false;
+let favoriteScheduleExpanded = false;
+
+function formatDisplayDate(ev) {
+  const weekdays = ["日", "月", "火", "水", "木", "金", "土"];
+  const dateObj = new Date(ev.date);
+  const weekday = weekdays[dateObj.getDay()];
+  const startLabel = `${ev.month}月${ev.day}日(${weekday})`;
+  const sessions = getEventSessions(ev);
+
+  if (ev.dateEnd && ev.dateEnd !== ev.date) {
+    const endObj = new Date(ev.dateEnd);
+    const endWeekday = weekdays[endObj.getDay()];
+    const endLabel = `${endObj.getMonth() + 1}月${endObj.getDate()}日(${endWeekday})`;
+    return sessions.length ? `${startLabel}〜${endLabel}` : `${startLabel}〜${endLabel} ${ev.time}`;
+  }
+
+  if (sessions.length > 1) return startLabel;
+
+  if (ev.time === "出演公演未定" || ev.time === "未定") {
+    return `${startLabel} ${ev.time}`;
+  }
+
+  return `${startLabel} 開演${ev.time}`;
+}
+
+// 正式会場名は venue に保持し、カード・お気に入り欄は同じ表示名を参照する。
+function getDisplayVenue(ev) {
+  return ev.venueDisplayName || ev.venue || "";
+}
+
+function normalizeTextWithoutAliases(text) {
+  return (text || "")
+    .trim()
+    .replace(/\s+/g, " ")
+    .normalize("NFKC")
+    .replace(/[〜～~∼]/g, "〜")
+    .toLowerCase();
+}
+
+function normalizeText(text) {
+  const normalized = normalizeTextWithoutAliases(text);
+
+  const identity = performerIdentities.get(normalized);
+  const key = identity ? normalizeTextWithoutAliases(identity.entryKey) : normalized;
+  return performerRenameAliases.get(key) || key;
+}
+
+// Both filtering and visual emphasis use the same normalized partial match.
+function performerMatchesNameQuery(name, normalizedQuery) {
+  const entry = performerIdentities.get(normalizeTextWithoutAliases(name));
+  return Boolean(normalizedQuery) && [name, ...(entry?.searchAliases || [])]
+    .some(candidate => normalizeText(candidate).includes(normalizedQuery) ||
+      normalizeTextWithoutAliases(candidate).includes(normalizedQuery));
+}
+
+function emphasizeSearchMatches(target, normalizedQuery) {
+  target.querySelectorAll(".performer").forEach((chip) => {
+    const star = chip.querySelector(".star");
+    if (!star || !performerMatchesNameQuery(star.dataset.name, normalizedQuery)) return;
+    chip.classList.add("search-match");
+    const description = document.createElement("span");
+    description.className = "visually-hidden";
+    description.textContent = "（芸人名の検索条件に一致）";
+    chip.appendChild(description);
+  });
+}
+
+function updateSearchResultSummary(futureResults, pendingCount, pastResults, filters) {
+  const summary = document.getElementById("searchResultSummary");
+  if (summary) summary.textContent = `今後の開催：${futureResults.length}件 ／ 進出者・出演予定者一覧：${pendingCount}件 ／ 過去の開催：${pastResults.length}件`;
+  const legend = document.getElementById("searchMatchLegend");
+  if (legend) legend.hidden = !filters.nameQuery;
+}
+
+function buildPerformerAliasMap(data) {
+  const aliasMap = new Map();
+  const groups = data && Array.isArray(data.aliases) ? data.aliases : [];
+
+  groups.forEach((group) => {
+    const currentName = normalizeTextWithoutAliases(group && group.currentName);
+    if (!currentName) return;
+
+    aliasMap.set(currentName, currentName);
+    (Array.isArray(group.aliases) ? group.aliases : []).forEach((alias) => {
+      const normalizedAlias = normalizeTextWithoutAliases(alias);
+      if (normalizedAlias) aliasMap.set(normalizedAlias, currentName);
+    });
+  });
+
+  return aliasMap;
+}
+
+function getFavorites() {
+  try {
+    const raw = localStorage.getItem(FAVORITE_KEY);
+    const list = raw ? JSON.parse(raw) : [];
+    if (!Array.isArray(list)) return [];
+
+    const normalized = [...new Set(list.map((name) => normalizeText(name)).filter(Boolean))];
+
+    if (JSON.stringify(list) !== JSON.stringify(normalized)) {
+      saveFavorites(normalized);
+    }
+
+    return normalized;
+  } catch (e) {
+    return [];
+  }
+}
+
+function saveFavorites(favorites) {
+  localStorage.setItem(FAVORITE_KEY, JSON.stringify(favorites));
+}
+
+function todayString() {
+  const jst = new Date(Date.now() + 9 * 60 * 60 * 1000);
+
+  if (jst.getUTCHours() < 3) {
+    jst.setUTCDate(jst.getUTCDate() - 1);
+  }
+
+  const year = jst.getUTCFullYear();
+  const month = String(jst.getUTCMonth() + 1).padStart(2, "0");
+  const day = String(jst.getUTCDate()).padStart(2, "0");
+
+  return `${year}-${month}-${day}`;
+}
+
+function toggleFavorite(name) {
+  const favorites = getFavorites();
+  const key = normalizeText(name);
+  const idx = favorites.indexOf(key);
+
+  let isFavorite;
+
+  if (idx >= 0) {
+    favorites.splice(idx, 1);
+    isFavorite = false;
+  } else {
+    favorites.push(key);
+    isFavorite = true;
+  }
+
+  saveFavorites(favorites);
+  renderFavoriteSchedule();
+
+  if (favoritesOnlyMode) {
+    runSearch();
+  } else {
+    updateFavoriteUI(key, isFavorite);
+  }
+}
+
+function updateFavoriteUI(key, isFavorite) {
+  document.querySelectorAll(`.star[data-key="${CSS.escape(key)}"]`).forEach((btn) => {
+    btn.textContent = isFavorite ? "★" : "☆";
+    btn.setAttribute("aria-pressed", isFavorite ? "true" : "false");
+    btn.setAttribute("aria-label", getFavoriteAriaLabel(btn.dataset.name, isFavorite));
+    const performer = btn.closest(".performer");
+    if (performer) {
+      performer.classList.toggle("favorite", isFavorite);
+    }
+  });
+}
+
+function populateSelects() {
+  const monthSelect = document.getElementById("month");
+  const daySelect = document.getElementById("day");
+  const hourSelect = document.getElementById("hour");
+
+  for (let m = 1; m <= 12; m++) {
+    const opt = document.createElement("option");
+    opt.value = String(m);
+    opt.textContent = `${m}月`;
+    monthSelect.appendChild(opt);
+  }
+  for (let d = 1; d <= 31; d++) {
+    const opt = document.createElement("option");
+    opt.value = String(d);
+    opt.textContent = `${d}日`;
+    daySelect.appendChild(opt);
+  }
+  for (let h = 10; h <= 20; h++) {
+    const opt = document.createElement("option");
+    opt.value = String(h);
+    opt.textContent = `${h}時以降`;
+    hourSelect.appendChild(opt);
+  }
+}
+
+function getCurrentFilters() {
+  return {
+    nameQuery: normalizeText(document.getElementById("nameQuery").value),
+    eventType: document.getElementById("eventType").value,
+    month: document.getElementById("month").value,
+    day: document.getElementById("day").value,
+    hour: document.getElementById("hour").value,
+  };
+}
+
+// Only these search controls are shareable; device-specific favorites never enter URLs.
+const SHARED_SEARCH_FIELDS = [
+  ["name", "nameQuery"], ["eventType", "eventType"],
+  ["month", "month"], ["day", "day"], ["hour", "hour"],
+];
+
+function getShareableSearchFilters() {
+  return Object.fromEntries(SHARED_SEARCH_FIELDS.map(([, id]) =>
+    [id, document.getElementById(id).value]
+  ));
+}
+
+function buildSharedSearchURL(baseURL, filters) {
+  const url = new URL(baseURL);
+  url.search = "";
+  url.hash = "";
+  SHARED_SEARCH_FIELDS.forEach(([parameter, id]) => {
+    const value = filters[id];
+    if (typeof value === "string" && value && (id === "nameQuery" || value !== "all")) {
+      url.searchParams.set(parameter, value);
+    }
+  });
+  return url;
+}
+
+function restoreSearchFiltersFromURL() {
+  const params = new URL(window.location.href).searchParams;
+  SHARED_SEARCH_FIELDS.forEach(([parameter, id]) => {
+    const control = document.getElementById(id);
+    // Ambiguous repeated parameters are ignored rather than choosing one silently.
+    const values = params.getAll(parameter);
+    const value = values.length === 1 ? values[0] : "";
+    if (id === "nameQuery") {
+      control.value = value;
+    } else {
+      control.value = Array.from(control.options).some(option => option.value === value)
+        ? value : "all";
+    }
+  });
+}
+
+function updateSearchURL() {
+  const currentURL = new URL(window.location.href);
+  const url = buildSharedSearchURL(currentURL.href, getShareableSearchFilters());
+  // In-page anchors belong to this tab; only copied share URLs omit the hash.
+  url.hash = currentURL.hash;
+  // Keep the test/debug analytics opt-out in this tab, but never copy it for sharing.
+  if (currentURL.searchParams.get("noanalytics") === "1") {
+    url.searchParams.set("noanalytics", "1");
+  }
+  if (url.href !== window.location.href) {
+    try {
+      window.history.replaceState(window.history.state, "", url.href);
+    } catch (error) {
+      // A browser restriction on history must not stop search or rendering.
+      return;
+    }
+  }
+}
+
+function getFavoritePerformersSet() {
+  try {
+    const raw = localStorage.getItem(FAVORITE_KEY);
+    const list = raw ? JSON.parse(raw) : [];
+    return new Set(Array.isArray(list) ? list : []);
+  } catch (e) {
+    return new Set();
+  }
+}
+
+function eventHasFavorite(ev) {
+  const favorites = getFavoritePerformersSet();
+  if (!favorites.size) return false;
+  return getEventPerformerNames(ev).some((name) => favorites.has(normalizeText(name)));
+}
+
+function eventHasFavoriteForFilters(ev, filters) {
+  const favorites = getFavoritePerformersSet();
+  if (!favorites.size) return false;
+
+  const unassignedHit = (Array.isArray(ev.performers) ? ev.performers : [])
+    .some((name) => favorites.has(normalizeText(name)));
+  if (unassignedHit) return true;
+
+  return getEventSessions(ev).some((session) => {
+    const hasFavorite = (Array.isArray(session.performers) ? session.performers : [])
+      .some((name) => favorites.has(normalizeText(name)));
+    return hasFavorite && occurrenceMatchesDateTimeFilters(getSessionOccurrence(session, ev), filters);
+  });
+}
+
+function updateFavoritesOnlyButton() {
+  const btn = document.getElementById("favoritesOnlyBtn");
+  if (!btn) return;
+  btn.setAttribute("aria-pressed", favoritesOnlyMode ? "true" : "false");
+  btn.classList.toggle("is-active", favoritesOnlyMode);
+}
+
+function setArchiveOpen(isOpen) {
+  archiveOpen = isOpen;
+
+  const btn = document.getElementById("archiveToggleBtn");
+  const body = document.getElementById("archiveBody");
+
+  if (btn) {
+    btn.setAttribute("aria-expanded", archiveOpen ? "true" : "false");
+    const icon = btn.querySelector(".archive-toggle-icon");
+    if (icon) icon.textContent = archiveOpen ? "−" : "＋";
+  }
+
+  if (body) {
+    body.hidden = !archiveOpen;
+  }
+}
+
+function hasActiveFilters(filters) {
+  return Boolean(
+    filters.nameQuery ||
+    filters.eventType !== "all" ||
+    filters.month !== "all" ||
+    filters.day !== "all" ||
+    filters.hour !== "all" ||
+    favoritesOnlyMode
+  );
+}
+
+function updateArchiveMessage(message) {
+  const target = document.getElementById("archiveMessage");
+  if (!target) return;
+  target.textContent = message || "";
+}
+
+function timeToMinutes(timeString) {
+  const match = /^(\d{1,2}):(\d{2})/.exec(String(timeString || ""));
+  if (!match) return null;
+
+  return Number(match[1]) * 60 + Number(match[2]);
+}
+
+function getEventDateParts(ev) {
+  const start = new Date(ev.date);
+  const end = new Date(ev.dateEnd || ev.date);
+  const dates = [];
+
+  if (Number.isNaN(start.getTime()) || Number.isNaN(end.getTime())) {
+    return [{ month: ev.month, day: ev.day }];
+  }
+
+  const cursor = new Date(start);
+  while (cursor <= end && dates.length < 10) {
+    dates.push({
+      date: cursor.toISOString().slice(0, 10),
+      month: cursor.getMonth() + 1,
+      day: cursor.getDate(),
+    });
+    cursor.setDate(cursor.getDate() + 1);
+  }
+
+  return dates;
+}
+
+function getEventSessions(ev) {
+  return Array.isArray(ev.sessions)
+    ? ev.sessions.filter((session) => session && session.date && session.time)
+    : [];
+}
+
+function getEventMCNames(ev) {
+  return Array.isArray(ev.mc) ? ev.mc : ev.mc ? [ev.mc] : [];
+}
+
+function buildMCHTML(ev) {
+  const query = getCurrentFilters().nameQuery;
+  return getEventMCNames(ev).map(name => {
+    const match = performerMatchesNameQuery(name, query);
+    return `<div class="event-mc">MC：<span class="mc-name ${match ? "search-match" : ""}">${escapeHTML(name)}${match ? '<span class="visually-hidden">（芸人名の検索条件に一致）</span>' : ""}</span></div>`;
+  }).join("");
+}
+
+function getEventPerformerNames(ev) {
+  const names = [];
+  const seen = new Set();
+  const add = (name) => {
+    const key = normalizeText(name);
+    if (!key || seen.has(key)) return;
+    seen.add(key);
+    names.push(name);
+  };
+
+  (Array.isArray(ev.performers) ? ev.performers : []).forEach(add);
+  getEventSessions(ev).forEach((session) => {
+    (Array.isArray(session.performers) ? session.performers : []).forEach(add);
+  });
+
+  return names;
+}
+
+function getSessionOccurrence(session, ev) {
+  const dateObj = new Date(session.date);
+  if (Number.isNaN(dateObj.getTime())) return null;
+
+  return {
+    date: session.date,
+    month: dateObj.getMonth() + 1,
+    day: dateObj.getDate(),
+    timeMinutes: timeToMinutes(session.time) ?? ev.timeMinutes ?? 0,
+  };
+}
+
+function getEventOccurrences(ev) {
+  const sessions = getEventSessions(ev);
+  if (sessions.length) {
+    return sessions.map((session) => getSessionOccurrence(session, ev)).filter(Boolean);
+  }
+
+  const ticketLinks = getEventTicketLinks(ev);
+
+  if (ticketLinks.length) {
+    return ticketLinks
+      .map((link) => {
+        const dateObj = new Date(link.date);
+        if (Number.isNaN(dateObj.getTime())) return null;
+
+        return {
+          date: link.date,
+          month: dateObj.getMonth() + 1,
+          day: dateObj.getDate(),
+          timeMinutes: timeToMinutes(link.time) ?? ev.timeMinutes ?? 0,
+        };
+      })
+      .filter(Boolean);
+  }
+
+  return getEventDateParts(ev).map((part) => ({
+    ...part,
+    timeMinutes: ev.timeMinutes ?? 0,
+  }));
+}
+
+function occurrenceMatchesDateTimeFilters(occurrence, filters) {
+  if (!occurrence) return false;
+  if (filters.month !== "all" && occurrence.month !== Number(filters.month)) return false;
+  if (filters.day !== "all" && occurrence.day !== Number(filters.day)) return false;
+  if (filters.hour !== "all" && occurrence.timeMinutes !== null && occurrence.timeMinutes < Number(filters.hour) * 60) return false;
+  return true;
+}
+
+function eventMatchesDateTimeFilters(ev, filters) {
+  const hasDateTimeFilter =
+    filters.month !== "all" ||
+    filters.day !== "all" ||
+    filters.hour !== "all";
+
+  if (!hasDateTimeFilter) return true;
+
+  return getEventOccurrences(ev).some((occurrence) => occurrenceMatchesDateTimeFilters(occurrence, filters));
+}
+
+function eventMatchesFilters(ev, filters, includePast = false, options = {}) {
+  const { ignoreNameQuery = false, ignoreFavoritesOnly = false } = options;
+  const today = todayString();
+
+  if (!includePast && (ev.dateEnd || ev.date) < today) return false;
+  if (includePast && (ev.dateEnd || ev.date) >= today) return false;
+  if (filters.eventType !== "all" && ev.eventType !== filters.eventType) return false;
+  if (!eventMatchesDateTimeFilters(ev, filters)) return false;
+
+  if (!ignoreNameQuery && filters.nameQuery) {
+    const unassignedHit = (Array.isArray(ev.performers) ? ev.performers : [])
+      .some((name) => performerMatchesNameQuery(name, filters.nameQuery));
+    const sessionHit = getEventSessions(ev).some((session) => {
+      const nameHit = (Array.isArray(session.performers) ? session.performers : [])
+        .some((name) => performerMatchesNameQuery(name, filters.nameQuery));
+      return nameHit && occurrenceMatchesDateTimeFilters(getSessionOccurrence(session, ev), filters);
+    });
+    const mcHit = getEventMCNames(ev).some(name => performerMatchesNameQuery(name, filters.nameQuery));
+    if (!unassignedHit && !sessionHit && !mcHit) return false;
+  }
+
+  if (!ignoreFavoritesOnly && favoritesOnlyMode && !eventHasFavoriteForFilters(ev, filters)) return false;
+
+  return true;
+}
+
+function pickRandomPerformer() {
+  const favorites = new Set(getFavorites());
+
+  const allNames = [...new Set(
+    events.flatMap((ev) => getEventPerformerNames(ev))
+  )].filter((name) => name && name.trim());
+
+  const pool = allNames.filter((name) => !favorites.has(normalizeText(name)));
+
+  if (!pool.length) {
+    alert("お気に入り未登録の出演者が見つかりませんでした");
+    return;
+  }
+
+  const selected = pool[Math.floor(Math.random() * pool.length)];
+
+  document.getElementById("nameQuery").value = selected;
+  document.getElementById("eventType").value = "all";
+  document.getElementById("month").value = "all";
+  document.getElementById("day").value = "all";
+  document.getElementById("hour").value = "all";
+  favoritesOnlyMode = false;
+  updateFavoritesOnlyButton();
+
+  const today = todayString();
+  const selectedKey = normalizeText(selected);
+  const hasPastHit = events.some((ev) =>
+    (ev.dateEnd || ev.date) < today &&
+    getEventPerformerNames(ev).some((name) => normalizeText(name) === selectedKey)
+  );
+
+  setArchiveOpen(hasPastHit);
+  runSearch();
+}
+
+function clearFilters() {
+  document.getElementById("nameQuery").value = "";
+  document.getElementById("eventType").value = "all";
+  document.getElementById("month").value = "all";
+  document.getElementById("day").value = "all";
+  document.getElementById("hour").value = "all";
+  favoritesOnlyMode = false;
+  updateFavoritesOnlyButton();
+  runSearch();
+}
+
+function filterEvents(list, includePast = false) {
+  const filters = getCurrentFilters();
+
+  return list
+    .filter((ev) => eventMatchesFilters(ev, filters, includePast))
+    .sort((a, b) => {
+      if (includePast) {
+        return b.date.localeCompare(a.date) || b.timeMinutes - a.timeMinutes;
+      }
+      return a.date.localeCompare(b.date) || a.timeMinutes - b.timeMinutes;
+    });
+}
+
+function findPerformerDisplayName(key) {
+  for (const ev of events) {
+    const found = getEventPerformerNames(ev).find((name) => normalizeText(name) === key);
+    if (found) return found;
+  }
+  return key;
+}
+
+function getFavoriteScheduleData() {
+  const favorites = getFavorites();
+  const today = todayString();
+
+  const futureEvents = events
+    .filter((ev) => (ev.dateEnd || ev.date) >= today)
+    .sort((a, b) => a.date.localeCompare(b.date) || a.timeMinutes - b.timeMinutes);
+
+  const favoriteSet = new Set(favorites);
+  const upcomingKeys = new Set();
+  const eventGroups = [];
+
+  futureEvents.forEach((ev) => {
+    const matchedNames = getEventPerformerNames(ev).filter((name) => {
+      const key = normalizeText(name);
+      return favoriteSet.has(key);
+    });
+
+    if (!matchedNames.length) return;
+
+    matchedNames.forEach((name) => upcomingKeys.add(normalizeText(name)));
+
+    eventGroups.push({
+      event: ev,
+      names: matchedNames,
+    });
+  });
+
+  const pendingGroups = getPendingStageGroups({
+    nameQuery: "",
+    eventType: "all",
+    month: "all",
+    day: "all",
+    hour: "all",
+  }, { favoritesOnly: true });
+
+  pendingGroups.forEach((group) => {
+    if (group.nextDate && (group.nextDateEnd || group.nextDate) < today) return;
+
+    group.names.forEach((name) => upcomingKeys.add(normalizeText(name)));
+
+    const dateObj = group.nextDate ? new Date(group.nextDate) : null;
+    eventGroups.push({
+      event: {
+        id: group.id,
+        eventType: group.nextEventType,
+        title: group.nextEventTitle,
+        date: group.nextDate || "",
+        dateEnd: group.nextDateEnd || group.nextDate || "",
+        month: !dateObj || Number.isNaN(dateObj.getTime()) ? 0 : dateObj.getMonth() + 1,
+        day: !dateObj || Number.isNaN(dateObj.getTime()) ? 0 : dateObj.getDate(),
+        time: isLineupOverviewGroup(group) ? "出演部未定" : group.nextTime || "未定",
+        timeMinutes: timeToMinutes(group.nextTime) ?? 0,
+        venue: group.venue || "詳細未定",
+        performers: group.names,
+        isPendingStage: true,
+        dateUnconfirmed: !group.nextDate,
+      },
+      names: group.names,
+    });
+  });
+
+  eventGroups.sort((a, b) =>
+    Number(!isConfirmedFavoriteEvent(a.event)) - Number(!isConfirmedFavoriteEvent(b.event)) ||
+    (a.event.date || "9999-99-99").localeCompare(b.event.date || "9999-99-99") ||
+    (a.event.timeMinutes ?? Infinity) - (b.event.timeMinutes ?? Infinity)
+  );
+
+  const noUpcoming = favorites
+    .filter((key) => !upcomingKeys.has(key))
+    .map((key) => ({
+      key,
+      name: findPerformerDisplayName(key),
+    }));
+
+  return {
+    total: favorites.length,
+    upcomingCount: upcomingKeys.size,
+    eventGroups,
+    noUpcoming,
+  };
+}
+
+function isConfirmedFavoriteEvent(ev) {
+  return !ev.isPendingStage && Boolean(ev.date) && timeToMinutes(ev.time) !== null;
+}
+
+function getFavoriteScheduleLabel(ev) {
+  const title = (ev.title || "").replace("（出演部未定）", "");
+  if (ev.dateUnconfirmed) return `${title}（出場権獲得・出演日時未確認）`;
+  return `${title} ${formatDisplayDate(ev)}`;
+}
+
+function renderFavoriteSchedule() {
+  const panel = document.getElementById("favoritePanel");
+  const target = document.getElementById("favoriteSchedule");
+  const backupBtn = document.getElementById("favoriteBackupBtn");
+  const backupHome = document.getElementById("favoriteBackupHome");
+  if (!panel || !target) return;
+
+  if (backupBtn && backupHome && backupBtn.parentElement !== backupHome) {
+    backupHome.appendChild(backupBtn);
+  }
+
+  const favorites = getFavorites();
+
+  if (!favorites.length) {
+    favoriteScheduleExpanded = false;
+    panel.hidden = true;
+    target.innerHTML = "";
+    return;
+  }
+
+  panel.hidden = false;
+
+  const { total, upcomingCount, eventGroups, noUpcoming } = getFavoriteScheduleData();
+  const visibleGroups = favoriteScheduleExpanded ? eventGroups : eventGroups.slice(0, 3);
+  const hasMore = eventGroups.length > 3 || noUpcoming.length > 0;
+
+  const upcomingHTML = visibleGroups.length
+    ? `
+      <div class="favorite-list">
+        ${visibleGroups.map(({ event, names }) => `
+          <button class="favorite-item favorite-jump-btn" type="button" data-event-id="${escapeHTML(event.id)}">
+            <div class="favorite-meta favorite-event-line">${escapeHTML(getFavoriteScheduleLabel(event))}</div>
+            <div class="favorite-name">${names.map((name) => escapeHTML(name)).join("／")}</div>
+          </button>
+        `).join("")}
+      </div>
+    `
+    : `<p class="empty favorite-empty">掲載中の出演予定はありません</p>`;
+
+  const noUpcomingHTML = favoriteScheduleExpanded && noUpcoming.length
+    ? `
+      <div class="favorite-no-upcoming">
+        <div class="favorite-no-upcoming-title">掲載中の出演予定なし</div>
+        <div class="favorite-name-list">${noUpcoming.map(({ name }) => escapeHTML(name)).join("、")}</div>
+      </div>
+    `
+    : "";
+
+  const moreText = favoriteScheduleExpanded ? "閉じる" : "すべて表示";
+  const moreButtonHTML = hasMore
+    ? `<button id="favoriteScheduleToggleBtn" class="secondary-btn favorite-toggle-btn" type="button">${moreText}</button>`
+    : "";
+
+  target.innerHTML = `
+    <p class="favorite-summary">お気に入り${total}組中、${upcomingCount}組の出演情報があります</p>
+    ${upcomingHTML}
+    ${noUpcomingHTML}
+    ${moreButtonHTML}
+  `;
+
+  if (backupBtn) {
+    target.appendChild(backupBtn);
+  }
+
+  target.querySelectorAll(".favorite-jump-btn").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      jumpToEventCard(btn.dataset.eventId);
+    });
+  });
+
+  const toggleBtn = document.getElementById("favoriteScheduleToggleBtn");
+  if (toggleBtn) {
+    toggleBtn.addEventListener("click", () => {
+      favoriteScheduleExpanded = !favoriteScheduleExpanded;
+      renderFavoriteSchedule();
+    });
+  }
+}
+
+
+function jumpToEventCard(eventId) {
+  document.getElementById("nameQuery").value = "";
+  document.getElementById("eventType").value = "all";
+  document.getElementById("month").value = "all";
+  document.getElementById("day").value = "all";
+  document.getElementById("hour").value = "all";
+
+  favoritesOnlyMode = false;
+  updateFavoritesOnlyButton();
+  setArchiveOpen(false);
+  updateArchiveMessage("");
+
+  runSearch();
+
+  requestAnimationFrame(() => {
+    const target = document.getElementById(`event-${eventId}`);
+    if (!target) return;
+
+    target.scrollIntoView({
+      behavior: "smooth",
+      block: "start",
+    });
+
+    target.classList.add("is-highlighted");
+
+    window.setTimeout(() => {
+      target.classList.remove("is-highlighted");
+    }, 1600);
+  });
+}
+
+
+function bytesToBase64(bytes) {
+  let binary = "";
+  bytes.forEach((byte) => {
+    binary += String.fromCharCode(byte);
+  });
+  return btoa(binary);
+}
+
+function base64ToBytes(base64) {
+  const binary = atob(base64);
+  return Uint8Array.from(binary, (char) => char.charCodeAt(0));
+}
+
+function encodeBackupPayload(payload) {
+  const json = JSON.stringify(payload);
+  const bytes = new TextEncoder().encode(json);
+  return bytesToBase64(bytes);
+}
+
+function decodeBackupPayload(code) {
+  const trimmed = (code || "").trim();
+  if (!trimmed) throw new Error("バックアップコードが空です");
+
+  const bytes = base64ToBytes(trimmed);
+  const json = new TextDecoder().decode(bytes);
+  const payload = JSON.parse(json);
+
+  if (!payload || payload.v !== 1 || !Array.isArray(payload.favorites)) {
+    throw new Error("バックアップコードの形式が正しくありません");
+  }
+
+  const normalizedFavorites = [...new Set(
+    payload.favorites
+      .map((name) => normalizeText(name))
+      .filter(Boolean)
+  )];
+
+  return normalizedFavorites;
+}
+
+function setBackupStatus(targetId, message, isError = false) {
+  const status = document.getElementById(targetId);
+  if (!status) return;
+
+  status.textContent = message || "";
+  status.classList.toggle("is-error", Boolean(isError));
+}
+
+function clearBackupStatuses() {
+  setBackupStatus("backupCreateStatus", "");
+  setBackupStatus("backupRestoreStatus", "");
+}
+
+function openFavoriteBackup() {
+  const panel = document.getElementById("favoriteBackupPanel");
+  if (!panel) return;
+
+  panel.hidden = false;
+  clearBackupStatuses();
+
+  requestAnimationFrame(() => {
+    panel.scrollIntoView({
+      behavior: "smooth",
+      block: "start",
+    });
+  });
+}
+
+function closeFavoriteBackup() {
+  const panel = document.getElementById("favoriteBackupPanel");
+  if (!panel) return;
+
+  panel.hidden = true;
+  clearBackupStatuses();
+}
+
+function createFavoriteBackupCode() {
+  const favorites = getFavorites();
+  const output = document.getElementById("backupCodeOutput");
+  if (!output) return;
+
+  if (!favorites.length) {
+    output.value = "";
+    setBackupStatus("backupCreateStatus", "お気に入りが登録されていません", true);
+    return;
+  }
+
+  const payload = {
+    v: 1,
+    favorites,
+    createdAt: new Date().toISOString(),
+  };
+
+  output.value = encodeBackupPayload(payload);
+  setBackupStatus("backupCreateStatus", `バックアップコードを生成しました（${favorites.length}組）`);
+}
+
+async function copyFavoriteBackupCode() {
+  const output = document.getElementById("backupCodeOutput");
+  if (!output || !output.value.trim()) {
+    setBackupStatus("backupCreateStatus", "先にバックアップコードを生成してください", true);
+    return;
+  }
+
+  try {
+    await navigator.clipboard.writeText(output.value.trim());
+    setBackupStatus("backupCreateStatus", "バックアップコードをコピーしました");
+  } catch (e) {
+    output.focus();
+    output.select();
+    setBackupStatus("backupCreateStatus", "コピーできない場合は、コードを選択して手動でコピーしてください", true);
+  }
+}
+
+function restoreFavoriteBackupCode() {
+  const input = document.getElementById("backupCodeInput");
+  if (!input) return;
+
+  let restoredFavorites;
+
+  try {
+    restoredFavorites = decodeBackupPayload(input.value);
+  } catch (e) {
+    setBackupStatus("backupRestoreStatus", e.message || "バックアップコードを読み取れませんでした", true);
+    return;
+  }
+
+  const ok = window.confirm("現在のお気に入りを上書きして復元します。よろしいですか？");
+  if (!ok) return;
+
+  saveFavorites(restoredFavorites);
+  favoriteScheduleExpanded = false;
+  favoritesOnlyMode = false;
+
+  updateFavoritesOnlyButton();
+  renderFavoriteSchedule();
+  runSearch();
+
+  setBackupStatus("backupRestoreStatus", `お気に入りを復元しました（${restoredFavorites.length}組）`);
+}
+
+function bindFavoriteBackup() {
+  const backupBtn = document.getElementById("favoriteBackupBtn");
+  if (backupBtn) backupBtn.addEventListener("click", openFavoriteBackup);
+
+  const createBtn = document.getElementById("createBackupBtn");
+  if (createBtn) createBtn.addEventListener("click", createFavoriteBackupCode);
+
+  const copyBtn = document.getElementById("copyBackupBtn");
+  if (copyBtn) copyBtn.addEventListener("click", copyFavoriteBackupCode);
+
+  const restoreBtn = document.getElementById("restoreBackupBtn");
+  if (restoreBtn) restoreBtn.addEventListener("click", restoreFavoriteBackupCode);
+
+  const closeBtn = document.getElementById("closeBackupBtn");
+  if (closeBtn) closeBtn.addEventListener("click", closeFavoriteBackup);
+}
+
+
+function escapeHTML(value) {
+  return String(value ?? "")
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#39;");
+}
+
+function formatDateLabel(dateString) {
+  if (!dateString) return "";
+  const weekdays = ["日", "月", "火", "水", "木", "金", "土"];
+  const dateObj = new Date(dateString);
+  if (Number.isNaN(dateObj.getTime())) return "";
+  return `${dateObj.getMonth() + 1}月${dateObj.getDate()}日(${weekdays[dateObj.getDay()]})`;
+}
+
+function getQualifiedStageLabel(ev) {
+  if (ev.qualifiedResult === "none") return "2nd進出者";
+
+  const nextStageDate = formatDateLabel(ev.qualifiedNextStageDate);
+  return nextStageDate
+    ? `2nd進出者 (${nextStageDate}出演予定)`
+    : "2nd進出者 (日程未定)";
+}
+
+// 2ndステージの正式香盤公開後も、元の1st公演で確定した追加合格区分を引き継ぐ。
+function getAdditionalQualifiedKeysForSecondStage(ev, sessionDate = "") {
+  if (ev.eventType !== "audition-2nd-east") return new Set();
+
+  const dates = sessionDate
+    ? [sessionDate]
+    : getEventOccurrences(ev).map((occurrence) => occurrence.date).filter(Boolean);
+  const matchingDates = new Set(dates);
+  const additionalKeys = new Set();
+
+  events.forEach((source) => {
+    if (!matchingDates.has(source.qualifiedNextStageDate)) return;
+
+    (Array.isArray(source.additionalQualifiedPerformers) ? source.additionalQualifiedPerformers : [])
+      .forEach((name) => additionalKeys.add(normalizeText(name)));
+  });
+
+  return additionalKeys;
+}
+
+function buildPerformerChipsHTML(names, favorites, additionalQualifiedKeys = new Set()) {
+  return (names || []).map((name) => {
+    const normalizedName = normalizeText(name);
+    const isFavorite = favorites.includes(normalizedName);
+    const nameHTML = getPerformerNameHTML(name);
+    const additionalBadge = additionalQualifiedKeys.has(normalizedName)
+      ? '<abbr class="additional-qualified-badge" title="追加合格者">追加</abbr>'
+      : "";
+
+    return `
+      <span class="performer ${isFavorite ? "favorite" : ""}">
+        <button
+          class="star"
+          data-name="${escapeHTML(name)}"
+          data-key="${escapeHTML(normalizedName)}"
+          type="button"
+          aria-pressed="${isFavorite ? "true" : "false"}"
+          aria-label="${escapeHTML(getFavoriteAriaLabel(name, isFavorite))}"
+        >${isFavorite ? "★" : "☆"}</button>
+        ${nameHTML}
+        ${additionalBadge}
+      </span>
+    `;
+  }).join("");
+}
+
+function getFavoriteAriaLabel(name, isFavorite) {
+  return isFavorite
+    ? `${name}をお気に入りから解除`
+    : `${name}をお気に入りに追加`;
+}
+
+function getStageResults(ev) {
+  if (Array.isArray(ev.stageResults) && ev.stageResults.length) {
+    return ev.stageResults
+      .map((result) => ({
+        status: result.status || "advanced",
+        label: result.label || "次ステージ進出者",
+        nextEventType: result.nextEventType || "",
+        nextEventTitle: result.nextEventTitle || "",
+        nextDate: result.nextDate || "",
+        nextDateEnd: result.nextDateEnd || "",
+        nextTime: result.nextTime || "",
+        nextVenue: result.nextVenue || "",
+        performers: Array.isArray(result.performers) ? result.performers : [],
+        displayStyle: result.displayStyle || "next-stage",
+        isAdditionalQualifier: result.isAdditionalQualifier === true,
+      }))
+      .filter((result) => result.status === "none" || result.performers.length);
+  }
+
+  if (Array.isArray(ev.nextStageSections) && ev.nextStageSections.length) {
+    return ev.nextStageSections
+      .map((section) => ({
+        status: "advanced",
+        label: section.label || "次ステージ進出者",
+        performers: Array.isArray(section.performers) ? section.performers : [],
+        displayStyle: "next-stage",
+      }))
+      .filter((result) => result.performers.length);
+  }
+
+  const results = [];
+
+  if (ev.qualifiedResult === "none") {
+    results.push({
+      status: "none",
+      label: Array.isArray(ev.additionalQualifiedPerformers) && ev.additionalQualifiedPerformers.length
+        ? "当初の2nd進出者"
+        : "2nd進出者",
+      performers: [],
+      displayStyle: "qualified",
+    });
+  } else if (Array.isArray(ev.qualifiedPerformers) && ev.qualifiedPerformers.length) {
+    results.push({
+      status: "advanced",
+      label: getQualifiedStageLabel(ev),
+      nextEventType: "audition-2nd-east",
+      nextEventTitle: "オーディション2ndステージ EAST",
+      nextDate: ev.qualifiedNextStageDate || "",
+      performers: ev.qualifiedPerformers,
+      displayStyle: "qualified",
+    });
+  }
+
+  if (Array.isArray(ev.additionalQualifiedPerformers) && ev.additionalQualifiedPerformers.length) {
+    const nextDate = formatDateLabel(ev.qualifiedNextStageDate);
+
+    results.push({
+      status: "advanced",
+      label: nextDate ? `追加合格者 (${nextDate}出演予定)` : "追加合格者 (日程未定)",
+      nextEventType: "audition-2nd-east",
+      nextEventTitle: "オーディション2ndステージ EAST",
+      nextDate: ev.qualifiedNextStageDate || "",
+      performers: ev.additionalQualifiedPerformers,
+      displayStyle: "qualified",
+      isAdditionalQualifier: true,
+    });
+  }
+
+  return results;
+}
+
+function getQualifiedStageResultsHTML(results, favorites) {
+  return results.map((result) => {
+    const content = result.status === "none"
+      ? '<div class="qualified-none">該当者なし</div>'
+      : `<div class="performers qualified-list">${buildPerformerChipsHTML(result.performers, favorites)}</div>`;
+
+    return `
+      <div class="qualified-performers ${result.isAdditionalQualifier ? "is-additional-qualified" : ""}">
+        <div class="card-section-label">${escapeHTML(result.label)}</div>
+        ${content}
+      </div>
+    `;
+  }).join("");
+}
+
+function getNextStageResultsHTML(results, favorites) {
+  const sections = results.map((result) => {
+    const performers = buildPerformerChipsHTML(result.performers, favorites);
+    if (!performers) return "";
+
+    return `
+      <div class="next-stage-group">
+        <div class="card-section-label">${escapeHTML(result.label)}</div>
+        <div class="performers next-stage-list">${performers}</div>
+      </div>
+    `;
+  }).join("");
+
+  if (!sections.trim()) return "";
+
+  return `
+    <div class="next-stage-performers">
+      ${sections}
+    </div>
+  `;
+}
+
+function getStageResultsHTML(ev, favorites) {
+  const results = getStageResults(ev);
+  if (!results.length) return "";
+
+  const qualifiedResults = results.filter((result) => result.displayStyle === "qualified");
+  const nextStageResults = results.filter((result) => result.displayStyle !== "qualified");
+
+  return `
+    ${getQualifiedStageResultsHTML(qualifiedResults, favorites)}
+    ${getNextStageResultsHTML(nextStageResults, favorites)}
+  `;
+}
+
+function getQualifiedPerformersHTML(ev, favorites) {
+  return getStageResultsHTML(ev, favorites);
+}
+
+function hasPublishedStageDetails(result) {
+  if (!result || !result.nextEventType || !result.nextDate || !result.performers.length) return false;
+
+  const rangeStart = result.nextDate;
+  const rangeEnd = result.nextDateEnd || result.nextDate;
+  const published = new Set();
+
+  events.forEach((ev) => {
+    if (ev.eventType !== result.nextEventType) return;
+    const evStart = ev.date || "";
+    const evEnd = ev.dateEnd || evStart;
+    if (!evStart || evEnd < rangeStart || evStart > rangeEnd) return;
+
+    getEventPerformerNames(ev).forEach((name) => {
+      const key = normalizeText(name);
+      if (key) published.add(key);
+    });
+  });
+
+  return result.performers.every((name) => published.has(normalizeText(name)));
+}
+
+function filtersAllowPendingStageCard(filters, result) {
+  if (!result || !result.nextEventType) return false;
+
+  const pendingEndDate = result.nextDateEnd || result.nextDate || "";
+  if (pendingEndDate && pendingEndDate < todayString()) return false;
+
+  if (hasPublishedStageDetails(result)) return false;
+  if (filters.eventType !== "all" && filters.eventType !== result.nextEventType) return false;
+
+  const hasDateTimeFilter =
+    filters.month !== "all" ||
+    filters.day !== "all" ||
+    filters.hour !== "all";
+
+  if (!hasDateTimeFilter) return true;
+  if (!result.nextDate) return false;
+
+  // Match candidate slots, without assigning any performer to an individual slot.
+  const confirmedSlots = getConfirmedStageSlots(result);
+  if (confirmedSlots.length) {
+    return confirmedSlots.some((ev) => getEventOccurrences(ev)
+      .some((occurrence) => occurrenceMatchesDateTimeFilters(occurrence, filters)));
+  }
+
+  const start = new Date(result.nextDate);
+  const end = new Date(result.nextDateEnd || result.nextDate);
+  if (Number.isNaN(start.getTime()) || Number.isNaN(end.getTime())) return false;
+
+  const occurrences = [];
+  const cursor = new Date(start);
+  while (cursor <= end && occurrences.length < 31) {
+    occurrences.push({
+      month: cursor.getMonth() + 1,
+      day: cursor.getDate(),
+      timeMinutes: timeToMinutes(result.nextTime),
+    });
+    cursor.setDate(cursor.getDate() + 1);
+  }
+
+  return occurrences.some((occurrence) => {
+    if (filters.month !== "all" && occurrence.month !== Number(filters.month)) return false;
+    if (filters.day !== "all" && occurrence.day !== Number(filters.day)) return false;
+    if (filters.hour !== "all" && occurrence.timeMinutes !== null && occurrence.timeMinutes < Number(filters.hour) * 60) return false;
+    return true;
+  });
+}
+
+function getPendingStageEventId(group) {
+  return `pending-${group.nextEventType || "stage"}-${group.nextDate || "undecided"}-${group.nextDateEnd || group.nextDate || "undecided"}`;
+}
+
+function getPendingStageGroups(filters, options = {}) {
+  const favorites = getFavoritePerformersSet();
+  const useFavoritesOnly = options.favoritesOnly ?? favoritesOnlyMode;
+  const groups = new Map();
+
+  events.forEach((sourceEvent) => {
+    getStageResults(sourceEvent).forEach((result) => {
+      if (result.status !== "advanced") return;
+      if (!result.performers.length) return;
+      if (!result.nextEventType) return;
+      if (!filtersAllowPendingStageCard(filters, result)) return;
+
+      const groupKey = [
+        result.nextEventType || "",
+        result.nextDate || "",
+        result.nextDateEnd || "",
+        result.nextEventTitle || result.label || "",
+      ].join("|");
+
+      if (!groups.has(groupKey)) {
+        groups.set(groupKey, {
+          id: "",
+          nextEventType: result.nextEventType || "",
+          nextEventTitle: result.nextEventTitle || result.label || "次ステージ",
+          nextDate: result.nextDate || "",
+          nextDateEnd: result.nextDateEnd || "",
+          nextTime: result.nextTime || "",
+          venue: result.nextVenue || "詳細未定",
+          label: result.label || "出演予定者",
+          names: [],
+          totalNames: new Set(),
+          fromSecondStage: sourceEvent.eventType === "audition-2nd-east",
+          additionalQualifiedNames: [],
+          seen: new Set(),
+          additionalSeen: new Set(),
+        });
+      }
+
+      const group = groups.get(groupKey);
+      group.fromSecondStage = group.fromSecondStage && sourceEvent.eventType === "audition-2nd-east";
+      result.performers.forEach((name) => {
+        const key = normalizeText(name);
+
+        if (!key) return;
+        group.totalNames.add(key);
+        if (filters.nameQuery && !performerMatchesNameQuery(name, filters.nameQuery)) return;
+        if (useFavoritesOnly && !favorites.has(key)) return;
+
+        if (result.isAdditionalQualifier && !group.additionalSeen.has(key)) {
+          group.additionalQualifiedNames.push(name);
+          group.additionalSeen.add(key);
+        }
+
+        if (group.seen.has(key)) return;
+        group.names.push(name);
+        group.seen.add(key);
+      });
+    });
+  });
+
+  return [...groups.values()]
+    .filter((group) => group.names.length)
+    .map((group) => {
+      group.id = getPendingStageEventId(group);
+      group.totalCount = group.totalNames.size;
+      delete group.totalNames;
+      delete group.seen;
+      delete group.additionalSeen;
+      return group;
+    })
+    .sort((a, b) =>
+      (a.nextDate || "9999-99-99").localeCompare(b.nextDate || "9999-99-99") ||
+      (timeToMinutes(a.nextTime) ?? 0) - (timeToMinutes(b.nextTime) ?? 0) ||
+      a.nextEventTitle.localeCompare(b.nextEventTitle, "ja")
+    );
+}
+
+function formatPendingStageDate(group) {
+  const startLabel = formatDateLabel(group.nextDate) || "日程未定";
+  if (!group.nextDateEnd || group.nextDateEnd === group.nextDate) return startLabel;
+  const endLabel = formatDateLabel(group.nextDateEnd) || "";
+  return endLabel ? `${startLabel}〜${endLabel}` : startLabel;
+}
+
+function getConfirmedStageSlots(group) {
+  return events
+    .filter((ev) =>
+      ev.eventType === group.nextEventType &&
+      ev.date >= group.nextDate &&
+      ev.date <= (group.nextDateEnd || group.nextDate) &&
+      ev.time &&
+      ev.time !== "未定" &&
+      ev.time !== "出演公演未定"
+    )
+    .sort((a, b) => a.date.localeCompare(b.date) || (a.timeMinutes ?? 0) - (b.timeMinutes ?? 0));
+}
+
+function isLineupOverviewGroup(group) {
+  return (!group.nextTime || group.nextTime === "出演公演未定") &&
+    getConfirmedStageSlots(group).length > 0;
+}
+
+function buildPendingStageCardHTML(group, favorites) {
+  const saraniQualification = group.nextEventType === "sarani-agari-stage" && !group.nextDate;
+  const dateLabel = saraniQualification ? "出演日時未確認" : formatPendingStageDate(group);
+  const confirmedSlots = getConfirmedStageSlots(group);
+  const lineupOverview = isLineupOverviewGroup(group);
+  const timeLabel = lineupOverview
+    ? ""
+    : group.nextTime === "出演公演未定"
+      ? "出演公演未定"
+      : (group.nextTime ? `開演${escapeHTML(group.nextTime)}` : "開演時間未定");
+  const knownVenues = [...new Set(confirmedSlots.map((ev) => ev.venue).filter(Boolean))];
+  const venue = group.venue && group.venue !== "詳細未定"
+    ? group.venue
+    : knownVenues.length === 1 ? knownVenues[0] : (group.venue || "詳細未定");
+  const publishedTimes = [...new Set(confirmedSlots.map((ev) => ev.time))];
+  const slotDates = [...new Set(confirmedSlots.map((ev) => ev.date))];
+  const slotDateLabel = slotDates.map((date) => {
+    const parsed = new Date(date);
+    return `${parsed.getMonth() + 1}月${parsed.getDate()}日`;
+  }).join("・");
+  const slotSchedule = confirmedSlots.map((ev) => `${formatDateLabel(ev.date)} ${ev.time}開演`).join("／");
+  const pendingNote = saraniQualification
+    ? "※アガり！ステージ最優秀者として「サラに！アガり！ステージ」の出場権を獲得。出演日時は個別に未確認です。"
+    : lineupOverview
+    ? "※出演部は更新時点では未定です"
+    : !group.nextTime && publishedTimes.length
+      ? `※この日は${publishedTimes.join("／")}開演の${publishedTimes.length}部構成。各組の出演部・出演順は未発表です。`
+      : "※出演公演・出演部などの詳細は発表され次第更新します";
+
+  const additionalKeys = new Set(
+    (group.additionalQualifiedNames || []).map((name) => normalizeText(name))
+  );
+  const regularNames = group.names.filter((name) => !additionalKeys.has(normalizeText(name)));
+  const additionalNames = group.names.filter((name) => additionalKeys.has(normalizeText(name)));
+
+  return `
+    <article class="result-card pending-stage-card ${lineupOverview ? "lineup-overview-card" : ""}" id="event-${group.id}">
+      <div class="datetime-venue">
+        <div>${escapeHTML(dateLabel)}${timeLabel ? ` ${timeLabel}` : ""}</div>
+        <div class="venue-line">会場：${escapeHTML(venue)}</div>
+      </div>
+      <h3>${escapeHTML(group.nextEventTitle.replace("（出演部未定）", ""))}</h3>
+      ${lineupOverview ? `
+        <div class="lineup-overview-heading">
+          <span>${group.fromSecondStage ? "2ndステージからの進出者" : group.nextEventType === "audition-2nd-east" ? "2nd進出者" : "出演予定者"}</span>
+          <strong>${group.totalCount ?? group.names.length}組</strong>
+        </div>
+      ` : `<p class="pending-stage-note">${escapeHTML(pendingNote)}</p>`}
+      <div class="performer-section">
+        ${group.totalCount > group.names.length ? `<p class="pending-stage-note">検索条件に一致：${group.names.length}組（進出者全${group.totalCount}組）</p>` : ""}
+        ${regularNames.length ? `
+          <div class="card-section-label">${saraniQualification ? "出場権獲得者" : additionalNames.length ? `通常合格者 (${regularNames.length}組)` : "出演予定者"}</div>
+          <div class="performers">${buildPerformerChipsHTML(regularNames, favorites)}</div>
+        ` : ""}
+        ${additionalNames.length ? `
+          <div class="pending-additional-qualified">
+            <div class="card-section-label">追加合格者 (${additionalNames.length}組)</div>
+            <div class="performers">${buildPerformerChipsHTML(additionalNames, favorites)}</div>
+          </div>
+        ` : ""}
+      </div>
+      ${lineupOverview ? `<p class="pending-stage-note lineup-overview-note">${escapeHTML(pendingNote)}</p><p class="visually-hidden">候補は${escapeHTML(slotDateLabel)}に計${confirmedSlots.length}公演。${escapeHTML(slotSchedule)}。日時を絞り込んでも、この日時への出演確定を示すものではありません。</p>` : ""}
+    </article>
+  `;
+}
+
+function buildPendingStageCardsHTML(filters, favorites) {
+  return getPendingStageGroups(filters)
+    .map((group) => buildPendingStageCardHTML(group, favorites))
+    .join("");
+}
+
+
+function isLineupOrderedEvent(ev) {
+  if (ev.lineupOrder === false) return false;
+  if (ev.lineupOrder === true) return true;
+
+  return ev.eventType === "audition-1st-east" || ev.eventType === "audition-2nd-east";
+}
+
+function renderMainEvents(targetId, list, filters) {
+  const target = document.getElementById(targetId);
+  const favorites = getFavorites();
+  const pendingStageGroups = targetId === "results"
+    ? getPendingStageGroups(filters)
+    : [];
+
+  const renderItems = [
+    ...list.map((ev) => ({
+      date: ev.date || "9999-99-99",
+      timeMinutes: ev.timeMinutes ?? 0,
+      title: ev.title || "",
+      html: buildEventCardHTML(ev, targetId, favorites),
+    })),
+    ...pendingStageGroups.map((group) => ({
+      date: group.nextDate || "9999-99-99",
+      // 出演部が未決定でも、開催枠が判明している場合は出演者一覧を先頭に表示。
+      timeMinutes: isLineupOverviewGroup(group)
+        ? -1
+        : (timeToMinutes(group.nextTime) ?? 24 * 60),
+      title: group.nextEventTitle || "",
+      html: buildPendingStageCardHTML(group, favorites),
+    })),
+  ].sort((a, b) =>
+    a.date.localeCompare(b.date) ||
+    a.timeMinutes - b.timeMinutes ||
+    a.title.localeCompare(b.title, "ja")
+  );
+
+  if (!renderItems.length) {
+    target.innerHTML = targetId === "results"
+      ? '<p class="empty">該当する今後の開催はありません</p>'
+      : '<p class="empty"></p>';
+    return pendingStageGroups.length;
+  }
+
+  target.innerHTML = renderItems.map((item) => item.html).join("");
+  bindStarButtons(target);
+  emphasizeSearchMatches(target, filters.nameQuery);
+  return pendingStageGroups.length;
+}
+
+
+function getEventDetailHTML(ev, targetId) {
+  if (targetId !== "results") return "";
+
+  const details = [];
+
+  // 開場時刻の原本は保存し、必要な公演だけ画面から省略する。
+  const visibleOpenTime = ev.hideOpenTime === true ? "" : ev.openTime;
+  if (visibleOpenTime || ev.endTime) {
+    const timeParts = [];
+    if (visibleOpenTime) timeParts.push(`開場${escapeHTML(visibleOpenTime)}`);
+    if (ev.endTime) timeParts.push(`終演${escapeHTML(ev.endTime)}`);
+    if (timeParts.length) details.push(timeParts.join("｜"));
+  }
+
+  if (ev.eventInfo) {
+    details.push(escapeHTML(ev.eventInfo));
+  }
+
+  if (!details.length) return "";
+
+  return `<div class="event-detail-note">${details.map((line) => `<div>${line}</div>`).join("")}</div>`;
+}
+
+
+function formatSessionDateLabel(dateString) {
+  if (!dateString) return "";
+  const weekdays = ["日", "月", "火", "水", "木", "金", "土"];
+  const dateObj = new Date(dateString);
+  if (Number.isNaN(dateObj.getTime())) return "";
+  return `${dateObj.getMonth() + 1}/${dateObj.getDate()}(${weekdays[dateObj.getDay()]})`;
+}
+
+function buildEventSessionsHTML(ev, targetId, favorites) {
+  const sessions = getEventSessions(ev);
+  if (!sessions.length) return "";
+
+  return `
+    <div class="event-sessions">
+      <div class="card-section-label">公演日程</div>
+      <div class="event-session-list">
+        ${sessions.map((session) => {
+          const timeParts = [];
+          if (session.openTime) timeParts.push(`開場${escapeHTML(session.openTime)}`);
+          if (session.time) timeParts.push(`開演${escapeHTML(session.time)}`);
+          if (session.endTime) timeParts.push(`終演${escapeHTML(session.endTime)}`);
+          const sessionPerformers = buildPerformerChipsHTML(
+            session.performers, favorites, getAdditionalQualifiedKeysForSecondStage(ev, session.date)
+          );
+          const ticketLink = targetId === "results" && session.ticketUrl
+            ? `<a class="event-session-ticket" href="${escapeHTML(session.ticketUrl)}" target="_blank" rel="noopener noreferrer">会場チケット</a>`
+            : "";
+
+          return `
+            <div class="event-session-row">
+              <div class="event-session-summary">
+                <div class="event-session-heading">
+                  <strong>${escapeHTML(session.label || "公演")}</strong>
+                  <span>${escapeHTML(formatSessionDateLabel(session.date))}</span>
+                </div>
+                <div class="event-session-times">${timeParts.join("｜")}</div>
+                ${ticketLink}
+              </div>
+              ${sessionPerformers
+                ? `<div class="event-session-performers"><div class="event-session-performer-label">出演者</div><div class="performers">${sessionPerformers}</div></div>`
+                : ""}
+            </div>
+          `;
+        }).join("")}
+      </div>
+    </div>
+  `;
+}
+
+function getTicketInfo(ev) {
+  const ticket = ev.ticket || {};
+
+  return {
+    purchaseNote: ticket.purchaseNote ?? ev.ticketNote ?? "",
+    priceInfo: ticket.priceInfo ?? ev.ticketPriceInfo ?? "",
+    saleInfo: ticket.saleInfo ?? ev.ticketSaleInfo ?? "",
+    links: Array.isArray(ticket.links)
+      ? ticket.links
+      : (Array.isArray(ev.ticketLinks) ? ev.ticketLinks : []),
+    url: ticket.url ?? ticket.ticketUrl ?? ev.ticketUrl ?? "",
+    linkLabel: ticket.linkLabel ?? ev.ticketLinkLabel ?? "",
+    streamingUrl: ticket.streamingUrl ?? ev.streamingUrl ?? "",
+    streamingLabel: ticket.streamingLabel ?? ev.streamingLabel ?? "配信",
+    streamingNote: ticket.streamingNote ?? ev.streamingNote ?? "",
+  };
+}
+
+function getEventTicketLinks(ev) {
+  return getTicketInfo(ev).links;
+}
+
+function getEventNoticeHTML(ev) {
+  if (!ev.eventNotice) return "";
+  if (ev.eventType === "kiwami-grand-battle-east" && ev.date >= "2026-12-12" && ev.date <= "2026-12-13" && !getEventPerformerNames(ev).length) return '<p class="event-notice">※出演部は更新時点では未定です</p>';
+  return `<p class="event-notice">${escapeHTML(ev.eventNotice)}</p>`;
+}
+
+function getNextStageSectionsHTML(ev, favorites) {
+  return getStageResultsHTML(ev, favorites);
+}
+
+function getTicketLinkHTML(ev, targetId) {
+  const ticket = getTicketInfo(ev);
+  if (ev.eventType === "agari-stage" && ev.date.startsWith("2026-11")) {
+    const sale = ticket.saleInfo.replace(/^一般発売：2026年/, "※FANY一般発売：").replace("（月）", "(月)").replace("～", "〜");
+    return `<div class="ticket-note"><div class="ticket-purchase-link">チケットの購入は<a href="${escapeHTML(ticket.url)}" target="_blank" rel="noopener noreferrer">FANYチケット</a>もしくは出演者への取り置きも可能です</div><div class="ticket-streaming-note">※配信はありません</div><div class="ticket-sale-info">${escapeHTML(sale)}</div></div>`;
+  }
+  if (targetId !== "results") return "";
+
+  const notePart = ticket.purchaseNote
+    ? `<div class="ticket-extra-note">${escapeHTML(ticket.purchaseNote)}</div>`
+    : "";
+
+  let linkPart = "";
+
+  if (ticket.links.length) {
+    linkPart = `
+      <div class="ticket-purchase-label">購入：</div>
+      <div class="ticket-link-list">
+        ${ticket.links.map((link) => `
+          <div class="ticket-link-row">
+            <span>${escapeHTML(link.label)} ${escapeHTML(formatDateLabel(link.date))} ${escapeHTML(link.time)}</span>
+            <a href="${escapeHTML(link.url)}" target="_blank" rel="noopener noreferrer">FANYチケット</a>
+          </div>
+        `).join("")}
+      </div>
+    `;
+  } else if (ticket.url) {
+    if (ticket.linkLabel) {
+      linkPart = `
+        <div class="ticket-purchase-link">
+          購入：
+          <a href="${escapeHTML(ticket.url)}" target="_blank" rel="noopener noreferrer">${escapeHTML(ticket.linkLabel)}</a>
+        </div>
+      `;
+    } else if (ticket.purchaseNote) {
+      linkPart = `
+        <div class="ticket-purchase-link">
+          購入：
+          <a href="${escapeHTML(ticket.url)}" target="_blank" rel="noopener noreferrer">FANYチケット</a>
+        </div>
+      `;
+    } else {
+      linkPart = ev.eventType === "audition-2nd-east"
+        ? `
+          <div class="ticket-purchase-link">
+            チケットは
+            <a href="${escapeHTML(ticket.url)}" target="_blank" rel="noopener noreferrer">FANYチケット</a>
+            からご購入ください
+          </div>
+        `
+        : ev.eventType === "audition-1st-east"
+          ? `
+            <div class="ticket-purchase-link">
+              チケットは
+              <a href="${escapeHTML(ticket.url)}" target="_blank" rel="noopener noreferrer">FANY</a>
+              もしくは出演芸人への取り置きも可能です
+            </div>
+          `
+          : `
+            <div class="ticket-purchase-link">
+              チケットは取り置き、もしくは
+              <a href="${escapeHTML(ticket.url)}" target="_blank" rel="noopener noreferrer">FANYチケット</a>から
+            </div>
+          `;
+    }
+  }
+
+  const streamingPart = ticket.streamingUrl
+    ? `
+      <div class="ticket-streaming-link">
+        ${escapeHTML(ticket.streamingLabel)}：
+        <a href="${escapeHTML(ticket.streamingUrl)}" target="_blank" rel="noopener noreferrer">配信チケット</a>
+      </div>
+    `
+    : (ticket.streamingNote
+      ? `<div class="ticket-streaming-note">${escapeHTML(ticket.streamingNote)}</div>`
+      : "");
+
+  const pricePart = ticket.priceInfo
+    ? `<div class="ticket-price-info">料金：${escapeHTML(ticket.priceInfo)}</div>`
+    : "";
+
+  const salePart = ticket.saleInfo
+    ? `<div class="ticket-sale-info">${escapeHTML(ticket.saleInfo)}</div>`
+    : "";
+
+  const parts = [notePart, pricePart, linkPart, streamingPart, salePart].filter((part) => part && part.trim());
+
+  if (!parts.length) return "";
+
+  return `<div class="ticket-note">${parts.join("")}</div>`;
+}
+
+function buildEventCardHTML(ev, targetId, favorites) {
+  const additionalQualifiedKeys = getAdditionalQualifiedKeysForSecondStage(ev);
+  const performers = ev.lineup ? [1, 2, 3].map(block => {
+    const entries = ev.lineup.filter(entry => entry.block === block);
+    return `<section class="lineup-block"><div class="card-section-label">第${block}ブロック</div>
+      <div class="performers">${buildPerformerChipsHTML(entries.map(entry => entry.name), favorites, additionalQualifiedKeys)}</div></section>`;
+  }).join("") : buildPerformerChipsHTML(
+    ev.performers, favorites, additionalQualifiedKeys
+  );
+  const hasAdditionalQualifiedPerformers =
+    ev.eventType === "audition-2nd-east" &&
+    (ev.performers || []).some((name) => additionalQualifiedKeys.has(normalizeText(name)));
+  const stageResults = getStageResultsHTML(ev, favorites);
+  const eventDetails = getEventDetailHTML(ev, targetId);
+  const sessionDetails = buildEventSessionsHTML(ev, targetId, favorites);
+  // 全進出者の一覧が同じ日の上部にある間は、各部で「未発表」を繰り返さない。
+  const hasUnassignedLineupOverview = targetId === "results" &&
+    ev.eventType === "audition-2nd-east" &&
+    getEventPerformerNames(ev).length === 0 &&
+    events.some((source) =>
+      source.qualifiedNextStageDate === ev.date &&
+      ((source.qualifiedPerformers || []).length || (source.additionalQualifiedPerformers || []).length)
+    );
+  const eventNotice = hasUnassignedLineupOverview
+    ? '<p class="event-notice">出演者一覧は上の「2nd進出者」カードをご覧ください。</p>'
+    : getEventNoticeHTML(ev);
+  const ticketLink = getTicketLinkHTML(ev, targetId);
+  const performerLabel = ev.performerLabel || "出演者";
+  const performerSection = (performers || ev.mc)
+    ? `
+      <div class="performer-section ${stageResults ? "has-qualified" : ""}">
+        <div class="card-section-label">${escapeHTML(performerLabel)}${isLineupOrderedEvent(ev) ? ' <span class="lineup-order-note">※香盤順</span>' : ""}${hasAdditionalQualifiedPerformers
+          ? '<span class="additional-qualified-legend">「追加」は追加合格者</span>'
+          : ""}</div>
+        ${buildMCHTML(ev)}
+        ${ev.lineup ? performers : `<div class="performers">${performers}</div>`}
+      </div>
+    `
+    : "";
+
+  return `
+    <article class="result-card ${ev.eventType === "audition-2nd-east" ? "audition-2nd-stage" : ""} ${getEventSessions(ev).length ? "has-sessions" : ""}" id="event-${escapeHTML(ev.id)}">
+      <div class="datetime-venue">
+        <div>${escapeHTML(formatDisplayDate(ev))}</div>
+        <div class="venue-line">会場：${escapeHTML(getDisplayVenue(ev))}</div>
+      </div>
+      <h3>${escapeHTML(ev.title)}</h3>
+      ${eventDetails}
+      ${sessionDetails}
+      ${stageResults}
+      ${eventNotice}
+      ${performerSection}
+      ${ticketLink}
+    </article>
+  `;
+}
+
+function bindStarButtons(target) {
+  target.querySelectorAll(".star").forEach((btn) => {
+    btn.addEventListener("click", () => toggleFavorite(btn.dataset.name));
+  });
+}
+
+function renderArchiveEvents(targetId, list, openMonths = false) {
+  const target = document.getElementById(targetId);
+  const favorites = getFavorites();
+
+  if (!list.length) {
+    target.innerHTML = '<p class="empty">該当する過去の開催はありません</p>';
+    return;
+  }
+
+  const groups = new Map();
+  list.forEach((ev) => {
+    const label = `${ev.date.slice(0, 4)}年${ev.month}月`;
+    if (!groups.has(label)) groups.set(label, []);
+    groups.get(label).push(ev);
+  });
+
+  target.innerHTML = [...groups.entries()].map(([label, items]) => {
+    const cards = items.map((ev) => buildEventCardHTML(ev, "archiveResults", favorites)).join("");
+    return `
+      <details class="archive-month" ${openMonths ? "open" : ""}>
+        <summary>${label}</summary>
+        <div class="archive-month-content">
+          ${cards}
+        </div>
+      </details>
+    `;
+  }).join("");
+
+  bindStarButtons(target);
+  emphasizeSearchMatches(target, getCurrentFilters().nameQuery);
+}
+
+function runSearch() {
+  updateSearchURL();
+  const filters = getCurrentFilters();
+  const futureResults = filterEvents(events, false);
+  const pastResults = filterEvents(events, true);
+  const activeFilters = hasActiveFilters(filters);
+
+  const pendingCount = renderMainEvents("results", futureResults, filters);
+  const hasUpcomingResults = futureResults.length > 0 || pendingCount > 0;
+  const pastOnlyHit = activeFilters && !hasUpcomingResults && pastResults.length > 0;
+  updateSearchResultSummary(futureResults, pendingCount, pastResults, filters);
+
+  if (pastOnlyHit) {
+    setArchiveOpen(true);
+    updateArchiveMessage("今後の開催には該当がありません。過去の開催に該当があります。");
+  } else if (activeFilters && hasUpcomingResults && pastResults.length > 0) {
+    updateArchiveMessage("過去の開催にも該当があります。");
+  } else {
+    updateArchiveMessage("");
+  }
+
+  if (archiveOpen) {
+    renderArchiveEvents("archiveResults", pastResults, activeFilters || pastOnlyHit);
+  } else {
+    const archiveResults = document.getElementById("archiveResults");
+    if (archiveResults) archiveResults.innerHTML = "";
+  }
+}
+
+function bindAutoSearch() {
+  let debounceTimer;
+
+  ["nameQuery", "eventType", "month", "day", "hour"].forEach((id) => {
+    const el = document.getElementById(id);
+
+    if (id === "nameQuery") {
+      el.addEventListener("input", () => {
+        clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(runSearch, 300);
+      });
+    } else {
+      el.addEventListener("change", runSearch);
+    }
+  });
+
+  document.getElementById("clearBtn").addEventListener("click", clearFilters);
+  document.getElementById("favoritesOnlyBtn").addEventListener("click", () => {
+    favoritesOnlyMode = !favoritesOnlyMode;
+    updateFavoritesOnlyButton();
+    runSearch();
+  });
+  document.getElementById("randomPerformerBtn").addEventListener("click", pickRandomPerformer);
+  document.getElementById("archiveToggleBtn").addEventListener("click", () => {
+    setArchiveOpen(!archiveOpen);
+    runSearch();
+  });
+  updateFavoritesOnlyButton();
+}
+
+function bindFloatingTop() {
+  const floatingTopBtn = document.getElementById("floatingTopBtn");
+  floatingTopBtn.addEventListener("click", () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  });
+
+  window.addEventListener("scroll", () => {
+    if (window.scrollY > 280) {
+      floatingTopBtn.classList.add("show");
+    } else {
+      floatingTopBtn.classList.remove("show");
+    }
+  });
+}
+
+
+async function fetchJSON(path) {
+  const res = await fetch(path, { cache: "no-store" });
+  if (!res.ok) {
+    throw new Error(`${path} を読み込めませんでした`);
+  }
+  return res.json();
+}
+
+function extractEventsList(data) {
+  if (Array.isArray(data)) return data;
+  if (data && Array.isArray(data.events)) return data.events;
+  throw new Error("イベントJSONの形式が正しくありません");
+}
+
+async function loadEventsData() {
+  try {
+    const index = await fetchJSON("data/events-index.json");
+    if (!index || !Array.isArray(index.files) || !index.files.length) {
+      throw new Error("events-index.json の files が空です");
+    }
+
+    const monthlyEvents = await Promise.all(
+      index.files.map(async (file) => {
+        const path = file.startsWith("data/") ? file : `data/${file}`;
+        const data = await fetchJSON(path);
+        return extractEventsList(data);
+      })
+    );
+
+    return monthlyEvents.flat();
+  } catch (e) {
+    console.warn("月別JSONの読み込みに失敗したため、従来の data/events.json を読み込みます", e);
+    const data = await fetchJSON("data/events.json");
+    return extractEventsList(data);
+  }
+}
+
+function extractProfilesMap(data) {
+  const profiles = data && data.profiles && typeof data.profiles === "object"
+    ? data.profiles
+    : {};
+
+  const profileMap = new Map();
+
+  Object.entries(profiles).forEach(([name, profile]) => {
+    const officialUrl = profile && (profile.officialUrl || profile.url);
+    if (!name || !officialUrl) return;
+
+    profileMap.set(normalizeText(name), {
+      name,
+      officialUrl,
+      checkedAt: profile.checkedAt || "",
+    });
+  });
+
+  return profileMap;
+}
+
+async function loadPerformerAliasesData() {
+  try {
+    const data = await fetchJSON("data/performer-aliases.json");
+    return buildPerformerAliasMap(data);
+  } catch (e) {
+    console.warn("performer-aliases.json を読み込めなかったため、内蔵の改名情報を使用します", e);
+    return buildPerformerAliasMap(FALLBACK_PERFORMER_ALIAS_DATA);
+  }
+}
+
+async function loadProfilesData() {
+  try {
+    const data = await fetchJSON("data/profiles.json");
+    return extractProfilesMap(data);
+  } catch (e) {
+    console.warn("profiles.json を読み込めなかったため、プロフィールリンクなしで表示します", e);
+    return new Map();
+  }
+}
+
+function getPerformerProfile(name) {
+  return performerProfiles.get(normalizeText(name)) || null;
+}
+
+function getPerformerNameHTML(name) {
+  const profile = getPerformerProfile(name);
+
+  if (!profile || !profile.officialUrl) {
+    return `<span class="performer-name">${escapeHTML(name)}</span>`;
+  }
+
+  return `
+    <a
+      class="performer-profile-link"
+      href="${escapeHTML(profile.officialUrl)}"
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-label="${escapeHTML(name)}の公式プロフィールを開く"
+    >
+      <span class="performer-name-text">${escapeHTML(name)}</span>
+      <span class="external-link-icon" aria-hidden="true">↗</span>
+    </a>
+  `;
+}
+
+async function loadSiteAlertData() {
+  try {
+    return await fetchJSON("data/site-alert.json");
+  } catch (e) {
+    console.warn("site-alert.json を読み込めなかったため、HTML内のお知らせを表示します", e);
+    return null;
+  }
+}
+
+function renderSiteAlert(alertData) {
+  const wrapper = document.getElementById("siteAlert");
+  const icon = document.getElementById("siteAlertIcon");
+  const heading = document.getElementById("siteAlertHeading");
+  const message = document.getElementById("siteAlertMessage");
+  const note = document.getElementById("siteAlertNote");
+
+  if (!wrapper || !heading || !message || !note) return;
+
+  if (alertData && alertData.enabled === false) {
+    wrapper.hidden = true;
+    return;
+  }
+
+  if (!alertData) {
+    wrapper.hidden = false;
+    return;
+  }
+
+  if (icon) {
+    icon.textContent = alertData.icon || "⚠️";
+  }
+
+  heading.textContent = alertData.heading || "";
+  const alertMessage = alertData.message || "";
+  const alertLinkLabel = alertData.linkLabel || "";
+  const alertLinkHref = alertData.linkHref || "";
+  const alertMessageSuffix = alertData.messageSuffix || "";
+
+  if (alertLinkLabel && alertLinkHref) {
+    message.innerHTML =
+      `${escapeHTML(alertMessage)}<a href="${escapeHTML(alertLinkHref)}">${escapeHTML(alertLinkLabel)}</a>${escapeHTML(alertMessageSuffix)}`;
+  } else {
+    message.textContent = alertMessage;
+  }
+  note.textContent = alertData.note ? `※${alertData.note}` : "";
+  note.hidden = !alertData.note;
+  wrapper.hidden = !(alertData.heading || alertData.message || alertData.note);
+}
+
+async function loadSiteNoticeData() {
+  try {
+    return await fetchJSON("data/site-notice.json");
+  } catch (e) {
+    console.warn("site-notice.json を読み込めなかったため、お知らせは非表示にします", e);
+    return null;
+  }
+}
+
+function renderSiteNotice(noticeData) {
+  const wrapper = document.getElementById("siteNotice");
+  const track = document.getElementById("siteNoticeTrack");
+  if (!wrapper || !track) return;
+
+  const items = noticeData && noticeData.enabled && Array.isArray(noticeData.items)
+    ? noticeData.items.filter((item) => item && item.message)
+    : [];
+
+  if (!items.length) {
+    wrapper.hidden = true;
+    track.innerHTML = "";
+    return;
+  }
+
+  const text = items.map((item) => {
+    const label = item.label ? `${item.label} ` : "";
+    const detail = item.detail ? `　${item.detail}` : "";
+    return `${label}${item.message}${detail}`;
+  }).join("　／　");
+
+  const content = `<span>${escapeHTML(text)}</span>`;
+
+  wrapper.hidden = false;
+  track.innerHTML = `${content}${content}`;
+}
+
+async function init() {
+  populateSelects();
+  restoreSearchFiltersFromURL();
+  bindAutoSearch();
+  bindFloatingTop();
+  bindFavoriteBackup();
+  setArchiveOpen(false);
+
+  try {
+    performerRenameAliases = await loadPerformerAliasesData();
+
+    const [loadedEvents, loadedProfiles, loadedNotice, loadedAlert] = await Promise.all([
+      loadEventsData(),
+      loadProfilesData(),
+      loadSiteNoticeData(),
+      loadSiteAlertData(),
+    ]);
+
+    events = loadedEvents;
+    performerIdentities = buildPerformerIdentities(events);
+    performerProfiles = loadedProfiles;
+    renderSiteNotice(loadedNotice);
+    renderSiteAlert(loadedAlert);
+  } catch (e) {
+    console.error(e);
+    const results = document.getElementById("results");
+    if (results) {
+      results.innerHTML = '<p class="empty">イベント情報を読み込めませんでした。時間をおいて再読み込みしてください。</p>';
+    }
+    return;
+  }
+
+  renderFavoriteSchedule();
+  runSearch();
+}
+
+init();
