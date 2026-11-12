@@ -9079,29 +9079,38 @@
     "excludedSlots": [],
     "stageResults": [
       {
-        "status": "pending",
+        "status": "ranked",
         "displayStyle": "qualified",
-        "performers": [],
+        "performers": [
+          "ハヤヲ"
+        ],
         "label": "最優秀者"
       },
       {
-        "status": "pending",
+        "status": "ranked",
         "displayStyle": "qualified",
-        "performers": [],
+        "performers": [
+          "ガチ銀河"
+        ],
         "label": "2位"
       },
       {
-        "status": "pending",
+        "status": "ranked",
         "displayStyle": "qualified",
-        "performers": [],
+        "performers": [
+          "都々逸"
+        ],
         "label": "3位"
       },
       {
-        "status": "pending",
+        "status": "advanced",
         "displayStyle": "next-stage",
-        "performers": [],
+        "performers": [
+          "ハヤヲ"
+        ],
         "nextEventType": "sarani-agari-stage",
-        "label": "サラに！への進出"
+        "label": "サラに！アガり！ステージ出場権",
+        "nextEventTitle": "サラに！アガり！ステージ"
       }
     ],
     "ticket": {
@@ -9299,29 +9308,38 @@
     "excludedSlots": [],
     "stageResults": [
       {
-        "status": "pending",
+        "status": "ranked",
         "displayStyle": "qualified",
-        "performers": [],
+        "performers": [
+          "フクロクジュ"
+        ],
         "label": "最優秀者"
       },
       {
-        "status": "pending",
+        "status": "ranked",
         "displayStyle": "qualified",
-        "performers": [],
+        "performers": [
+          "桂馬大ジャンプ"
+        ],
         "label": "2位"
       },
       {
-        "status": "pending",
+        "status": "ranked",
         "displayStyle": "qualified",
-        "performers": [],
+        "performers": [
+          "燦々メイデン"
+        ],
         "label": "3位"
       },
       {
-        "status": "pending",
+        "status": "advanced",
         "displayStyle": "next-stage",
-        "performers": [],
+        "performers": [
+          "フクロクジュ"
+        ],
         "nextEventType": "sarani-agari-stage",
-        "label": "サラに！への進出"
+        "label": "サラに！アガり！ステージ出場権",
+        "nextEventTitle": "サラに！アガり！ステージ"
       }
     ],
     "ticket": {
@@ -9519,29 +9537,38 @@
     "excludedSlots": [],
     "stageResults": [
       {
-        "status": "pending",
+        "status": "ranked",
         "displayStyle": "qualified",
-        "performers": [],
+        "performers": [
+          "XYZ"
+        ],
         "label": "最優秀者"
       },
       {
-        "status": "pending",
+        "status": "ranked",
         "displayStyle": "qualified",
-        "performers": [],
+        "performers": [
+          "トラモチーフ"
+        ],
         "label": "2位"
       },
       {
-        "status": "pending",
+        "status": "ranked",
         "displayStyle": "qualified",
-        "performers": [],
+        "performers": [
+          "七色フラン"
+        ],
         "label": "3位"
       },
       {
-        "status": "pending",
+        "status": "advanced",
         "displayStyle": "next-stage",
-        "performers": [],
+        "performers": [
+          "XYZ"
+        ],
         "nextEventType": "sarani-agari-stage",
-        "label": "サラに！への進出"
+        "label": "サラに！アガり！ステージ出場権",
+        "nextEventTitle": "サラに！アガり！ステージ"
       }
     ],
     "ticket": {
@@ -9739,29 +9766,38 @@
     "excludedSlots": [],
     "stageResults": [
       {
-        "status": "pending",
+        "status": "ranked",
         "displayStyle": "qualified",
-        "performers": [],
+        "performers": [
+          "ピーチキャッスル"
+        ],
         "label": "最優秀者"
       },
       {
-        "status": "pending",
+        "status": "ranked",
         "displayStyle": "qualified",
-        "performers": [],
+        "performers": [
+          "それありき"
+        ],
         "label": "2位"
       },
       {
-        "status": "pending",
+        "status": "ranked",
         "displayStyle": "qualified",
-        "performers": [],
+        "performers": [
+          "ボレロ"
+        ],
         "label": "3位"
       },
       {
-        "status": "pending",
+        "status": "advanced",
         "displayStyle": "next-stage",
-        "performers": [],
+        "performers": [
+          "ピーチキャッスル"
+        ],
         "nextEventType": "sarani-agari-stage",
-        "label": "サラに！への進出"
+        "label": "サラに！アガり！ステージ出場権",
+        "nextEventTitle": "サラに！アガり！ステージ"
       }
     ],
     "ticket": {
@@ -9959,29 +9995,38 @@
     "excludedSlots": [],
     "stageResults": [
       {
-        "status": "pending",
+        "status": "ranked",
         "displayStyle": "qualified",
-        "performers": [],
+        "performers": [
+          "バチョフ"
+        ],
         "label": "最優秀者"
       },
       {
-        "status": "pending",
+        "status": "ranked",
         "displayStyle": "qualified",
-        "performers": [],
+        "performers": [
+          "象美人"
+        ],
         "label": "2位"
       },
       {
-        "status": "pending",
+        "status": "ranked",
         "displayStyle": "qualified",
-        "performers": [],
+        "performers": [
+          "テキーラカンガルー"
+        ],
         "label": "3位"
       },
       {
-        "status": "pending",
+        "status": "advanced",
         "displayStyle": "next-stage",
-        "performers": [],
+        "performers": [
+          "バチョフ"
+        ],
         "nextEventType": "sarani-agari-stage",
-        "label": "サラに！への進出"
+        "label": "サラに！アガり！ステージ出場権",
+        "nextEventTitle": "サラに！アガり！ステージ"
       }
     ],
     "ticket": {
@@ -10179,29 +10224,38 @@
     "excludedSlots": [],
     "stageResults": [
       {
-        "status": "pending",
+        "status": "ranked",
         "displayStyle": "qualified",
-        "performers": [],
+        "performers": [
+          "御恩と奉公と痛み"
+        ],
         "label": "最優秀者"
       },
       {
-        "status": "pending",
+        "status": "ranked",
         "displayStyle": "qualified",
-        "performers": [],
+        "performers": [
+          "タナバタ"
+        ],
         "label": "2位"
       },
       {
-        "status": "pending",
+        "status": "ranked",
         "displayStyle": "qualified",
-        "performers": [],
+        "performers": [
+          "クロフォード"
+        ],
         "label": "3位"
       },
       {
-        "status": "pending",
+        "status": "advanced",
         "displayStyle": "next-stage",
-        "performers": [],
+        "performers": [
+          "御恩と奉公と痛み"
+        ],
         "nextEventType": "sarani-agari-stage",
-        "label": "サラに！への進出"
+        "label": "サラに！アガり！ステージ出場権",
+        "nextEventTitle": "サラに！アガり！ステージ"
       }
     ],
     "ticket": {
@@ -10405,29 +10459,38 @@
     "excludedSlots": [],
     "stageResults": [
       {
-        "status": "pending",
+        "status": "ranked",
         "displayStyle": "qualified",
-        "performers": [],
+        "performers": [
+          "バイバイスプリット"
+        ],
         "label": "最優秀者"
       },
       {
-        "status": "pending",
+        "status": "ranked",
         "displayStyle": "qualified",
-        "performers": [],
+        "performers": [
+          "裏切りマンキーコング風次"
+        ],
         "label": "2位"
       },
       {
-        "status": "pending",
+        "status": "ranked",
         "displayStyle": "qualified",
-        "performers": [],
+        "performers": [
+          "山下野村"
+        ],
         "label": "3位"
       },
       {
-        "status": "pending",
+        "status": "advanced",
         "displayStyle": "next-stage",
-        "performers": [],
+        "performers": [
+          "バイバイスプリット"
+        ],
         "nextEventType": "sarani-agari-stage",
-        "label": "サラに！への進出"
+        "label": "サラに！アガり！ステージ出場権",
+        "nextEventTitle": "サラに！アガり！ステージ"
       }
     ],
     "ticket": {
@@ -10436,7 +10499,8 @@
       "purchaseNote": "※出演者からのチケット取り置き可能",
       "streamingNote": "※配信はございません",
       "saleInfo": "一般発売：2026年10月19日（月）10:00～"
-    }
+    },
+    "eventNotice": "※結果発表では第3位「山下野村」とされていますが、事前香盤の出演者欄には記載がありません。"
   },
   {
     "id": "2026-11-11-1930-agari-stage",
@@ -10625,29 +10689,38 @@
     "excludedSlots": [],
     "stageResults": [
       {
-        "status": "pending",
+        "status": "ranked",
         "displayStyle": "qualified",
-        "performers": [],
+        "performers": [
+          "阿部直也"
+        ],
         "label": "最優秀者"
       },
       {
-        "status": "pending",
+        "status": "ranked",
         "displayStyle": "qualified",
-        "performers": [],
+        "performers": [
+          "髙橋ごとき"
+        ],
         "label": "2位"
       },
       {
-        "status": "pending",
+        "status": "ranked",
         "displayStyle": "qualified",
-        "performers": [],
+        "performers": [
+          "ニューシャネル"
+        ],
         "label": "3位"
       },
       {
-        "status": "pending",
+        "status": "advanced",
         "displayStyle": "next-stage",
-        "performers": [],
+        "performers": [
+          "阿部直也"
+        ],
         "nextEventType": "sarani-agari-stage",
-        "label": "サラに！への進出"
+        "label": "サラに！アガり！ステージ出場権",
+        "nextEventTitle": "サラに！アガり！ステージ"
       }
     ],
     "ticket": {
@@ -10656,7 +10729,8 @@
       "purchaseNote": "※出演者からのチケット取り置き可能",
       "streamingNote": "※配信はございません",
       "saleInfo": "一般発売：2026年10月19日（月）10:00～"
-    }
+    },
+    "eventNotice": "※結果発表では第2位「髙橋ごとき」とされていますが、事前香盤では「高橋ごとき」と表記されています。"
   },
   {
     "id": "2026-11-12-1700-agari-stage",
