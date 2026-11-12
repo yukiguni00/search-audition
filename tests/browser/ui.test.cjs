@@ -918,6 +918,9 @@ for(const width of [1280,390,375,320]){
  const {context,page,errors}=await openPage(width,'2026-11-11T03:00:00Z');try{
  assert.equal(await page.locator('h1').textContent(),'オーディション EAST・アガり！ステージ出演者検索（非公式）');assert.equal(await page.locator('h1 br').count(),1);assert.equal(await page.locator('.hero-title-main').evaluate(el=>{const range=document.createRange();range.selectNodeContents(el);return range.getClientRects().length;}),1,'タイトル先頭行は折り返さない');assert.equal(await page.locator('.hero p,#shareSearchBtn,#shareSearchFallback,#resultNote').count(),0);
  assert.equal(await page.locator('#searchResultSummary').getAttribute('class'),'visually-hidden');assert.equal(await page.locator('#searchResultSummary').getAttribute('role'),'status');assert.equal(await page.locator('footer a[href="https://x.com/agaristage"]').count(),1);
+ assert.equal(await page.locator('#siteNotice').isVisible(),true);
+ assert.equal(await page.locator('#siteNoticeTrack span').count(),2,'流れる告知はシームレスループ用に同じ内容を2回描画');
+ assert.equal((await page.locator('#siteNoticeTrack span').first().textContent()).replace(/\s+/g,' '),'🆕 アガり！ステージの掲載を始めました ⚠️ 吉本のタレント検索サービスが一時停止中のためプロフィールリンクが飛べなくなっています');
  await page.locator('#eventType').selectOption('agari-stage');await page.locator('#month').selectOption('11');await page.locator('#day').selectOption('2');await page.locator('#nameQuery').fill(' サンライズ ');
  await page.waitForFunction(()=>new URL(location.href).searchParams.get('name')===' サンライズ ');await page.locator('#archiveBody').waitFor({state:'visible'});
  const card=page.locator('#event-2026-11-02-1700-agari-stage');assert.equal(await card.locator('.event-mc .mc-name.search-match').count(),1);assert.equal(await card.locator('.event-mc .star').count(),0);assert.equal(await card.locator('.event-mc').textContent(),'MC：サンライズ（芸人名の検索条件に一致）');
