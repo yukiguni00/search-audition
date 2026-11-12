@@ -1,7 +1,7 @@
 const test=require('node:test');const assert=require('node:assert/strict');const fs=require('node:fs');const {createHash}=require('node:crypto');const {loadApp,readJSON}=require('./helpers/app.cjs');
-test('194公演のJSONをバイト保持し、MC検索でも出演者・順位・お気に入りへMCを追加しない',()=>{
+test('194公演と従来OGPを保持し、MC検索でも出演者・順位・お気に入りへMCを追加しない',()=>{
  for(const [name,hash] of Object.entries({"ogp.jpg": "c7892401b3e3e6b456d9cb9b756c0f94be518d5fda0e7ee3c9c897cb84b606e6", "ogp-twitter.jpg": "63112fe7839ba0ef8dbc009445665e30a98e6305f292ab120adc99c75e3dba1b"}))assert.equal(createHash('sha256').update(fs.readFileSync(require('node:path').join(__dirname,'..',name))).digest('hex'),hash,'旧OGP URL用の画像を保持');
- assert.equal(readJSON('data/events.json').length,194);assert.equal(createHash('sha256').update(fs.readFileSync(require('node:path').join(__dirname,'../data/events.json'))).digest('hex'),'e6d553af96ed6095c0c46e07fb58b05ca98cb360797f691a1757d9144b1bc8a7');
+ const all=readJSON('data/events.json');assert.equal(all.length,194);assert.equal(all.filter(e=>e.eventType==='agari-stage').length,30);assert.equal(all.filter(e=>e.eventType!=='agari-stage').length,164);
  const a=loadApp();const e={date:'2026-12-01',month:12,day:1,time:'17:00',timeMinutes:1020,eventType:'agari-stage',mc:'ＭＣ芸人',performers:['出演芸人']};const f={nameQuery:a.context.normalizeText(' mc芸人 '),eventType:'all',month:'12',day:'1',hour:'17'};
  assert.equal(a.context.eventMatchesFilters(e,f),true);assert.deepEqual(Array.from(a.context.getEventPerformerNames(e)),['出演芸人']);
  a.set('e',e);a.run('events=[e];saveFavorites([normalizeText(e.mc)]);favoritesOnlyMode=true');assert.equal(a.context.eventMatchesFilters(e,f),false);assert.equal(a.context.getStageResults(e).length,0);

@@ -76,7 +76,7 @@ for (const width of [1280,390,375,320]) {
           const star=card.locator(`.star[data-key="${p.entryKey}"]`);
           assert.equal(await star.count(),1);
           assert.equal(await card.locator('.lineup-block').count(),3);
-          assert.equal(await card.locator('.star').count(),e.performers.length);
+          assert.equal(await card.locator('.lineup-block .star').count(),e.performers.length,'順位欄の星を香盤の出演組数に加算しない');
           assert.match(await star.locator('..').textContent(),/判読不可/);
           assert.ok((await star.locator('..').getAttribute('class')).includes('search-match'));
           assert.ok((await card.textContent()).includes(`MC：${e.mc}`));
@@ -872,14 +872,14 @@ for(const width of [1280,390,375,320]) {
 }
 
 for(const width of [1280,320]){
-  test('アガり結果 '+width+'px: 6公演結果・3位同順位・サラに出場権・FANY共通リンク',{timeout:30000},async()=>{
-    const {context,page,errors}=await openPage(width,'2026-11-09T03:00:00Z');
+  test('アガり結果 '+width+'px: 14公演結果・3位同順位・サラに出場権・FANY共通リンク',{timeout:30000},async()=>{
+    const {context,page,errors}=await openPage(width,'2026-11-12T03:00:00Z');
     try{
       const rights=page.locator('#results .pending-stage-card').filter({hasText:'サラに！アガり！ステージ'});
       assert.equal(await rights.count(),1);
       assert.match(await rights.textContent(),/出場権獲得者/);
       assert.match(await rights.textContent(),/出演日時未確認/);
-      assert.equal(await rights.locator('.star').count(),6);
+      assert.equal(await rights.locator('.star').count(),14);
       await page.locator('#eventType').selectOption('agari-stage');
       await page.locator('#month').selectOption('11');
       await page.locator('#day').selectOption('4');
@@ -893,6 +893,15 @@ for(const width of [1280,320]){
       assert.equal(await first.locator('.performer-section .star[data-name="サンライズ"]').count(),0,'MCは香盤に追加しない');
       assert.equal(await first.locator('.event-notice').textContent(),'※公式Xでは第3位「サンライズ」と発表されていますが、事前香盤では同組はMCとして記載されています。');
       assert.equal(await page.locator('#archiveResults .event-notice').filter({hasText:'事前香盤では同組はMC'}).count(),1,'注記は該当1部だけ');
+      await page.locator('#day').selectOption('11');
+      const n11a=page.locator('#archiveResults #event-2026-11-11-1700-agari-stage');
+      const n11b=page.locator('#archiveResults #event-2026-11-11-1930-agari-stage');
+      assert.equal(await n11a.locator('.qualified-performers').nth(2).locator('.star').getAttribute('data-name'),'山下野村');
+      assert.match(await n11a.locator('.event-notice').textContent(),/事前香盤の出演者欄には記載がありません/);
+      assert.equal(await n11a.locator('.performer-section .star[data-name="山下野村"]').count(),0);
+      assert.equal(await n11b.locator('.qualified-performers').nth(1).locator('.star').getAttribute('data-name'),'髙橋ごとき');
+      assert.match(await n11b.locator('.event-notice').textContent(),/事前香盤では「高橋ごとき」と表記/);
+      assert.equal(await n11b.locator('.performer-section .star[data-name="高橋ごとき"]').count(),1);
       await page.locator('#day').selectOption('24');
       const future=page.locator('#results #event-2026-11-24-1700-agari-stage');
       assert.equal(await future.locator('.ticket-purchase-link a').getAttribute('href'),'https://ticket.fany.lol/event/detail/22035');
