@@ -76,7 +76,7 @@ for (const width of [1280,390,375,320]) {
           const star=card.locator(`.star[data-key="${p.entryKey}"]`);
           assert.equal(await star.count(),1);
           assert.equal(await card.locator('.lineup-block').count(),3);
-          assert.equal(await card.locator('.star').count(),e.performers.length);
+          assert.equal(await card.locator('.lineup-block .star').count(),e.performers.length,'順位欄の星を香盤の出演組数に加算しない');
           assert.match(await star.locator('..').textContent(),/判読不可/);
           assert.ok((await star.locator('..').getAttribute('class')).includes('search-match'));
           assert.ok((await card.textContent()).includes(`MC：${e.mc}`));
