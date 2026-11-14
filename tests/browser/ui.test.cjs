@@ -949,3 +949,43 @@ for(const width of [1280,390,375,320]){
  }finally{await context.close();}
  });
 }
+
+for(const width of [1280,390,375,320]){
+  test(`サラに！専用絞り込み ${width}px: 18組・未確認日程・芸人名・お気に入り・URL復元`,{timeout:30000},async()=>{
+    const {context,page,errors}=await openPage(width,'2026-11-14T03:00:00Z');
+    try{
+      const picker=page.locator('#eventType');
+      assert.equal(await picker.locator('option[value="standup"]').count(),0,'開催予定のないスタンドアップは選択肢から外す');
+      assert.equal(await picker.locator('option[value="sarani-agari-stage"]').textContent(),'サラに！アガり！ステージ');
+      await picker.selectOption('sarani-agari-stage');
+      const rights=page.locator('#results .pending-stage-card');
+      assert.equal(await rights.count(),1,'出場権獲得者カードは1枚');
+      assert.equal(await page.locator('#results .result-card:not(.pending-stage-card)').count(),0,'架空の開催日付き公演は表示しない');
+      assert.match(await rights.textContent(),/サラに！アガり！ステージ/);
+      assert.match(await rights.textContent(),/出演日時未確認/);
+      assert.match(await rights.textContent(),/出場権獲得者/);
+      assert.equal(await rights.locator('.star').count(),18);
+      assert.equal(new URL(page.url()).searchParams.get('eventType'),'sarani-agari-stage','ライブ名選択は共有URLに保存');
+      await page.locator('#nameQuery').fill('ランス39号');
+      await page.waitForFunction(()=>new URL(location.href).searchParams.get('name')==='ランス39号');
+      assert.equal(await rights.locator('.star').count(),1);
+      assert.equal(await rights.locator('.star').getAttribute('data-name'),'ランス39号');
+      await rights.locator('.star').click();
+      assert.equal(await rights.locator('.star').getAttribute('aria-pressed'),'true');
+      await page.locator('#favoritesOnlyBtn').click();
+      assert.equal(await rights.count(),1);
+      assert.equal(await rights.locator('.star').count(),1);
+      await page.reload();
+      await readySearchPage(page);
+      assert.equal(await picker.inputValue(),'sarani-agari-stage');
+      assert.equal(await page.locator('#nameQuery').inputValue(),'ランス39号');
+      assert.equal(await rights.locator('.star').count(),1);
+      assert.equal(await rights.locator('.star').getAttribute('aria-pressed'),'true','既存のお気に入り登録を維持');
+      assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true,'横スクロールを発生させない');
+      await page.locator('#clearBtn').click();
+      assert.equal(await picker.inputValue(),'all');
+      assert.equal(new URL(page.url()).searchParams.has('eventType'),false);
+      assert.deepEqual(errors,[]);
+    }finally{await context.close();}
+  });
+}

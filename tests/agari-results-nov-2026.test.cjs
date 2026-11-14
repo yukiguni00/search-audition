@@ -135,3 +135,28 @@ test('11/12・13の4公演は発表順位・出場権のみ更新、香盤とMC�
   const late=events.find(e=>e.id==='2026-11-13-1930-agari-stage');
   assert.equal(late.excludedSlots[0].order,4,'既存の判読不可枠を維持');
 });
+
+test('ライブ名選択にサラに！を追加し、日時未確認の18組だけを絞り込める。スタンドアップ項目を削除',()=>{
+  const fs=require('node:fs');
+  const path=require('node:path');
+  const html=fs.readFileSync(path.join(__dirname,'../index.html'),'utf8');
+  assert.match(html,/<option value="sarani-agari-stage">サラに！アガり！ステージ<\/option>/);
+  assert.doesNotMatch(html,/<option value="standup">/);
+  const app=loadApp();
+  const filters={nameQuery:'',eventType:'sarani-agari-stage',month:'all',day:'all',hour:'all'};
+  assert.equal(events.filter(e=>e.eventType==='sarani-agari-stage').length,0,'未確定の日付で架空公演を作成しない');
+  const groups=app.context.getPendingStageGroups(filters);
+  assert.equal(groups.length,1,'出場権獲得者は1枚の専用カード');
+  assert.equal(groups[0].nextEventType,'sarani-agari-stage');
+  assert.equal(groups[0].nextEventTitle,'サラに！アガり！ステージ');
+  assert.equal(groups[0].nextDate,'','開催日時を推測しない');
+  assert.equal(groups[0].names.length,18);
+  const htmlCard=app.context.buildPendingStageCardHTML(groups[0],[]);
+  assert.match(htmlCard,/出場権獲得者/);
+  assert.match(htmlCard,/出演日時未確認/);
+  const one=app.context.getPendingStageGroups({...filters,nameQuery:app.context.normalizeText('ランス39号')});
+  assert.equal(one.length,1);
+  assert.deepEqual([...one[0].names],['ランス39号']);
+  assert.equal(one[0].totalCount,18);
+  assert.equal(app.context.getPendingStageGroups({...filters,month:'11'}).length,0,'日時未確認のため月指定ではヒットさせない');
+});
