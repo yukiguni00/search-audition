@@ -4,7 +4,7 @@ const { createHash } = require('node:crypto');
 const { loadApp, readJSON } = require('./helpers/app.cjs');
 const all = readJSON('data/events.json');
 const added = all.filter(e => e.eventType === 'agari-stage');
-const publishedResultEventIDs = new Set(['2026-11-02-1700-agari-stage','2026-11-02-1930-agari-stage','2026-11-04-1700-agari-stage','2026-11-04-1930-agari-stage','2026-11-05-1700-agari-stage','2026-11-05-1930-agari-stage','2026-11-06-1700-agari-stage','2026-11-06-1930-agari-stage','2026-11-09-1700-agari-stage','2026-11-09-1930-agari-stage','2026-11-10-1700-agari-stage','2026-11-10-1930-agari-stage','2026-11-11-1700-agari-stage','2026-11-11-1930-agari-stage']);
+const publishedResultEventIDs = new Set(['2026-11-02-1700-agari-stage','2026-11-02-1930-agari-stage','2026-11-04-1700-agari-stage','2026-11-04-1930-agari-stage','2026-11-05-1700-agari-stage','2026-11-05-1930-agari-stage','2026-11-06-1700-agari-stage','2026-11-06-1930-agari-stage','2026-11-09-1700-agari-stage','2026-11-09-1930-agari-stage','2026-11-10-1700-agari-stage','2026-11-10-1930-agari-stage','2026-11-11-1700-agari-stage','2026-11-11-1930-agari-stage','2026-11-12-1700-agari-stage','2026-11-12-1930-agari-stage','2026-11-13-1700-agari-stage','2026-11-13-1930-agari-stage']);
 const filters = { nameQuery:'', eventType:'agari-stage', month:'11', day:'all', hour:'all' };
 
 test('既存164公演は全フィールド不変、アガり30公演追加で194公演', () => {
@@ -49,7 +49,7 @@ test('判読不可2枠: 両候補で同一カード・チップ、MC/3ブロッ�
       e.performers.length + a.context.getStageResults(e).reduce((sum,r)=>sum+r.performers.length,0));
     assert.ok(html.replace(/<[^>]*>/g, "").includes(`MC：${e.mc}`));
     assert.equal(html.replace(/<[^>]*>/g, "").split(`MC：${e.mc}`).length-1,1,'MCは既存の公演詳細欄に1回だけ表示');
-    assert.equal(a.context.getStageResults(e).length,publishedResultEventIDs.has(e.id)?4:0,'発表済み14公演のみ結果表示');
+    assert.equal(a.context.getStageResults(e).length,publishedResultEventIDs.has(e.id)?4:0,'発表済み18公演のみ結果表示');
     for (const p of e.lineup.filter(p=>p.entryKey)) {
       assert.match(p.name,/（判読不可）/);
       assert.equal(p.searchAliases.length,2);

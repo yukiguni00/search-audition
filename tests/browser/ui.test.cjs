@@ -872,14 +872,14 @@ for(const width of [1280,390,375,320]) {
 }
 
 for(const width of [1280,320]){
-  test('アガり結果 '+width+'px: 14公演結果・3位同順位・サラに出場権・FANY共通リンク',{timeout:30000},async()=>{
-    const {context,page,errors}=await openPage(width,'2026-11-12T03:00:00Z');
+  test('アガり結果 '+width+'px: 18公演結果・3位同順位・サラに出場権・FANY共通リンク',{timeout:30000},async()=>{
+    const {context,page,errors}=await openPage(width,'2026-11-14T03:00:00Z');
     try{
       const rights=page.locator('#results .pending-stage-card').filter({hasText:'サラに！アガり！ステージ'});
       assert.equal(await rights.count(),1);
       assert.match(await rights.textContent(),/出場権獲得者/);
       assert.match(await rights.textContent(),/出演日時未確認/);
-      assert.equal(await rights.locator('.star').count(),14);
+      assert.equal(await rights.locator('.star').count(),18);
       await page.locator('#eventType').selectOption('agari-stage');
       await page.locator('#month').selectOption('11');
       await page.locator('#day').selectOption('4');
@@ -902,6 +902,18 @@ for(const width of [1280,320]){
       assert.equal(await n11b.locator('.qualified-performers').nth(1).locator('.star').getAttribute('data-name'),'髙橋ごとき');
       assert.match(await n11b.locator('.event-notice').textContent(),/事前香盤では「高橋ごとき」と表記/);
       assert.equal(await n11b.locator('.performer-section .star[data-name="高橋ごとき"]').count(),1);
+      for(const [day,id,winner,second,third] of [
+        ['12','2026-11-12-1700-agari-stage','ランス39号','ウルトラスーパーコバタナックス','ラーフル'],
+        ['12','2026-11-12-1930-agari-stage','マルティンス','マシン語感','ゾンビのアトリエ'],
+        ['13','2026-11-13-1700-agari-stage','パウリスタ','ヒッキー北風','かるかん'],
+        ['13','2026-11-13-1930-agari-stage','まえだかっこかり','鈴木ララバイ','ええいちにち']
+      ]){
+        await page.locator('#day').selectOption(day);
+        const card=page.locator('#archiveResults #event-'+id);
+        for(const [i,name] of [winner,second,third].entries())assert.equal(await card.locator('.qualified-performers').nth(i).locator('.star').getAttribute('data-name'),name);
+        assert.equal(await card.locator('.next-stage-performers .star').getAttribute('data-name'),winner);
+        assert.equal(await card.locator('.event-notice').count(),0,'今回4公演には注記不要');
+      }
       await page.locator('#day').selectOption('24');
       const future=page.locator('#results #event-2026-11-24-1700-agari-stage');
       assert.equal(await future.locator('.ticket-purchase-link a').getAttribute('href'),'https://ticket.fany.lol/event/detail/22035');

@@ -19,9 +19,13 @@ const expected=[
   ['2026-11-10','19:30','御恩と奉公と痛み','タナバタ',['クロフォード']],
   ['2026-11-11','17:00','バイバイスプリット','裏切りマンキーコング風次',['山下野村']],
   ['2026-11-11','19:30','阿部直也','髙橋ごとき',['ニューシャネル']],
+  ['2026-11-12','17:00','ランス39号','ウルトラスーパーコバタナックス',['ラーフル']],
+  ['2026-11-12','19:30','マルティンス','マシン語感',['ゾンビのアトリエ']],
+  ['2026-11-13','17:00','パウリスタ','ヒッキー北風',['かるかん']],
+  ['2026-11-13','19:30','まえだかっこかり','鈴木ララバイ',['ええいちにち']],
 ];
 const key=e=>e.date+'T'+e.time;
-test('公式発表14公演の入賞結果を正しく記録し、その他16公演は未発表',()=>{
+test('公式発表18公演の入賞結果を正しく記録し、その他12公演は未発表',()=>{
   assert.equal(all.length,194);assert.equal(events.length,30);
   const resultKeys=new Set(expected.map(x=>x[0]+'T'+x[1]));
   for(const [date,time,winner,second,third] of expected){
@@ -45,7 +49,7 @@ test('公式発表14公演の入賞結果を正しく記録し、その他16公�
     }
     assert.deepEqual(monthly.find(x=>key(x)===key(e)),e);
   }
-  assert.equal(events.filter(e=>!resultKeys.has(key(e))).length,16);
+  assert.equal(events.filter(e=>!resultKeys.has(key(e))).length,12);
   assert.ok(events.filter(e=>!resultKeys.has(key(e))).every(e=>e.stageResults.every(r=>r.status==='pending'&&r.performers.length===0)));
   assert.equal(events.find(e=>e.date==='2026-11-04'&&e.time==='19:30').stageResults[2].performers.length,3);
 });
@@ -60,14 +64,14 @@ test('30公演の共通FANYと販売・取り置き・配信なし',()=>{
     assert.ok(app.context.getTicketLinkHTML(e,'results').includes('href="https://ticket.fany.lol/event/detail/22035"'));
   }
 });
-test('サラに！出場権14組は1枚の専用カード。3位同順位は3名表示',()=>{
+test('サラに！出場権18組は1枚の専用カード。3位同順位は3名表示',()=>{
   const app=loadApp();
   const e=events.find(e=>e.date==='2026-11-04'&&e.time==='19:30');
   const html=app.context.getStageResultsHTML(e,[]);
   for(const n of ['プテラエリア','こへい','鬼河童','フィッシュおさかな','ユンクフラワー'])assert.ok(html.includes(n),n);
   const groups=app.context.getPendingStageGroups({nameQuery:'',eventType:'all',month:'all',day:'all',hour:'all'});
   const rights=groups.filter(g=>g.nextEventType==='sarani-agari-stage');
-  assert.equal(rights.length,1);assert.equal(rights[0].names.length,14);
+  assert.equal(rights.length,1);assert.equal(rights[0].names.length,18);
   assert.equal(rights[0].nextDate,'');
   const output=app.context.buildPendingStageCardHTML(rights[0],[]);
   assert.match(output,/出場権獲得者/);assert.match(output,/出演日時未確認/);
@@ -109,4 +113,25 @@ test('11/11の発表結果と事前香盤の相違は該当公演に限定し、
     if(label==='2位') assert.ok(e.performers.includes('高橋ごとき'));
     if(label==='3位') assert.ok(!e.performers.includes('山下野村'));
   }
+});
+test('11/12・13の4公演は発表順位・出場権のみ更新、香盤とMC・未確認日時を保持',()=>{
+  const cases=[["2026-11-12","17:00","ランス39号","ウルトラスーパーコバタナックス",["ラーフル"]],["2026-11-12","19:30","マルティンス","マシン語感",["ゾンビのアトリエ"]],["2026-11-13","17:00","パウリスタ","ヒッキー北風",["かるかん"]],["2026-11-13","19:30","まえだかっこかり","鈴木ララバイ",["ええいちにち"]]];
+  const app=loadApp();
+  for(const [date,time,winner,second,third] of cases){
+    const e=events.find(x=>x.date===date&&x.time===time);
+    assert.ok(e,date+time);
+    assert.deepEqual(e.stageResults.map(x=>x.status),['ranked','ranked','ranked','advanced']);
+    assert.deepEqual(e.stageResults.map(x=>x.performers),[[winner],[second],third,[winner]]);
+    assert.deepEqual(e.performers,e.lineup.map(p=>p.name),'香盤を変えない');
+    assert.ok([winner,second,...third].every(n=>e.performers.includes(n)),'順位全員が出演者');
+    assert.ok(!e.eventNotice,'香盤差異注記なし');
+    assert.ok(!('nextDate' in e.stageResults[3])&&!('nextTime' in e.stageResults[3]),'日時は未確認');
+    assert.match(app.context.getStageResultsHTML(e,[]),/サラに！アガり！ステージ出場権/);
+  }
+  const a=events.find(e=>e.date==='2026-11-12'&&e.time==='17:00');
+  const b=events.find(e=>e.date==='2026-11-12'&&e.time==='19:30');
+  assert.equal(a.mc,'マルティンス','1部のMCを維持');
+  assert.equal(b.stageResults[0].performers[0],'マルティンス','2部の最優秀者を維持');
+  const late=events.find(e=>e.id==='2026-11-13-1930-agari-stage');
+  assert.equal(late.excludedSlots[0].order,4,'既存の判読不可枠を維持');
 });

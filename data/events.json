@@ -10919,29 +10919,38 @@
     "excludedSlots": [],
     "stageResults": [
       {
-        "status": "pending",
+        "status": "ranked",
         "displayStyle": "qualified",
-        "performers": [],
+        "performers": [
+          "ランス39号"
+        ],
         "label": "最優秀者"
       },
       {
-        "status": "pending",
+        "status": "ranked",
         "displayStyle": "qualified",
-        "performers": [],
+        "performers": [
+          "ウルトラスーパーコバタナックス"
+        ],
         "label": "2位"
       },
       {
-        "status": "pending",
+        "status": "ranked",
         "displayStyle": "qualified",
-        "performers": [],
+        "performers": [
+          "ラーフル"
+        ],
         "label": "3位"
       },
       {
-        "status": "pending",
+        "status": "advanced",
         "displayStyle": "next-stage",
-        "performers": [],
+        "performers": [
+          "ランス39号"
+        ],
         "nextEventType": "sarani-agari-stage",
-        "label": "サラに！への進出"
+        "label": "サラに！アガり！ステージ出場権",
+        "nextEventTitle": "サラに！アガり！ステージ"
       }
     ],
     "ticket": {
@@ -11139,29 +11148,38 @@
     "excludedSlots": [],
     "stageResults": [
       {
-        "status": "pending",
+        "status": "ranked",
         "displayStyle": "qualified",
-        "performers": [],
+        "performers": [
+          "マルティンス"
+        ],
         "label": "最優秀者"
       },
       {
-        "status": "pending",
+        "status": "ranked",
         "displayStyle": "qualified",
-        "performers": [],
+        "performers": [
+          "マシン語感"
+        ],
         "label": "2位"
       },
       {
-        "status": "pending",
+        "status": "ranked",
         "displayStyle": "qualified",
-        "performers": [],
+        "performers": [
+          "ゾンビのアトリエ"
+        ],
         "label": "3位"
       },
       {
-        "status": "pending",
+        "status": "advanced",
         "displayStyle": "next-stage",
-        "performers": [],
+        "performers": [
+          "マルティンス"
+        ],
         "nextEventType": "sarani-agari-stage",
-        "label": "サラに！への進出"
+        "label": "サラに！アガり！ステージ出場権",
+        "nextEventTitle": "サラに！アガり！ステージ"
       }
     ],
     "ticket": {
@@ -11359,29 +11377,38 @@
     "excludedSlots": [],
     "stageResults": [
       {
-        "status": "pending",
+        "status": "ranked",
         "displayStyle": "qualified",
-        "performers": [],
+        "performers": [
+          "パウリスタ"
+        ],
         "label": "最優秀者"
       },
       {
-        "status": "pending",
+        "status": "ranked",
         "displayStyle": "qualified",
-        "performers": [],
+        "performers": [
+          "ヒッキー北風"
+        ],
         "label": "2位"
       },
       {
-        "status": "pending",
+        "status": "ranked",
         "displayStyle": "qualified",
-        "performers": [],
+        "performers": [
+          "かるかん"
+        ],
         "label": "3位"
       },
       {
-        "status": "pending",
+        "status": "advanced",
         "displayStyle": "next-stage",
-        "performers": [],
+        "performers": [
+          "パウリスタ"
+        ],
         "nextEventType": "sarani-agari-stage",
-        "label": "サラに！への進出"
+        "label": "サラに！アガり！ステージ出場権",
+        "nextEventTitle": "サラに！アガり！ステージ"
       }
     ],
     "ticket": {
@@ -11578,29 +11605,38 @@
     ],
     "stageResults": [
       {
-        "status": "pending",
+        "status": "ranked",
         "displayStyle": "qualified",
-        "performers": [],
+        "performers": [
+          "まえだかっこかり"
+        ],
         "label": "最優秀者"
       },
       {
-        "status": "pending",
+        "status": "ranked",
         "displayStyle": "qualified",
-        "performers": [],
+        "performers": [
+          "鈴木ララバイ"
+        ],
         "label": "2位"
       },
       {
-        "status": "pending",
+        "status": "ranked",
         "displayStyle": "qualified",
-        "performers": [],
+        "performers": [
+          "ええいちにち"
+        ],
         "label": "3位"
       },
       {
-        "status": "pending",
+        "status": "advanced",
         "displayStyle": "next-stage",
-        "performers": [],
+        "performers": [
+          "まえだかっこかり"
+        ],
         "nextEventType": "sarani-agari-stage",
-        "label": "サラに！への進出"
+        "label": "サラに！アガり！ステージ出場権",
+        "nextEventTitle": "サラに！アガり！ステージ"
       }
     ],
     "ticket": {
