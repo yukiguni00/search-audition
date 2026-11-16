@@ -872,14 +872,14 @@ for(const width of [1280,390,375,320]) {
 }
 
 for(const width of [1280,320]){
-  test('アガり結果 '+width+'px: 18公演結果・3位同順位・サラに出場権・FANY共通リンク',{timeout:30000},async()=>{
-    const {context,page,errors}=await openPage(width,'2026-11-14T03:00:00Z');
+  test('アガり結果 '+width+'px: 20公演結果・3位同順位・サラに出場権・FANY共通リンク',{timeout:30000},async()=>{
+    const {context,page,errors}=await openPage(width,'2026-11-17T03:00:00Z');
     try{
       const rights=page.locator('#results .pending-stage-card').filter({hasText:'サラに！アガり！ステージ'});
       assert.equal(await rights.count(),1);
       assert.match(await rights.textContent(),/出場権獲得者/);
       assert.match(await rights.textContent(),/出演日時未確認/);
-      assert.equal(await rights.locator('.star').count(),18);
+      assert.equal(await rights.locator('.star').count(),20);
       await page.locator('#eventType').selectOption('agari-stage');
       await page.locator('#month').selectOption('11');
       await page.locator('#day').selectOption('4');
@@ -914,6 +914,20 @@ for(const width of [1280,320]){
         assert.equal(await card.locator('.next-stage-performers .star').getAttribute('data-name'),winner);
         assert.equal(await card.locator('.event-notice').count(),0,'今回4公演には注記不要');
       }
+      await page.locator('#day').selectOption('16');
+      const nov16a=page.locator('#archiveResults #event-2026-11-16-1700-agari-stage');
+      const nov16b=page.locator('#archiveResults #event-2026-11-16-1930-agari-stage');
+      for(const [card,rank] of [
+        [nov16a,['超アジア','タイサンボク','既婚者']],
+        [nov16b,['アイガモシーサー','2人のトイボックス','ウィークリー習慣']]
+      ]){
+        for(const [i,name] of rank.entries())assert.equal(await card.locator('.qualified-performers').nth(i).locator('.star').getAttribute('data-name'),name);
+        assert.equal(await card.locator('.next-stage-performers .star').getAttribute('data-name'),rank[0]);
+        assert.equal(await card.locator('.event-notice').count(),0);
+      }
+      assert.match(await nov16a.locator('.event-mc').textContent(),/ウィークリー習慣/);
+      assert.equal(await nov16a.locator('.performer-section .star[data-name="ウィークリー習慣"]').count(),0,'1部MCを香盤へ混入しない');
+      assert.equal(await nov16b.locator('.qualified-performers').nth(2).locator('.star').getAttribute('data-name'),'ウィークリー習慣');
       await page.locator('#day').selectOption('24');
       const future=page.locator('#results #event-2026-11-24-1700-agari-stage');
       assert.equal(await future.locator('.ticket-purchase-link a').getAttribute('href'),'https://ticket.fany.lol/event/detail/22035');
@@ -951,8 +965,8 @@ for(const width of [1280,390,375,320]){
 }
 
 for(const width of [1280,390,375,320]){
-  test(`サラに！専用絞り込み ${width}px: 18組・未確認日程・芸人名・お気に入り・URL復元`,{timeout:30000},async()=>{
-    const {context,page,errors}=await openPage(width,'2026-11-14T03:00:00Z');
+  test(`サラに！専用絞り込み ${width}px: 20組・未確認日程・芸人名・お気に入り・URL復元`,{timeout:30000},async()=>{
+    const {context,page,errors}=await openPage(width,'2026-11-17T03:00:00Z');
     try{
       const picker=page.locator('#eventType');
       assert.equal(await picker.locator('option[value="standup"]').count(),0,'開催予定のないスタンドアップは選択肢から外す');
@@ -964,7 +978,7 @@ for(const width of [1280,390,375,320]){
       assert.match(await rights.textContent(),/サラに！アガり！ステージ/);
       assert.match(await rights.textContent(),/出演日時未確認/);
       assert.match(await rights.textContent(),/出場権獲得者/);
-      assert.equal(await rights.locator('.star').count(),18);
+      assert.equal(await rights.locator('.star').count(),20);
       assert.equal(new URL(page.url()).searchParams.get('eventType'),'sarani-agari-stage','ライブ名選択は共有URLに保存');
       await page.locator('#nameQuery').fill('ランス39号');
       await page.waitForFunction(()=>new URL(location.href).searchParams.get('name')==='ランス39号');
