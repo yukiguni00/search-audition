@@ -11840,29 +11840,38 @@
     "excludedSlots": [],
     "stageResults": [
       {
-        "status": "pending",
+        "status": "ranked",
         "displayStyle": "qualified",
-        "performers": [],
+        "performers": [
+          "超アジア"
+        ],
         "label": "最優秀者"
       },
       {
-        "status": "pending",
+        "status": "ranked",
         "displayStyle": "qualified",
-        "performers": [],
+        "performers": [
+          "タイサンボク"
+        ],
         "label": "2位"
       },
       {
-        "status": "pending",
+        "status": "ranked",
         "displayStyle": "qualified",
-        "performers": [],
+        "performers": [
+          "既婚者"
+        ],
         "label": "3位"
       },
       {
-        "status": "pending",
+        "status": "advanced",
         "displayStyle": "next-stage",
-        "performers": [],
+        "performers": [
+          "超アジア"
+        ],
         "nextEventType": "sarani-agari-stage",
-        "label": "サラに！への進出"
+        "label": "サラに！アガり！ステージ出場権",
+        "nextEventTitle": "サラに！アガり！ステージ"
       }
     ],
     "ticket": {
@@ -12060,29 +12069,38 @@
     "excludedSlots": [],
     "stageResults": [
       {
-        "status": "pending",
+        "status": "ranked",
         "displayStyle": "qualified",
-        "performers": [],
+        "performers": [
+          "アイガモシーサー"
+        ],
         "label": "最優秀者"
       },
       {
-        "status": "pending",
+        "status": "ranked",
         "displayStyle": "qualified",
-        "performers": [],
+        "performers": [
+          "2人のトイボックス"
+        ],
         "label": "2位"
       },
       {
-        "status": "pending",
+        "status": "ranked",
         "displayStyle": "qualified",
-        "performers": [],
+        "performers": [
+          "ウィークリー習慣"
+        ],
         "label": "3位"
       },
       {
-        "status": "pending",
+        "status": "advanced",
         "displayStyle": "next-stage",
-        "performers": [],
+        "performers": [
+          "アイガモシーサー"
+        ],
         "nextEventType": "sarani-agari-stage",
-        "label": "サラに！への進出"
+        "label": "サラに！アガり！ステージ出場権",
+        "nextEventTitle": "サラに！アガり！ステージ"
       }
     ],
     "ticket": {
