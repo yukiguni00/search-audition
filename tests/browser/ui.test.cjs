@@ -1021,12 +1021,16 @@ for(const width of [1280,390,375,320]){
       const sparkle=page.locator('#event-2026-11-30-1600-audition-1st-east');
       assert.match(await sparkle.locator('.venue-line').textContent(),/歌舞伎町Sparkle/);
       assert.equal(await sparkle.locator('.ticket-purchase-link a').getAttribute('href'),'https://ticket.fany.lol/event/detail/23161');
+       assert.equal(await sparkle.locator('.ticket-streaming-note').textContent(),'※配信はありません');
+       assert.equal(await sparkle.locator('.ticket-sale-info').textContent(),'※ FANY一般販売：11月18日(水) 10:00〜');
       await page.locator('#day').selectOption('24');
       assert.equal(await page.locator('#results .result-card').count(),2);
       const november=page.locator('#event-2026-11-24-1600-audition-1st-east');
       assert.equal(await november.locator('.performer-section .star').nth(5).getAttribute('data-name'),'ビィワゴン');
       assert.match(await november.locator('.venue-line').textContent(),/LEFKADA新宿/);
       assert.equal(await november.locator('.ticket-purchase-link a').getAttribute('href'),'https://ticket.fany.lol/event/detail/23168');
+       assert.equal(await november.locator('.ticket-streaming-note').textContent(),'※配信はありません');
+       assert.equal(await november.locator('.ticket-sale-info').textContent(),'※ FANY一般販売：11月18日(水) 10:00〜');
       await page.locator('#month').selectOption('12');
       await page.locator('#day').selectOption('1');
       assert.equal(await page.locator('#results .result-card').count(),2);
@@ -1034,6 +1038,8 @@ for(const width of [1280,390,375,320]){
       assert.equal(await dec.locator('.performer-section .star').nth(4).getAttribute('data-name'),'毛極蜂空芯蝶々虻火鉢');
       assert.equal(await dec.locator('.performer-section .star').nth(8).getAttribute('data-name'),'ayu♡','12月の目視校正を確認');
       assert.equal(await dec.locator('.ticket-purchase-link a').getAttribute('href'),'https://ticket.fany.lol/event/detail/23168');
+       assert.equal(await dec.locator('.ticket-streaming-note').textContent(),'※配信はありません');
+       assert.equal(await dec.locator('.ticket-sale-info').textContent(),'※ FANY一般販売：11月18日(水) 10:00〜');
       assert.equal(new URL(page.url()).searchParams.get('eventType'),'audition-1st-east');
       await page.locator('#nameQuery').fill('毛極蜂空芯蝶々虻火鉢');
       await page.waitForFunction(()=>new URL(location.href).searchParams.get('name')==='毛極蜂空芯蝶々虻火鉢' && document.querySelectorAll('#results .result-card').length===1);
