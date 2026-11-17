@@ -632,7 +632,7 @@ for (const width of [1280,390,375,320]) {
       assert.equal(await page.locator('#results .result-card:not(.pending-stage-card)').count(),futureIDs.length);
       assert.equal(await page.locator('.pending-stage-card').count(),2);
       assert.deepEqual(await searchCardIDs(page).then(ids=>ids.filter(id=>!id.startsWith('event-pending-')).sort()),futureIDs);
-      assert.equal(await page.locator('#favoriteSchedule .favorite-jump-btn').count(),2,'パピヨンは極進出とサラに出場権の2件を表示');
+      assert.equal(await page.locator('#favoriteSchedule .favorite-jump-btn').count(),3,'パピヨンは極進出・サラに出場権・12/14の1st出演の3件を表示');
       const favoriteDetails=await page.locator('#favoriteSchedule').textContent();
       assert.ok(favoriteDetails.includes('出演部未定'));
       assert.ok(favoriteDetails.includes('サラに！アガり！ステージ'));
