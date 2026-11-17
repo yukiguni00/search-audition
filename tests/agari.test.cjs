@@ -7,9 +7,9 @@ const added = all.filter(e => e.eventType === 'agari-stage');
 const publishedResultEventIDs = new Set(['2026-11-02-1700-agari-stage','2026-11-02-1930-agari-stage','2026-11-04-1700-agari-stage','2026-11-04-1930-agari-stage','2026-11-05-1700-agari-stage','2026-11-05-1930-agari-stage','2026-11-06-1700-agari-stage','2026-11-06-1930-agari-stage','2026-11-09-1700-agari-stage','2026-11-09-1930-agari-stage','2026-11-10-1700-agari-stage','2026-11-10-1930-agari-stage','2026-11-11-1700-agari-stage','2026-11-11-1930-agari-stage','2026-11-12-1700-agari-stage','2026-11-12-1930-agari-stage','2026-11-13-1700-agari-stage','2026-11-13-1930-agari-stage','2026-11-16-1700-agari-stage','2026-11-16-1930-agari-stage']);
 const filters = { nameQuery:'', eventType:'agari-stage', month:'11', day:'all', hour:'all' };
 
-test('既存164公演は全フィールド不変、アガり30公演追加で194公演', () => {
-  const old = all.filter(e => e.eventType !== 'agari-stage');
-  assert.equal(old.length,164); assert.equal(added.length,30); assert.equal(all.length,194);
+test('既存164公演とアガり30公演を維持し、1st新規33公演で計227公演', () => {
+  const old = all.filter(e => e.eventType !== 'agari-stage' && !(e.eventType === 'audition-1st-east' && e.date >= '2026-11-24'));
+  assert.equal(old.length,164); assert.equal(added.length,30); assert.equal(all.length,227);
   assert.equal(createHash('sha256').update(JSON.stringify(old)).digest('hex'),
     '3d1ffbff43f1d28bd7986ed490d10259be53da464c2c6e8f90f0dee21815f813');
   assert.equal(new Set(added.map(e=>e.date)).size,15);
