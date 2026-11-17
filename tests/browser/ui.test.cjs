@@ -809,7 +809,9 @@ for(const width of [1280,390,375,320]) {
       assert.match(await pending.textContent(),/計4公演/);
       if(process.env.TEST_SCREENSHOT_DIR)await page.locator('#results').screenshot({path:path.join(process.env.TEST_SCREENSHOT_DIR,`dec-date-filter-${width}.png`)});
       await page.locator('#day').selectOption('14');
-      assert.deepEqual(await assertVisibleCounts(page),{future:2,pending:0,past:0});
+      assert.deepEqual(await assertVisibleCounts(page),{future:0,pending:0,past:0},'20時指定のままでは16:00と18:30の新規1stはヒットしない');
+      await page.locator('#hour').selectOption('all');
+      assert.deepEqual(await assertVisibleCounts(page),{future:2,pending:0,past:0},'時間条件を解除すると12/14の新規1stが2公演表示される');
       await page.locator('#clearBtn').click();await page.locator('#month').selectOption('11');await page.locator('#day').selectOption('6');
       assert.deepEqual(await assertVisibleCounts(page),{future:0,pending:0,past:3});
       const november=page.locator('#archiveResults #event-'+f.novemberEventId);
@@ -867,7 +869,7 @@ for(const width of [1280,390,375,320]) {
         assert.deepEqual(await assertVisibleCounts(recipient.page),{future:0,pending:1,past:0});
         assert.equal(await recipient.page.locator('#results .pending-stage-card .star').getAttribute('data-name'),'ZAZY');
       } finally {await recipient.context.close();}
-      await page.locator('#clearBtn').click();assert.deepEqual(await assertVisibleCounts(page),{future:2,pending:2,past:192});
+      await page.locator('#clearBtn').click();assert.deepEqual(await assertVisibleCounts(page),{future:10,pending:2,past:217},'12/13時点では新規1stの25公演が過去、8公演が今後');
       assert.deepEqual(errors,[]);
     } finally {await context.close();}
   });
@@ -957,7 +959,7 @@ for(const width of [1280,390,375,320]){
  const before=await searchCardIDs(page,'#archiveResults');await page.reload();await readySearchPage(page);assert.deepEqual(await searchCardIDs(page,'#archiveResults'),before);assert.equal(await card.locator('.event-mc .search-match').count(),1);
  if(process.env.TEST_SCREENSHOT_DIR)await card.screenshot({path:path.join(process.env.TEST_SCREENSHOT_DIR,`v6-mc-${width}.png`)});
  await page.locator('#clearBtn').click();await page.locator('#month').selectOption('12');const pending=page.locator('#results .pending-stage-card').filter({hasText:'2ndステージからの進出者'});assert.equal(await pending.count(),1);assert.equal(await pending.locator('.lineup-overview-heading span').textContent(),'2ndステージからの進出者');assert.equal(await pending.locator('.lineup-overview-note').textContent(),'※出演部は更新時点では未定です');
- assert.equal(await page.locator('#results .result-card[id*="kiwami-grand-battle-east"] .star').count(),0,'極の出演部未定枠だけは出演者ゼロ');
+ assert.equal(await page.locator('#results .result-card:not(.pending-stage-card)[id*="kiwami-grand-battle-east"] .star').count(),0,'極の出演部未定枠だけは出演者ゼロ');
  await pending.locator('.star[data-name="ZAZY"]').click();assert.equal(await page.locator('#favoritePanel h2').textContent(),'★お気に入りの出演・進出情報');assert.ok(!(await page.locator('#favoriteSchedule').textContent()).includes('渋谷よしもと漫才劇場'));
  await page.locator('#favoriteBackupBtn').click();await page.locator('#createBackupBtn').click();assert.ok((await page.locator('#backupCodeOutput').inputValue()).length>0);await page.locator('#closeBackupBtn').click();
  assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true);const clipping=await page.locator('#results .pending-stage-note,.event-mc,.favorite-meta,h1').evaluateAll(nodes=>nodes.filter(n=>n.getClientRects().length&&n.clientWidth>0&&n.scrollWidth>n.clientWidth+1).map(n=>n.textContent));assert.deepEqual(clipping,[]);
@@ -1033,6 +1035,7 @@ for(const width of [1280,390,375,320]){
       assert.equal(await dec.locator('.ticket-purchase-link a').getAttribute('href'),'https://ticket.fany.lol/event/detail/23168');
       assert.equal(new URL(page.url()).searchParams.get('eventType'),'audition-1st-east');
       await page.locator('#nameQuery').fill('毛極蜂空芯蝶々虻火鉢');
+      await page.waitForFunction(()=>new URL(location.href).searchParams.get('name')==='毛極蜂空芯蝶々虻火鉢' && document.querySelectorAll('#results .result-card').length===1);
       assert.equal(await page.locator('#results .result-card').count(),1);
       assert.equal(await dec.locator('.star[data-name="毛極蜂空芯蝶々虻火鉢"]').count(),1);
       await page.reload();await readySearchPage(page);
