@@ -326,6 +326,26 @@ test('11/24〜12/17 1st新規33公演・841出演記録と開催時刻・欠場�
     assert.ok(e.performers.every(n=>n&&n.trim()));
   }
 });
+test('冬期1st全33公演の11/18一般販売・配信なし／アガり全30公演の10/19発売を混同しない',()=>{
+  const app=loadApp();
+  assert.equal(winter.length,33);
+  for(const e of winter){
+    assert.equal(e.ticket.streamingNote,'※配信はありません',e.id);
+    assert.equal(e.ticket.saleInfo,'※ FANY一般販売：11月18日(水) 10:00〜',e.id);
+    const html=app.context.buildEventCardHTML(e,'results',[]);
+    assert.ok(html.includes('class="ticket-streaming-note">※配信はありません</div>'),e.id);
+    assert.ok(html.includes('class="ticket-sale-info">※ FANY一般販売：11月18日(水) 10:00〜</div>'),e.id);
+    assert.ok(!html.includes('10月19日(月)'),e.id);
+  }
+  const agari=all.filter(e=>e.eventType==='agari-stage');
+  assert.equal(agari.length,30);
+  for(const e of agari){
+    assert.equal(e.ticket.saleInfo,'一般発売：2026年10月19日（月）10:00～',e.id);
+    const html=app.context.buildEventCardHTML(e,'results',[]);
+    assert.ok(html.includes('※FANY一般発売：10月19日(月)10:00〜'),e.id);
+    assert.ok(!html.includes('11月18日(水)'),e.id);
+  }
+});
 test('目視修正済みの22件を1-based香盤位置へそのまま反映（自動同一化なし）',()=>{
   assert.equal(fixes.length,22);
   for(const [date,time,index,name] of fixes){
