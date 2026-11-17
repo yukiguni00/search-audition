@@ -946,8 +946,11 @@ for(const width of [1280,320]){
       }
       await page.locator('#eventType').selectOption('sarani-agari-stage');
       await page.locator('#day').selectOption('all');
+      assert.equal(await page.locator('#results .pending-stage-card').count(),0,'日時未確認のため11月絞り込みでは表示しない');
+      await page.locator('#month').selectOption('all');
       assert.equal(await page.locator('#results .pending-stage-card .star').count(),22);
       await page.locator('#eventType').selectOption('agari-stage');
+      await page.locator('#month').selectOption('11');
       await page.locator('#day').selectOption('24');
       const future=page.locator('#results #event-2026-11-24-1700-agari-stage');
       assert.equal(await future.locator('.ticket-purchase-link a').getAttribute('href'),'https://ticket.fany.lol/event/detail/22035');
