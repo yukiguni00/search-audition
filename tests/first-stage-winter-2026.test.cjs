@@ -241,7 +241,7 @@ const fixes=[
     "2026-12-04",
     "16:00",
     4,
-    "焼肉未"
+    "焼肉末"
   ],
   [
     "2026-12-04",
@@ -304,7 +304,7 @@ const fixes=[
     "楽しいスポーツぷるぷるつんつん"
   ]
 ];
-const targetNotice="⚠️11月12月開催の1stステージの情報を目視確認中です";
+const targetNotice="🆕 アガり！ステージの掲載を始めました　⚠️ 吉本のタレント検索サービスが一時停止中のためプロフィールリンクが飛べなくなっています";
 
 test('11/24〜12/17 1st新規33公演・841出演記録と開催時刻・欠場枠',()=>{
   assert.equal(all.length,227);
@@ -334,7 +334,7 @@ test('目視修正済みの22件を1-based香盤位置へそのまま反映（�
     assert.equal(e.performers[index-1],name,date+time+' #'+index);
   }
 });
-test('暫定告知は指定文言。従来のアガり告知は復元指示まで表示しない',()=>{
+test('11月・12月の目視校正後、従来のアガり告知を復元',()=>{
   const notice=readJSON('data/site-notice.json');
   assert.equal(notice.enabled,true);
   assert.equal(notice.items.length,1);
@@ -342,7 +342,8 @@ test('暫定告知は指定文言。従来のアガり告知は復元指示ま�
   const shown=(item.label?item.label+' ':'')+item.message+(item.detail?'　'+item.detail:'');
   assert.equal(shown,targetNotice);
   const a=loadApp();
-  assert.ok(!shown.includes('吉本のタレント検索サービス'));
+  assert.equal(item.label,'🆕');
+  assert.ok(shown.includes('吉本のタレント検索サービス'));
   assert.equal(a.context.eventMatchesFilters(winter[0],{nameQuery:'',eventType:'audition-1st-east',month:'11',day:'24',hour:'16'}),true);
 });
 

@@ -632,7 +632,7 @@ for (const width of [1280,390,375,320]) {
       assert.equal(await page.locator('#results .result-card:not(.pending-stage-card)').count(),futureIDs.length);
       assert.equal(await page.locator('.pending-stage-card').count(),2);
       assert.deepEqual(await searchCardIDs(page).then(ids=>ids.filter(id=>!id.startsWith('event-pending-')).sort()),futureIDs);
-      assert.equal(await page.locator('#favoriteSchedule .favorite-jump-btn').count(),2,'パピヨンは極進出とサラに出場権の2件を表示');
+      assert.equal(await page.locator('#favoriteSchedule .favorite-jump-btn').count(),3,'パピヨンは極進出・サラに出場権・12/14の1st出演の3件を表示');
       const favoriteDetails=await page.locator('#favoriteSchedule').textContent();
       assert.ok(favoriteDetails.includes('出演部未定'));
       assert.ok(favoriteDetails.includes('サラに！アガり！ステージ'));
@@ -950,7 +950,7 @@ for(const width of [1280,390,375,320]){
  assert.equal(await page.locator('#searchResultSummary').getAttribute('class'),'visually-hidden');assert.equal(await page.locator('#searchResultSummary').getAttribute('role'),'status');assert.equal(await page.locator('footer a[href="https://x.com/agaristage"]').count(),1);
  assert.equal(await page.locator('#siteNotice').isVisible(),true);
  assert.equal(await page.locator('#siteNoticeTrack span').count(),2,'流れる告知はシームレスループ用に同じ内容を2回描画');
- assert.equal((await page.locator('#siteNoticeTrack span').first().textContent()).replace(/\s+/g,' '),'⚠️11月12月開催の1stステージの情報を目視確認中です');
+ assert.equal((await page.locator('#siteNoticeTrack span').first().textContent()).replace(/\s+/g,' '),'🆕 アガり！ステージの掲載を始めました ⚠️ 吉本のタレント検索サービスが一時停止中のためプロフィールリンクが飛べなくなっています');
  await page.locator('#eventType').selectOption('agari-stage');await page.locator('#month').selectOption('11');await page.locator('#day').selectOption('2');await page.locator('#nameQuery').fill(' サンライズ ');
  await page.waitForFunction(()=>new URL(location.href).searchParams.get('name')===' サンライズ ');await page.locator('#archiveBody').waitFor({state:'visible'});
  const card=page.locator('#event-2026-11-02-1700-agari-stage');assert.equal(await card.locator('.event-mc .mc-name.search-match').count(),1);assert.equal(await card.locator('.event-mc .star').count(),0);assert.equal(await card.locator('.event-mc').textContent(),'MC：サンライズ（芸人名の検索条件に一致）');
@@ -1009,11 +1009,11 @@ for(const width of [1280,390,375,320]){
 }
 
 for(const width of [1280,390,375,320]){
-  test('12月期1st暫定公開 '+width+'px: 新規33公演・会場/チケット別・目視確認告知・検索URL・表示幅',{timeout:60000},async()=>{
+  test('12月期1st目視校正後 '+width+'px: 新規33公演・会場/チケット別・目視確認告知・検索URL・表示幅',{timeout:60000},async()=>{
     const {context,page,errors}=await openPage(width,'2026-11-17T03:00:00Z');
     try{
       assert.equal(winterFirst.length,33);
-      assert.equal((await page.locator('#siteNoticeTrack span').first().textContent()).trim(),'⚠️11月12月開催の1stステージの情報を目視確認中です');
+      assert.equal((await page.locator('#siteNoticeTrack span').first().textContent()).trim(),'🆕 アガり！ステージの掲載を始めました　⚠️ 吉本のタレント検索サービスが一時停止中のためプロフィールリンクが飛べなくなっています');
       await page.locator('#eventType').selectOption('audition-1st-east');
       await page.locator('#month').selectOption('11');
       await page.locator('#day').selectOption('30');
@@ -1032,6 +1032,7 @@ for(const width of [1280,390,375,320]){
       assert.equal(await page.locator('#results .result-card').count(),2);
       const dec=page.locator('#event-2026-12-01-1830-audition-1st-east');
       assert.equal(await dec.locator('.performer-section .star').nth(4).getAttribute('data-name'),'毛極蜂空芯蝶々虻火鉢');
+      assert.equal(await dec.locator('.performer-section .star').nth(8).getAttribute('data-name'),'ayu♡','12月の目視校正を確認');
       assert.equal(await dec.locator('.ticket-purchase-link a').getAttribute('href'),'https://ticket.fany.lol/event/detail/23168');
       assert.equal(new URL(page.url()).searchParams.get('eventType'),'audition-1st-east');
       await page.locator('#nameQuery').fill('毛極蜂空芯蝶々虻火鉢');
