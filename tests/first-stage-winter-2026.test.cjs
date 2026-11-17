@@ -345,3 +345,92 @@ test('暫定告知は指定文言。従来のアガり告知は復元指示ま�
   assert.ok(!shown.includes('吉本のタレント検索サービス'));
   assert.equal(a.context.eventMatchesFilters(winter[0],{nameQuery:'',eventType:'audition-1st-east',month:'11',day:'24',hour:'16'}),true);
 });
+
+test('11月1st香盤のユーザー目視校正12件を同じ位置で保持し月別・集約で一致',()=>{
+  const monthly=readJSON('data/events/2026-11.json');
+  const aggregate=readJSON('data/events.json');
+  const corrections=[
+    [
+      "2026-11-24",
+      "16:00",
+      2,
+      "シャープペンソー"
+    ],
+    [
+      "2026-11-24",
+      "16:00",
+      17,
+      "中邨世代"
+    ],
+    [
+      "2026-11-24",
+      "16:00",
+      19,
+      "ファニーアズヘル"
+    ],
+    [
+      "2026-11-24",
+      "18:30",
+      21,
+      "ゲラゲラ星人"
+    ],
+    [
+      "2026-11-25",
+      "16:00",
+      17,
+      "怪獣マンダウエ"
+    ],
+    [
+      "2026-11-25",
+      "18:30",
+      12,
+      "ばばちゃり"
+    ],
+    [
+      "2026-11-25",
+      "18:30",
+      16,
+      "鷗外"
+    ],
+    [
+      "2026-11-25",
+      "18:30",
+      20,
+      "ういに田ぷぅ"
+    ],
+    [
+      "2026-11-26",
+      "16:00",
+      26,
+      "かいりき"
+    ],
+    [
+      "2026-11-26",
+      "18:30",
+      14,
+      "ナッケンパデン"
+    ],
+    [
+      "2026-11-30",
+      "16:00",
+      20,
+      "蹴王"
+    ],
+    [
+      "2026-11-30",
+      "16:00",
+      27,
+      "俊ちゃん賢ちゃん"
+    ]
+  ];
+  assert.equal(monthly.length,38);
+  assert.equal(aggregate.length,227);
+  assert.deepEqual(aggregate.filter(e=>e.date.startsWith('2026-11')),monthly);
+  assert.equal(corrections.length,12);
+  for(const [date,time,position,name] of corrections){
+    const e=monthly.find(x=>x.eventType==='audition-1st-east'&&x.date===date&&x.time===time);
+    assert.ok(e,date+' '+time);
+    assert.equal(e.performers[position-1],name,date+' '+time+' #'+position);
+  }
+  assert.equal(monthly.find(e=>e.date==='2026-11-25'&&e.time==='18:30'&&e.eventType==='audition-1st-east').performers[9],'バネンカ','未確定の表記は勝手に変更しない');
+});
