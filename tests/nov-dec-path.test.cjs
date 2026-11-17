@@ -7,14 +7,15 @@ const all=readJSON('data/events.json').filter(e=>e.eventType!=='agari-stage');
 const empty={nameQuery:'',eventType:'all',month:'all',day:'all',hour:'all'};
 function current(){const a=loadApp();a.run('todayString=()=>"2026-11-08"');return a;}
 
-test('既存オーディション経路164件を保持。従来の5公演はオーディション由来のみ',()=>{
-  assert.equal(all.length,164);
+test('既存のオーディション経路164件を保持し、新しい1stの33公演を追加',()=>{
+  assert.equal(all.length,197);
   const old=structuredClone(all.filter(e=>e.date<'2026-11-01'));
   assert.equal(old.length,159);
   for(const e of old.filter(e=>e.date==='2026-10-30'&&e.eventType==='audition-2nd-east'))
     for(const r of e.stageResults)for(const key of ['nextEventType','nextEventTitle','nextDate','nextDateEnd','nextTime','nextVenue'])delete r[key];
   assert.equal(createHash('sha256').update(JSON.stringify(old)).digest('hex'),f.originalEventsSHA256);
-  const added=all.filter(e=>e.date>='2026-11-01');
+  const added=all.filter(e=>e.date>='2026-11-01' && e.eventType!=='audition-1st-east');
+  assert.equal(all.filter(e=>e.eventType==='audition-1st-east' && e.date>='2026-11-24').length,33,'今回の新規1stだけ33公演');
   assert.equal(added.length,5);
   assert.deepEqual(added.map(e=>e.id),[f.novemberEventId,...f.decemberEventIds]);
   assert.deepEqual([...new Set(added.flatMap(e=>[...e.performers,...(e.stageResults||[]).flatMap(r=>r.performers)]))].sort(),[...f.auditionKakeru].sort());
