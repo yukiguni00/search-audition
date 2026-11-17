@@ -877,7 +877,7 @@ for(const width of [1280,390,375,320]) {
 
 for(const width of [1280,320]){
   test('アガり結果 '+width+'px: 22公演結果・3位同順位・サラに出場権・FANY共通リンク',{timeout:30000},async()=>{
-    const {context,page,errors}=await openPage(width,'2026-11-17T03:00:00Z');
+    const {context,page,errors}=await openPage(width,'2026-11-18T03:00:00Z');
     try{
       const rights=page.locator('#results .pending-stage-card').filter({hasText:'サラに！アガり！ステージ'});
       assert.equal(await rights.count(),1);
