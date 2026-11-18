@@ -675,11 +675,15 @@ for (const width of [1280,390,375,320]) {
       assert.equal(await page.locator('#results .result-card:not(.pending-stage-card)').count(),futureIDs.length);
       assert.equal(await page.locator('.pending-stage-card').count(),2);
       assert.deepEqual(await searchCardIDs(page).then(ids=>ids.filter(id=>!id.startsWith('event-pending-')).sort()),futureIDs);
-      assert.equal(await page.locator('#favoriteSchedule .favorite-jump-btn').count(),3,'パピヨンは極進出・サラに出場権・12/14の1st出演の3件を表示');
+      assert.equal(await page.locator('#favoriteSchedule .favorite-jump-btn').count(),3,'パピヨンの出演情報4件のうち先頭3件だけを折りたたみ表示');
       const favoriteDetails=await page.locator('#favoriteSchedule').textContent();
       assert.ok(favoriteDetails.includes('出演部未定'));
-      assert.ok(favoriteDetails.includes('サラに！アガり！ステージ'));
-      assert.ok(favoriteDetails.includes('出演日時未確認'),'未確認の出場権を今日の開催と誤表示しない');
+      assert.ok(!favoriteDetails.includes('サラに！アガり！ステージ'),'未確認の出場権は確定日時3件の後ろに置く');
+      await page.locator('#favoriteScheduleToggleBtn').click();
+      assert.equal(await page.locator('#favoriteSchedule .favorite-jump-btn').count(),4,'12/9アガり、12/14 1st、極進出、サラに！出場権の4件');
+      const expandedFavoriteDetails=await page.locator('#favoriteSchedule').textContent();
+      assert.ok(expandedFavoriteDetails.includes('サラに！アガり！ステージ'));
+      assert.ok(expandedFavoriteDetails.includes('出演日時未確認'),'未確認の出場権を今日の開催と誤表示しない');
       assert.equal(await page.locator('#favoriteSchedule .favorite-summary').textContent(),'お気に入り1組中、1組の出演情報があります');
       assert.deepEqual(errors,[]);
     } finally { await context.close(); }
