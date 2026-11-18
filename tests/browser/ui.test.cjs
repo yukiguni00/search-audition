@@ -155,7 +155,8 @@ for(const width of [1280,390,375,320]){
         const star=page.locator('#results #event-'+id+' .star[data-name="'+label+'"]');
         for(const alias of aliases){
           await page.locator('#nameQuery').fill(alias);
-          await star.waitFor();
+          await page.waitForFunction(alias=>new URL(location.href).searchParams.get('name')===alias,alias);
+          await page.locator('#results #event-'+id+' .performer.search-match .star[data-name="'+label+'"]').waitFor();
           assert.equal(await star.count(),1,'いずれの候補でも1枠: '+id+' '+alias);
           assert.match(await star.locator('..').textContent(),/判読不可/);
           assert.ok((await star.locator('..').getAttribute('class')).includes('search-match'));
