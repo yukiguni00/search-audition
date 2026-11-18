@@ -91,7 +91,7 @@ const corrected=[
     "2026-12-02",
     "18:30",
     23,
-    "ピールモンスター"
+    "ピールモンスター／ビールモンスター（判読不可）" // ユーザー再確認：いずれとも判定不可
   ],
   [
     "2026-12-03",
@@ -1164,7 +1164,7 @@ const unresolved=[
     "バウ"
   ]
 ];
-test('12月1st EASTの目視校正191件、元の公演順・全件集約との同期',()=>{
+test('12月1st EASTの校正191枠＋後続の判読不可追記、元の公演順・全件集約との同期',()=>{
   const month=readJSON('data/events/2026-12.json');
   const all=readJSON('data/events.json');
   assert.equal(month.length,60);
