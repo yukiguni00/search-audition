@@ -68,6 +68,50 @@ test('香盤の順序・3ブロック・黒塗り3枠を保ち、907件を空名
  assert.equal(december.find(e=>e.id==='2026-12-01-1700-agari-stage').performers[0],'広島兄弟');
  assert.equal(december.find(e=>e.id==='2026-12-01-1700-agari-stage').performers.at(-1),'JJブッツ');
 });
+test('3枚の元画像と再照合した12月アガり5芸名を香盤位置と集約で固定する',()=>{
+ const fixes=[
+  {
+    "id": "2026-12-01-1930-agari-stage",
+    "position": 3,
+    "from": "7関構テンパイ",
+    "to": "7図柄テンパイ"
+  },
+  {
+    "id": "2026-12-03-1700-agari-stage",
+    "position": 16,
+    "from": "こしょ温泉",
+    "to": "ごしょ温泉"
+  },
+  {
+    "id": "2026-12-04-1700-agari-stage",
+    "position": 4,
+    "from": "愛♡モーツ！",
+    "to": "愛♡モーレツ！"
+  },
+  {
+    "id": "2026-12-16-1700-agari-stage",
+    "position": 22,
+    "from": "大きくブリガラって",
+    "to": "大きくブリガブって"
+  },
+  {
+    "id": "2026-12-17-1700-agari-stage",
+    "position": 7,
+    "from": "仲悟ワンカラー",
+    "to": "伸悟ワンカラー"
+  }
+];
+ for(const {id,position,to} of fixes){
+  const e=december.find(x=>x.id===id);
+  const total=all.find(x=>x.id===id);
+  assert.ok(e&&total,id);
+  assert.equal(e.performers[position-1],to,id+' #'+position);
+  assert.equal(e.lineup.find(x=>x.order===position).name,to,id+' #'+position);
+  assert.deepEqual(total,e,'月別正本と集約一致: '+id);
+ }
+ assert.equal(december.reduce((n,e)=>n+e.performers.length,0),907);
+ assert.equal(all.length,257);
+});
 test('12月のFANYと11/20発売を11月の10/19発売やオーディション1stの11/18と混同しない',()=>{
  const app=loadApp();
  const decTicket='https://ticket.fany.lol/event/detail/23033';
