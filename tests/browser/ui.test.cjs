@@ -7,7 +7,8 @@ const { root, readJSON } = require('../helpers/app.cjs');
 // Optional: use an existing Playwright installation; never download a browser here.
 const { chromium } = require('playwright');
 const stages = readJSON('data/events.json').filter(e => e.date === '2026-10-30' && e.eventType === 'audition-2nd-east');
-const agari = readJSON('data/events.json').filter(e => e.eventType === 'agari-stage');
+const agari = readJSON('data/events.json').filter(e => e.eventType === 'agari-stage' && e.date.startsWith('2026-11'));
+const decemberAgari = readJSON('data/events.json').filter(e => e.eventType === 'agari-stage' && e.date.startsWith('2026-12'));
 const winterFirst = readJSON('data/events.json').filter(e => e.eventType === 'audition-1st-east' && e.date >= '2026-11-24');
 let browser, server, baseURL;
 before(async () => {
@@ -56,11 +57,52 @@ async function filterSecondStage(page) {
   await page.locator('#day').selectOption('30');
   assert.equal(await page.locator('#results .result-card').count(), 3);
 }
+for(const width of [1280,390,375,320]){
+  test('12月アガり '+width+'px: 30公演・907出演記録・MC/3ブロック・チケット発売日・お気に入り',{timeout:60000},async()=>{
+    const {context,page,errors}=await openPage(width,'2026-11-18T03:00:00Z');
+    try{
+      assert.equal(decemberAgari.length,30);
+      await page.locator('#eventType').selectOption('agari-stage');
+      await page.locator('#month').selectOption('12');
+      assert.equal(await page.locator('#results .result-card').count(),30);
+      assert.equal(await page.locator('#results .lineup-block').count(),90);
+      assert.equal(await page.locator('#results .lineup-block .star').count(),907);
+      assert.equal(await page.locator('#results .lineup-order').count(),0);
+      const first=page.locator('#event-2026-12-01-1700-agari-stage');
+      assert.match(await first.locator('.event-mc').textContent(),/MC：超巨大/);
+      assert.deepEqual(await first.locator('.lineup-block .star').evaluateAll(nodes=>nodes.map(n=>n.dataset.name)),decemberAgari[0].lineup.map(x=>x.name));
+      assert.equal(await first.locator('.ticket-purchase-link a').getAttribute('href'),'https://ticket.fany.lol/event/detail/23033');
+      assert.equal(await first.locator('.ticket-streaming-note').textContent(),'※配信はありません');
+      assert.equal(await first.locator('.ticket-sale-info').textContent(),'※FANY一般発売：11月20日(金)10:00〜');
+      assert.equal(await first.locator('.qualified-performers .star').count(),0,'未発表の順位を表示しない');
+      const second=page.locator('#event-2026-12-01-1930-agari-stage');
+      assert.match(await second.locator('.event-mc').textContent(),/MC：広島兄弟/);
+      assert.equal(await second.locator('.lineup-block .star').count(),30,'黒塗りの28番は出演者に加えない');
+      await page.locator('#day').selectOption('1');
+      assert.equal(await page.locator('#results .result-card').count(),2);
+      await page.locator('#nameQuery').fill('JJブッツ');
+      await page.waitForFunction(()=>new URL(location.href).searchParams.get('name')==='JJブッツ');
+      assert.equal(await page.locator('#results .result-card').count(),1);
+      assert.equal(await first.locator('.star[data-name="JJブッツ"]').count(),1);
+      await first.locator('.star[data-name="JJブッツ"]').click();
+      assert.equal(await first.locator('.star[data-name="JJブッツ"]').getAttribute('aria-pressed'),'true');
+      await page.reload();
+      await readySearchPage(page);
+      assert.equal(await first.locator('.star[data-name="JJブッツ"]').getAttribute('aria-pressed'),'true');
+      assert.equal(await page.locator('#eventType').inputValue(),'agari-stage');
+      assert.equal(await page.locator('#month').inputValue(),'12');
+      assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),'スマホでも横はみ出しなし');
+      assert.deepEqual(errors,[]);
+    }finally{await context.close();}
+  });
+}
+
 for (const width of [1280,390,375,320]) {
   test(`アガり ${width}px: 両候補検索・1枠・1お気に入り・URL復元・香盤順・ブロック（番号表示なし）`, {timeout:60000}, async () => {
     const {context,page,errors}=await openPage(width);
     try {
       await page.locator('#eventType').selectOption('agari-stage');
+      await page.locator('#month').selectOption('11');
       assert.equal(await page.locator('#results .result-card').count(),30);
       assert.equal(await page.locator('#results .lineup-block .star').count(),839);
       assert.equal(await page.locator('#results .lineup-order').count(),0,'番号チップを表示しない');
@@ -590,6 +632,7 @@ for (const width of [1280,390,375,320]) {
     const expected = readJSON('tests/fixtures/2026-10-30-stage-results.json');
     const futureIDs=[...readJSON('tests/fixtures/2026-nov-dec-audition-path.json').decemberEventIds,
       ...agari.filter(e=>e.date>='2026-11-07').map(e=>e.id),
+      ...decemberAgari.map(e=>e.id),
       ...winterFirst.map(e=>e.id)].map(id=>'event-'+id).sort();
     try {
       // Change only this test's clock; existing regression cases retain their own date.
@@ -632,11 +675,15 @@ for (const width of [1280,390,375,320]) {
       assert.equal(await page.locator('#results .result-card:not(.pending-stage-card)').count(),futureIDs.length);
       assert.equal(await page.locator('.pending-stage-card').count(),2);
       assert.deepEqual(await searchCardIDs(page).then(ids=>ids.filter(id=>!id.startsWith('event-pending-')).sort()),futureIDs);
-      assert.equal(await page.locator('#favoriteSchedule .favorite-jump-btn').count(),3,'パピヨンは極進出・サラに出場権・12/14の1st出演の3件を表示');
+      assert.equal(await page.locator('#favoriteSchedule .favorite-jump-btn').count(),3,'パピヨンの出演情報4件のうち先頭3件だけを折りたたみ表示');
       const favoriteDetails=await page.locator('#favoriteSchedule').textContent();
       assert.ok(favoriteDetails.includes('出演部未定'));
-      assert.ok(favoriteDetails.includes('サラに！アガり！ステージ'));
-      assert.ok(favoriteDetails.includes('出演日時未確認'),'未確認の出場権を今日の開催と誤表示しない');
+      assert.ok(!favoriteDetails.includes('サラに！アガり！ステージ'),'未確認の出場権は確定日時3件の後ろに置く');
+      await page.locator('#favoriteScheduleToggleBtn').click();
+      assert.equal(await page.locator('#favoriteSchedule .favorite-jump-btn').count(),4,'12/9アガり、12/14 1st、極進出、サラに！出場権の4件');
+      const expandedFavoriteDetails=await page.locator('#favoriteSchedule').textContent();
+      assert.ok(expandedFavoriteDetails.includes('サラに！アガり！ステージ'));
+      assert.ok(expandedFavoriteDetails.includes('出演日時未確認'),'未確認の出場権を今日の開催と誤表示しない');
       assert.equal(await page.locator('#favoriteSchedule .favorite-summary').textContent(),'お気に入り1組中、1組の出演情報があります');
       assert.deepEqual(errors,[]);
     } finally { await context.close(); }
@@ -668,7 +715,7 @@ for(const width of [1280,390,375,320]) {
   test(`結果視認性 ${width}px: 実データの件数・正規化一致・お気に入り・URL復元・クリア・0件`,{timeout:30000},async()=>{
     const {context,page,errors}=await openPage(width);
     try {
-      assert.deepEqual(await assertVisibleCounts(page),{future:71,pending:2,past:156});
+      assert.deepEqual(await assertVisibleCounts(page),{future:101,pending:2,past:156});
       assert.equal(await page.locator('#searchMatchLegend').isHidden(),true);
       assert.equal(await assertMatchChips(page),0);
       await page.locator('#nameQuery').fill(' ｚａｚｙ ');
@@ -791,7 +838,7 @@ for(const width of [1280,390,375,320]) {
     try {
       assert.equal(new URL(page.url()).origin,baseURL);assert.match(await page.title(),/オーディション EAST・アガり！ステージ/);
       assert.equal(await page.locator('vite-error-overlay, nextjs-portal').count(),0);
-      assert.deepEqual(await assertVisibleCounts(page),{future:59,pending:2,past:168});
+      assert.deepEqual(await assertVisibleCounts(page),{future:89,pending:2,past:168});
       assert.equal(await page.locator('#results .pending-stage-card').count(),2);
       const pending=page.locator('#results .lineup-overview-card');assert.equal(await pending.count(),1);
       assert.equal(await pending.locator('h3').textContent(),'グランドバトルEAST');
@@ -811,7 +858,7 @@ for(const width of [1280,390,375,320]) {
       await page.locator('#day').selectOption('14');
       assert.deepEqual(await assertVisibleCounts(page),{future:0,pending:0,past:0},'20時指定のままでは16:00と18:30の新規1stはヒットしない');
       await page.locator('#hour').selectOption('all');
-      assert.deepEqual(await assertVisibleCounts(page),{future:2,pending:0,past:0},'時間条件を解除すると12/14の新規1stが2公演表示される');
+      assert.deepEqual(await assertVisibleCounts(page),{future:4,pending:0,past:0},'時間条件を解除すると12/14の新規1stとアガり計4公演表示される');
       await page.locator('#clearBtn').click();await page.locator('#month').selectOption('11');await page.locator('#day').selectOption('6');
       assert.deepEqual(await assertVisibleCounts(page),{future:0,pending:0,past:3});
       const november=page.locator('#archiveResults #event-'+f.novemberEventId);
@@ -869,7 +916,7 @@ for(const width of [1280,390,375,320]) {
         assert.deepEqual(await assertVisibleCounts(recipient.page),{future:0,pending:1,past:0});
         assert.equal(await recipient.page.locator('#results .pending-stage-card .star').getAttribute('data-name'),'ZAZY');
       } finally {await recipient.context.close();}
-      await page.locator('#clearBtn').click();assert.deepEqual(await assertVisibleCounts(page),{future:10,pending:2,past:217},'12/13時点では新規1stの25公演が過去、8公演が今後');
+      await page.locator('#clearBtn').click();assert.deepEqual(await assertVisibleCounts(page),{future:22,pending:2,past:235},'12/13時点では12月アガり18公演が過去、12公演が今後');
       assert.deepEqual(errors,[]);
     } finally {await context.close();}
   });
@@ -969,7 +1016,7 @@ for(const width of [1280,390,375,320]){
  assert.equal(await page.locator('#searchResultSummary').getAttribute('class'),'visually-hidden');assert.equal(await page.locator('#searchResultSummary').getAttribute('role'),'status');assert.equal(await page.locator('footer a[href="https://x.com/agaristage"]').count(),1);
  assert.equal(await page.locator('#siteNotice').isVisible(),true);
  assert.equal(await page.locator('#siteNoticeTrack span').count(),2,'流れる告知はシームレスループ用に同じ内容を2回描画');
- assert.equal((await page.locator('#siteNoticeTrack span').first().textContent()).replace(/\s+/g,' '),'🆕 アガり！ステージの掲載を始めました ⚠️ 吉本のタレント検索サービスが一時停止中のためプロフィールリンクが飛べなくなっています');
+ assert.equal((await page.locator('#siteNoticeTrack span').first().textContent()).replace(/\s+/g,' '),'🆕 12月アガり！ステージの香盤を掲載しました（出演者名は目視確認中です） ⚠️ 吉本のタレント検索サービスが一時停止中のためプロフィールリンクが飛べなくなっています');
  await page.locator('#eventType').selectOption('agari-stage');await page.locator('#month').selectOption('11');await page.locator('#day').selectOption('2');await page.locator('#nameQuery').fill(' サンライズ ');
  await page.waitForFunction(()=>new URL(location.href).searchParams.get('name')===' サンライズ ');await page.locator('#archiveBody').waitFor({state:'visible'});
  const card=page.locator('#event-2026-11-02-1700-agari-stage');assert.equal(await card.locator('.event-mc .mc-name.search-match').count(),1);assert.equal(await card.locator('.event-mc .star').count(),0);assert.equal(await card.locator('.event-mc').textContent(),'MC：サンライズ（芸人名の検索条件に一致）');
@@ -1032,7 +1079,7 @@ for(const width of [1280,390,375,320]){
     const {context,page,errors}=await openPage(width,'2026-11-17T03:00:00Z');
     try{
       assert.equal(winterFirst.length,33);
-      assert.equal((await page.locator('#siteNoticeTrack span').first().textContent()).trim(),'🆕 アガり！ステージの掲載を始めました　⚠️ 吉本のタレント検索サービスが一時停止中のためプロフィールリンクが飛べなくなっています');
+      assert.equal((await page.locator('#siteNoticeTrack span').first().textContent()).trim(),'🆕 12月アガり！ステージの香盤を掲載しました（出演者名は目視確認中です）　⚠️ 吉本のタレント検索サービスが一時停止中のためプロフィールリンクが飛べなくなっています');
       await page.locator('#eventType').selectOption('audition-1st-east');
       await page.locator('#month').selectOption('11');
       await page.locator('#day').selectOption('30');

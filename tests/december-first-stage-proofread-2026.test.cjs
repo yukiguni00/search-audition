@@ -1167,8 +1167,8 @@ const unresolved=[
 test('12月1st EASTの目視校正191件、元の公演順・全件集約との同期',()=>{
   const month=readJSON('data/events/2026-12.json');
   const all=readJSON('data/events.json');
-  assert.equal(month.length,30);
-  assert.equal(all.length,227);
+  assert.equal(month.length,60);
+  assert.equal(all.length,257);
   assert.deepEqual(all.filter(x=>x.date.startsWith('2026-12')),month);
   assert.equal(month.filter(x=>x.eventType==='kiwami-grand-battle-east').length,4);
   assert.equal(month.filter(x=>x.eventType==='audition-1st-east').length,26);

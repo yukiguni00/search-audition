@@ -12,7 +12,7 @@ test('全公演: カード会場・発売情報・チケットURLを元データ
     const escaped = s => a.context.escapeHTML(s);
     assert.ok(html.includes(`会場：${escaped(ev.venueDisplayName || ev.venue || '')}`), ev.id);
     const ticket = a.context.getTicketInfo(ev);
-    if (ticket.saleInfo) assert.ok(html.includes(escaped(ev.eventType === 'agari-stage' ? '※FANY一般発売：10月19日(月)10:00〜' : ticket.saleInfo)), ev.id);
+    if (ticket.saleInfo) assert.ok(html.includes(escaped(ev.eventType === 'agari-stage' ? (ev.date.startsWith('2026-11') ? '※FANY一般発売：10月19日(月)10:00〜' : '※FANY一般発売：11月20日(金)10:00〜') : ticket.saleInfo)), ev.id);
     for (const url of [ticket.url, ...ticket.links.map(l => l.url)].filter(Boolean)) {
       // A links array takes precedence over the single-URL representation.
       if (ticket.links.length && url === ticket.url) continue;

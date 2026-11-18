@@ -31,8 +31,8 @@ test('10/30公式結果: 極6・翔15、各部1/0・2/5・3/10。全員が出演
   }
 });
 
-test('10/30の結果以外の全フィールドを保持: 23/24/23、70組、全227公演', () => {
-  assert.equal(all.length, 227);
+test('10/30の結果以外の全フィールドを保持: 23/24/23、70組、全257公演', () => {
+  assert.equal(all.length, 257);
   assert.deepEqual(stages.map(event => event.performers.length), [23,24,23]);
   assert.equal(stages.flatMap(event => event.performers).length, 70);
   for (const [index, event] of stages.entries()) {

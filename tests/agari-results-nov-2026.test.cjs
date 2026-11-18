@@ -2,7 +2,7 @@ const test=require('node:test');
 const assert=require('node:assert/strict');
 const {readJSON,loadApp}=require('./helpers/app.cjs');
 const all=readJSON('data/events.json');
-const events=all.filter(e=>e.eventType==='agari-stage');
+const events=all.filter(e=>e.eventType==='agari-stage'&&e.date.startsWith('2026-11'));
 const monthly=readJSON('data/events/2026-11.json').filter(e=>e.eventType==='agari-stage');
 const expected=[
   ['2026-11-02','17:00','ライダーキック','絶品',['サンライズ']],
@@ -30,7 +30,7 @@ const expected=[
 ];
 const key=e=>e.date+'T'+e.time;
 test('公式発表22公演の入賞結果を正しく記録し、その他8公演は未発表',()=>{
-  assert.equal(all.length,227);assert.equal(events.length,30);
+  assert.equal(all.length,257);assert.equal(events.length,30);
   const resultKeys=new Set(expected.map(x=>x[0]+'T'+x[1]));
   for(const [date,time,winner,second,third] of expected){
     const e=events.find(e=>e.date===date&&e.time===time);
