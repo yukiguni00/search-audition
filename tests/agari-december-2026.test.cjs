@@ -143,7 +143,7 @@ test('12月のFANYと11/20発売を11月の10/19発売やオーディション1s
  assert.equal(rights[0].names.length,22,'12月未発表分をサラに！の出場権に追加しない');
 });
 
-test('ユーザー確認済み：12月アガり！32名と1st2名を香盤位置で固定し、保留5組は変更しない',()=>{
+test('前回の12月アガり！32名と1st2名の確認済み表記を保持',()=>{
  const verified=[
   [
     "2026-12-15-1700-agari-stage",
@@ -365,42 +365,83 @@ test('ユーザー確認済み：12月アガり！32名と1st2名を香盤位置
   expectedIds.add(id);
  }
  assert.equal(expectedIds.size,23);
- const retained=[
-  [
-    "2026-12-03-1930-agari-stage",
-    "ドブレーテ",
-    "2026-12-09-1830-audition-1st-east",
-    "ドプレーテ"
-  ],
-  [
-    "2026-12-04-1700-agari-stage",
-    "ごぞんじ武田",
-    "2026-12-16-1830-audition-1st-east",
-    "こぞんじ武田"
-  ],
-  [
-    "2026-12-07-1700-agari-stage",
-    "もってい",
-    "2026-12-03-1600-audition-1st-east",
-    "もってぃ"
-  ],
-  [
-    "2026-12-09-1930-agari-stage",
-    "野澤輸出",
-    "2026-12-11-1830-audition-1st-east",
-    "野沢輸出"
-  ],
-  [
-    "2026-12-18-1930-agari-stage",
-    "ビールモンスター",
-    "2026-12-02-1830-audition-1st-east",
-    "ピールモンスター"
-  ]
-];
- for(const [agId,agName,firstId,firstName] of retained){
-  assert.ok(monthly.find(x=>x.id===agId)?.performers.includes(agName),'保留したアガり！側は維持: '+agId);
-  assert.ok(monthly.find(x=>x.id===firstId)?.performers.includes(firstName),'保留した1st側は維持: '+firstId);
- }
+ // 後続の5組の確認結果は別テストに保持する。
  assert.equal(all.length,257);
  assert.equal(december.reduce((n,e)=>n+e.performers.length,0),907);
+});
+
+test('追加確認の3組は確定表記、2組の判読不可は両候補検索・1枠お気に入り・独立キー',()=>{
+ const app=loadApp();
+ const confirmed=[
+   ['2026-12-04-1700-agari-stage','2026-12-16-1830-audition-1st-east','ごぞんじ武田','こぞんじ武田'],
+   ['2026-12-07-1700-agari-stage','2026-12-03-1600-audition-1st-east','もってぃ','もってい'],
+   ['2026-12-09-1930-agari-stage','2026-12-11-1830-audition-1st-east','野澤輸出','野沢輸出']
+ ];
+ for(const [agId,firstId,correct,discarded] of confirmed){
+   const ag=monthly.find(e=>e.id===agId),first=monthly.find(e=>e.id===firstId);
+   assert.ok(ag&&first,agId+' / '+firstId);
+   assert.ok(ag.performers.includes(correct),'アガり！の確定芸名: '+agId);
+   assert.ok(first.performers.includes(correct),'1stの確定芸名: '+firstId);
+   assert.ok(!ag.performers.includes(discarded),'アガり！に旧名を残さない');
+   assert.ok(!first.performers.includes(discarded),'1stに旧名を残さない');
+   assert.deepEqual(ag.performers,ag.lineup.map(x=>x.name),'香盤順を維持');
+   assert.deepEqual(all.find(e=>e.id===agId),ag);
+   assert.deepEqual(all.find(e=>e.id===firstId),first);
+ }
+ const ambiguous=[
+   {
+     agId:'2026-12-03-1930-agari-stage',order:5,key:'agari-20261203-1930-05',
+     agName:'ドブレーテ／ドプレーテ（判読不可）',
+     firstId:'2026-12-09-1830-audition-1st-east',
+     firstName:'ドプレーテ／ドブレーテ（判読不可）',
+     aliases:['ドブレーテ','ドプレーテ']
+   },
+   {
+     agId:'2026-12-18-1930-agari-stage',order:28,key:'agari-20261218-1930-28',
+     agName:'ビールモンスター／ピールモンスター（判読不可）',
+     firstId:'2026-12-02-1830-audition-1st-east',
+     firstName:'ピールモンスター／ビールモンスター（判読不可）',
+     aliases:['ビールモンスター','ピールモンスター']
+   }
+ ];
+ const filters={nameQuery:'',eventType:'all',month:'all',day:'all',hour:'all'};
+ for(const spec of ambiguous){
+   const ag=monthly.find(e=>e.id===spec.agId),first=monthly.find(e=>e.id===spec.firstId);
+   assert.ok(ag&&first,spec.agId);
+   const entry=ag.lineup.find(x=>x.order===spec.order);
+   assert.ok(entry,'香盤番号を保持: '+spec.agId+' #'+spec.order);
+   assert.equal(entry.name,spec.agName);
+   assert.equal(entry.identityStatus,'unresolved');
+   assert.equal(entry.entryKey,spec.key);
+   assert.deepEqual(entry.searchAliases,spec.aliases);
+   assert.deepEqual(ag.performers,ag.lineup.map(x=>x.name),'出演者と香盤の一致');
+   assert.equal(ag.performers.filter(x=>x===spec.agName).length,1,'一枠のみ');
+   assert.equal(first.performers.filter(x=>x===spec.firstName).length,1,'1stも一枠のみ');
+   assert.equal(app.context.normalizeText(spec.agName),spec.key,'アガり！未確定枠の独立お気に入りキー');
+   assert.notEqual(app.context.normalizeText(spec.agName),app.context.normalizeText(spec.firstName),'別公演の候補を同一人物と確定しない');
+   for(const alias of spec.aliases){
+     const query=app.context.normalizeText(alias);
+     assert.ok(app.context.eventMatchesFilters(ag,{...filters,nameQuery:query}),'アガり！候補検索: '+alias);
+     assert.ok(app.context.eventMatchesFilters(first,{...filters,nameQuery:query}),'1st候補検索: '+alias);
+     assert.ok(app.context.performerMatchesNameQuery(spec.agName,query));
+     assert.ok(app.context.performerMatchesNameQuery(spec.firstName,query));
+   }
+   app.context.saveFavorites([app.context.normalizeText(spec.agName)]);
+   assert.ok(app.context.eventHasFavorite(ag),'アガり！お気に入りは1枠');
+   assert.ok(!app.context.eventHasFavorite(first),'未確定の別公演へお気に入りを自動流用しない');
+   app.context.saveFavorites([app.context.normalizeText(spec.firstName)]);
+   assert.ok(app.context.eventHasFavorite(first),'1stお気に入りは1枠');
+   assert.ok(!app.context.eventHasFavorite(ag),'未確定のアガり！枠へお気に入りを自動流用しない');
+   app.context.saveFavorites([]);
+   const htmlAg=app.context.buildEventCardHTML(ag,'results',[]);
+   const htmlFirst=app.context.buildEventCardHTML(first,'results',[]);
+   assert.ok(htmlAg.includes('data-key="'+spec.key+'"'),'1stと独立したアガり！キー');
+   assert.ok(htmlAg.includes(spec.agName)&&htmlFirst.includes(spec.firstName),'両方を画面に表示');
+   assert.deepEqual(all.find(e=>e.id===spec.agId),ag);
+   assert.deepEqual(all.find(e=>e.id===spec.firstId),first);
+ }
+ assert.equal(monthly.filter(e=>e.eventType==='agari-stage').reduce((n,e)=>n+e.performers.length,0),907);
+ assert.equal(all.length,257);
+ const notice=readJSON('data/site-notice.json');
+ assert.match(notice.items[0].message,/出演者名は目視確認中です/,'未校正の告知を維持');
 });
