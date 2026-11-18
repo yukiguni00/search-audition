@@ -307,7 +307,7 @@ const fixes=[
 const targetNotice="🆕 アガり！ステージの掲載を始めました　⚠️ 吉本のタレント検索サービスが一時停止中のためプロフィールリンクが飛べなくなっています";
 
 test('11/24〜12/17 1st新規33公演・841出演記録と開催時刻・欠場枠',()=>{
-  assert.equal(all.length,227);
+  assert.equal(all.length,257);
   assert.equal(winter.length,33);
   assert.deepEqual(winter.map(e=>[e.date,e.time,e.performers.length]),counts);
   assert.equal(winter.reduce((n,e)=>n+e.performers.length,0),841);
@@ -337,7 +337,7 @@ test('冬期1st全33公演の11/18一般販売・配信なし／アガり全30�
     assert.ok(html.includes('class="ticket-sale-info">※ FANY一般販売：11月18日(水) 10:00〜</div>'),e.id);
     assert.ok(!html.includes('10月19日(月)'),e.id);
   }
-  const agari=all.filter(e=>e.eventType==='agari-stage');
+  const agari=all.filter(e=>e.eventType==='agari-stage'&&e.date.startsWith('2026-11'));
   assert.equal(agari.length,30);
   for(const e of agari){
     assert.equal(e.ticket.saleInfo,'一般発売：2026年10月19日（月）10:00～',e.id);
@@ -445,7 +445,7 @@ test('11月1st香盤のユーザー目視校正12件を同じ位置で保持し�
     ]
   ];
   assert.equal(monthly.length,38);
-  assert.equal(aggregate.length,227);
+  assert.equal(aggregate.length,257);
   assert.deepEqual(aggregate.filter(e=>e.date.startsWith('2026-11')),monthly);
   assert.equal(corrections.length,12);
   for(const [date,time,position,name] of corrections){
