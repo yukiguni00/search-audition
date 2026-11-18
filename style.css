@@ -73,6 +73,20 @@ a:focus-visible{outline:3px solid #1769aa;outline-offset:3px}
   word-break: break-all;
 }
 
+/* 11/12月のアガり！と冬期1stは同じ4行・同じ文字の重さで案内する */
+.ticket-note-unified{
+  font-weight:400;
+}
+.ticket-note-unified .ticket-purchase-link,
+.ticket-note-unified .ticket-sale-info,
+.ticket-note-unified .ticket-streaming-note{
+  margin:0;
+  color:inherit;
+  font-size:inherit;
+  font-weight:inherit;
+  line-height:inherit;
+}
+
 .floating-top-btn{
   position:fixed;
   right:16px;
