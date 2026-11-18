@@ -138,6 +138,49 @@ for(const width of [1280,390,375,320]){
   });
 }
 
+for(const width of [1280,390,375,320]){
+  test('12月の2組判読不可: 両候補で検索・1枠お気に入り・URL復元 '+width+'px',{timeout:60000},async()=>{
+    const {context,page,errors}=await openPage(width,'2026-11-18T03:00:00Z');
+    try{
+      const cases=[
+        ['agari-stage','3','2026-12-03-1930-agari-stage','ドブレーテ／ドプレーテ（判読不可）',['ドブレーテ','ドプレーテ'],'agari-20261203-1930-05'],
+        ['audition-1st-east','9','2026-12-09-1830-audition-1st-east','ドプレーテ／ドブレーテ（判読不可）',['ドブレーテ','ドプレーテ'],null],
+        ['agari-stage','18','2026-12-18-1930-agari-stage','ビールモンスター／ピールモンスター（判読不可）',['ビールモンスター','ピールモンスター'],'agari-20261218-1930-28'],
+        ['audition-1st-east','2','2026-12-02-1830-audition-1st-east','ピールモンスター／ビールモンスター（判読不可）',['ビールモンスター','ピールモンスター'],null]
+      ];
+      for(const [type,day,id,label,aliases,agariKey] of cases){
+        await page.locator('#eventType').selectOption(type);
+        await page.locator('#month').selectOption('12');
+        await page.locator('#day').selectOption(day);
+        const star=page.locator('#results #event-'+id+' .star[data-name="'+label+'"]');
+        for(const alias of aliases){
+          await page.locator('#nameQuery').fill(alias);
+          await star.waitFor();
+          assert.equal(await star.count(),1,'いずれの候補でも1枠: '+id+' '+alias);
+          assert.match(await star.locator('..').textContent(),/判読不可/);
+          assert.ok((await star.locator('..').getAttribute('class')).includes('search-match'));
+        }
+        if(agariKey)assert.equal(await star.getAttribute('data-key'),agariKey);
+        await star.click();
+        const key=await star.getAttribute('data-key');
+        assert.deepEqual(await page.evaluate(()=>JSON.parse(localStorage.getItem('favoritePerformers'))),[key]);
+        await page.locator('#nameQuery').fill(aliases[0]);
+        await star.waitFor();
+        assert.equal(await star.getAttribute('aria-pressed'),'true','両候補で同じお気に入りを使用');
+        await page.reload();
+        await readySearchPage(page);
+        await star.waitFor();
+        assert.equal(await star.getAttribute('aria-pressed'),'true','再読込後も1枠として保持');
+        await star.click();
+        assert.deepEqual(await page.evaluate(()=>JSON.parse(localStorage.getItem('favoritePerformers'))),[]);
+        await page.locator('#clearBtn').click();
+      }
+      assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),'横スクロールを発生させない');
+      assert.deepEqual(errors,[]);
+    }finally{await context.close();}
+  });
+}
+
 for (const width of [1280,390,375,320]) {
   test(`アガり ${width}px: 両候補検索・1枠・1お気に入り・URL復元・香盤順・ブロック（番号表示なし）`, {timeout:60000}, async () => {
     const {context,page,errors}=await openPage(width);
