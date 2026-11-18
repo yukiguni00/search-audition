@@ -1540,8 +1540,9 @@ function getNextStageSectionsHTML(ev, favorites) {
 
 function getTicketLinkHTML(ev, targetId) {
   const ticket = getTicketInfo(ev);
-  if (ev.eventType === "agari-stage" && ev.date.startsWith("2026-11")) {
-    const sale = ticket.saleInfo.replace(/^一般発売：2026年/, "※FANY一般発売：").replace("（月）", "(月)").replace("～", "〜");
+  if (ev.eventType === "agari-stage" && /^2026-(?:11|12)-/.test(ev.date)) {
+    const sale = ticket.saleInfo.replace(/^一般発売：2026年(\\d{1,2})月(\\d{1,2})日（(.)）(\\d{1,2}:\\d{2})～$/, (_, month, day, weekday, time) =>
+      `※FANY一般発売：${month}月${day}日(${weekday})${time}〜`);
     return `<div class="ticket-note"><div class="ticket-purchase-link">チケットの購入は<a href="${escapeHTML(ticket.url)}" target="_blank" rel="noopener noreferrer">FANYチケット</a>もしくは出演者への取り置きも可能です</div><div class="ticket-streaming-note">※配信はありません</div><div class="ticket-sale-info">${escapeHTML(sale)}</div></div>`;
   }
   if (targetId !== "results") return "";
