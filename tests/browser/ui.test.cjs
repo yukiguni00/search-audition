@@ -7,7 +7,8 @@ const { root, readJSON } = require('../helpers/app.cjs');
 // Optional: use an existing Playwright installation; never download a browser here.
 const { chromium } = require('playwright');
 const stages = readJSON('data/events.json').filter(e => e.date === '2026-10-30' && e.eventType === 'audition-2nd-east');
-const agari = readJSON('data/events.json').filter(e => e.eventType === 'agari-stage');
+const agari = readJSON('data/events.json').filter(e => e.eventType === 'agari-stage' && e.date.startsWith('2026-11'));
+const decemberAgari = readJSON('data/events.json').filter(e => e.eventType === 'agari-stage' && e.date.startsWith('2026-12'));
 const winterFirst = readJSON('data/events.json').filter(e => e.eventType === 'audition-1st-east' && e.date >= '2026-11-24');
 let browser, server, baseURL;
 before(async () => {
@@ -61,6 +62,7 @@ for (const width of [1280,390,375,320]) {
     const {context,page,errors}=await openPage(width);
     try {
       await page.locator('#eventType').selectOption('agari-stage');
+      await page.locator('#month').selectOption('11');
       assert.equal(await page.locator('#results .result-card').count(),30);
       assert.equal(await page.locator('#results .lineup-block .star').count(),839);
       assert.equal(await page.locator('#results .lineup-order').count(),0,'番号チップを表示しない');
@@ -668,7 +670,7 @@ for(const width of [1280,390,375,320]) {
   test(`結果視認性 ${width}px: 実データの件数・正規化一致・お気に入り・URL復元・クリア・0件`,{timeout:30000},async()=>{
     const {context,page,errors}=await openPage(width);
     try {
-      assert.deepEqual(await assertVisibleCounts(page),{future:71,pending:2,past:156});
+      assert.deepEqual(await assertVisibleCounts(page),{future:101,pending:2,past:156});
       assert.equal(await page.locator('#searchMatchLegend').isHidden(),true);
       assert.equal(await assertMatchChips(page),0);
       await page.locator('#nameQuery').fill(' ｚａｚｙ ');
@@ -791,7 +793,7 @@ for(const width of [1280,390,375,320]) {
     try {
       assert.equal(new URL(page.url()).origin,baseURL);assert.match(await page.title(),/オーディション EAST・アガり！ステージ/);
       assert.equal(await page.locator('vite-error-overlay, nextjs-portal').count(),0);
-      assert.deepEqual(await assertVisibleCounts(page),{future:59,pending:2,past:168});
+      assert.deepEqual(await assertVisibleCounts(page),{future:89,pending:2,past:168});
       assert.equal(await page.locator('#results .pending-stage-card').count(),2);
       const pending=page.locator('#results .lineup-overview-card');assert.equal(await pending.count(),1);
       assert.equal(await pending.locator('h3').textContent(),'グランドバトルEAST');
@@ -811,7 +813,7 @@ for(const width of [1280,390,375,320]) {
       await page.locator('#day').selectOption('14');
       assert.deepEqual(await assertVisibleCounts(page),{future:0,pending:0,past:0},'20時指定のままでは16:00と18:30の新規1stはヒットしない');
       await page.locator('#hour').selectOption('all');
-      assert.deepEqual(await assertVisibleCounts(page),{future:2,pending:0,past:0},'時間条件を解除すると12/14の新規1stが2公演表示される');
+      assert.deepEqual(await assertVisibleCounts(page),{future:4,pending:0,past:0},'時間条件を解除すると12/14の新規1stとアガり計4公演表示される');
       await page.locator('#clearBtn').click();await page.locator('#month').selectOption('11');await page.locator('#day').selectOption('6');
       assert.deepEqual(await assertVisibleCounts(page),{future:0,pending:0,past:3});
       const november=page.locator('#archiveResults #event-'+f.novemberEventId);
@@ -869,7 +871,7 @@ for(const width of [1280,390,375,320]) {
         assert.deepEqual(await assertVisibleCounts(recipient.page),{future:0,pending:1,past:0});
         assert.equal(await recipient.page.locator('#results .pending-stage-card .star').getAttribute('data-name'),'ZAZY');
       } finally {await recipient.context.close();}
-      await page.locator('#clearBtn').click();assert.deepEqual(await assertVisibleCounts(page),{future:10,pending:2,past:217},'12/13時点では新規1stの25公演が過去、8公演が今後');
+      await page.locator('#clearBtn').click();assert.deepEqual(await assertVisibleCounts(page),{future:22,pending:2,past:235},'12/13時点では12月アガり18公演が過去、12公演が今後');
       assert.deepEqual(errors,[]);
     } finally {await context.close();}
   });
