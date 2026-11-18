@@ -45,6 +45,238 @@
     }
   },
   {
+    "id": "2026-12-01-1700-agari-stage",
+    "eventType": "agari-stage",
+    "title": "アガり！ステージ",
+    "date": "2026-12-01",
+    "month": 12,
+    "day": 1,
+    "time": "17:00",
+    "timeMinutes": 1020,
+    "venue": "歌舞伎町Sparkle",
+    "mc": "超巨大",
+    "lineupOrder": true,
+    "performers": [
+      "広島兄弟",
+      "ぐれウェザー",
+      "ツカレタハト",
+      "ココちゃん大統領",
+      "あつあつ",
+      "にしだっくす",
+      "ブリーム",
+      "伊藤ゲシュタルト",
+      "あさゆま",
+      "本田エリート",
+      "ベジョンダー",
+      "ワンルーム",
+      "ジャガーマンズ",
+      "ショウズィー",
+      "にんげんのうた",
+      "ホットドッグマニア",
+      "ジャリ銭",
+      "東海らいだー",
+      "ヒッキー北風",
+      "番犬",
+      "物デーモン",
+      "しゃがむ",
+      "ひでりー卍",
+      "ダイアゴナル",
+      "タイラ五目",
+      "へびにらみ",
+      "ベレ",
+      "リヴァースネール",
+      "ワントンタン",
+      "JJブッツ"
+    ],
+    "lineup": [
+      {
+        "name": "広島兄弟",
+        "order": 1,
+        "block": 1
+      },
+      {
+        "name": "ぐれウェザー",
+        "order": 2,
+        "block": 1
+      },
+      {
+        "name": "ツカレタハト",
+        "order": 3,
+        "block": 1
+      },
+      {
+        "name": "ココちゃん大統領",
+        "order": 4,
+        "block": 1
+      },
+      {
+        "name": "あつあつ",
+        "order": 5,
+        "block": 1
+      },
+      {
+        "name": "にしだっくす",
+        "order": 6,
+        "block": 1
+      },
+      {
+        "name": "ブリーム",
+        "order": 7,
+        "block": 1
+      },
+      {
+        "name": "伊藤ゲシュタルト",
+        "order": 8,
+        "block": 1
+      },
+      {
+        "name": "あさゆま",
+        "order": 9,
+        "block": 1
+      },
+      {
+        "name": "本田エリート",
+        "order": 10,
+        "block": 1
+      },
+      {
+        "name": "ベジョンダー",
+        "order": 11,
+        "block": 2
+      },
+      {
+        "name": "ワンルーム",
+        "order": 12,
+        "block": 2
+      },
+      {
+        "name": "ジャガーマンズ",
+        "order": 13,
+        "block": 2
+      },
+      {
+        "name": "ショウズィー",
+        "order": 14,
+        "block": 2
+      },
+      {
+        "name": "にんげんのうた",
+        "order": 15,
+        "block": 2
+      },
+      {
+        "name": "ホットドッグマニア",
+        "order": 16,
+        "block": 2
+      },
+      {
+        "name": "ジャリ銭",
+        "order": 17,
+        "block": 2
+      },
+      {
+        "name": "東海らいだー",
+        "order": 18,
+        "block": 2
+      },
+      {
+        "name": "ヒッキー北風",
+        "order": 19,
+        "block": 2
+      },
+      {
+        "name": "番犬",
+        "order": 20,
+        "block": 2
+      },
+      {
+        "name": "物デーモン",
+        "order": 21,
+        "block": 3
+      },
+      {
+        "name": "しゃがむ",
+        "order": 22,
+        "block": 3
+      },
+      {
+        "name": "ひでりー卍",
+        "order": 23,
+        "block": 3
+      },
+      {
+        "name": "ダイアゴナル",
+        "order": 24,
+        "block": 3
+      },
+      {
+        "name": "タイラ五目",
+        "order": 25,
+        "block": 3
+      },
+      {
+        "name": "へびにらみ",
+        "order": 26,
+        "block": 3
+      },
+      {
+        "name": "ベレ",
+        "order": 27,
+        "block": 3
+      },
+      {
+        "name": "リヴァースネール",
+        "order": 28,
+        "block": 3
+      },
+      {
+        "name": "ワントンタン",
+        "order": 29,
+        "block": 3
+      },
+      {
+        "name": "JJブッツ",
+        "order": 30,
+        "block": 3
+      }
+    ],
+    "excludedSlots": [],
+    "stageResults": [
+      {
+        "status": "pending",
+        "displayStyle": "qualified",
+        "performers": [],
+        "label": "最優秀者"
+      },
+      {
+        "status": "pending",
+        "displayStyle": "qualified",
+        "performers": [],
+        "label": "2位"
+      },
+      {
+        "status": "pending",
+        "displayStyle": "qualified",
+        "performers": [],
+        "label": "3位"
+      },
+      {
+        "status": "pending",
+        "displayStyle": "next-stage",
+        "performers": [],
+        "nextEventType": "sarani-agari-stage",
+        "label": "サラに！への進出"
+      }
+    ],
+    "ticket": {
+      "url": "https://ticket.fany.lol/event/detail/23033",
+      "linkLabel": "FANYチケット",
+      "purchaseNote": "※出演者からのチケット取り置き可能",
+      "streamingNote": "※配信はございません",
+      "saleInfo": "一般発売：2026年11月20日（金）10:00～"
+    }
+  },
+  {
     "id": "2026-12-01-1830-audition-1st-east",
     "eventType": "audition-1st-east",
     "title": "オーディション1stステージ EAST",
@@ -86,6 +318,243 @@
       "url": "https://ticket.fany.lol/event/detail/23168",
       "streamingNote": "※配信はありません",
       "saleInfo": "※ FANY一般販売：11月18日(水) 10:00〜"
+    }
+  },
+  {
+    "id": "2026-12-01-1930-agari-stage",
+    "eventType": "agari-stage",
+    "title": "アガり！ステージ",
+    "date": "2026-12-01",
+    "month": 12,
+    "day": 1,
+    "time": "19:30",
+    "timeMinutes": 1170,
+    "venue": "歌舞伎町Sparkle",
+    "mc": "広島兄弟",
+    "lineupOrder": true,
+    "performers": [
+      "Tボーンシフォンケーキ",
+      "ちゃいろ",
+      "7関構テンパイ",
+      "千種トメイトゥ",
+      "ドゥダダ",
+      "Lunatic",
+      "てまえどり",
+      "椿谷斎",
+      "がおる",
+      "THE・座",
+      "最後のじゃんいち",
+      "スパイシー坊や",
+      "キカシ",
+      "大西わ",
+      "ブリタニカ",
+      "キゲンゼン",
+      "ちょっかい",
+      "ないものねだりの山崎くん",
+      "圏外",
+      "アイブレーダー",
+      "超巨大",
+      "ガチ銀河",
+      "ヒンデル",
+      "Stand up・茶柱",
+      "ひのでかいがん〜あの日の記憶〜",
+      "大福",
+      "勇者のくせに",
+      "蛇友人",
+      "安田なおき",
+      "石橋真尚"
+    ],
+    "lineup": [
+      {
+        "name": "Tボーンシフォンケーキ",
+        "order": 1,
+        "block": 1
+      },
+      {
+        "name": "ちゃいろ",
+        "order": 2,
+        "block": 1
+      },
+      {
+        "name": "7関構テンパイ",
+        "order": 3,
+        "block": 1
+      },
+      {
+        "name": "千種トメイトゥ",
+        "order": 4,
+        "block": 1
+      },
+      {
+        "name": "ドゥダダ",
+        "order": 5,
+        "block": 1
+      },
+      {
+        "name": "Lunatic",
+        "order": 6,
+        "block": 1
+      },
+      {
+        "name": "てまえどり",
+        "order": 7,
+        "block": 1
+      },
+      {
+        "name": "椿谷斎",
+        "order": 8,
+        "block": 1
+      },
+      {
+        "name": "がおる",
+        "order": 9,
+        "block": 1
+      },
+      {
+        "name": "THE・座",
+        "order": 10,
+        "block": 1
+      },
+      {
+        "name": "最後のじゃんいち",
+        "order": 11,
+        "block": 2
+      },
+      {
+        "name": "スパイシー坊や",
+        "order": 12,
+        "block": 2
+      },
+      {
+        "name": "キカシ",
+        "order": 13,
+        "block": 2
+      },
+      {
+        "name": "大西わ",
+        "order": 14,
+        "block": 2
+      },
+      {
+        "name": "ブリタニカ",
+        "order": 15,
+        "block": 2
+      },
+      {
+        "name": "キゲンゼン",
+        "order": 16,
+        "block": 2
+      },
+      {
+        "name": "ちょっかい",
+        "order": 17,
+        "block": 2
+      },
+      {
+        "name": "ないものねだりの山崎くん",
+        "order": 18,
+        "block": 2
+      },
+      {
+        "name": "圏外",
+        "order": 19,
+        "block": 2
+      },
+      {
+        "name": "アイブレーダー",
+        "order": 20,
+        "block": 2
+      },
+      {
+        "name": "超巨大",
+        "order": 21,
+        "block": 3
+      },
+      {
+        "name": "ガチ銀河",
+        "order": 22,
+        "block": 3
+      },
+      {
+        "name": "ヒンデル",
+        "order": 23,
+        "block": 3
+      },
+      {
+        "name": "Stand up・茶柱",
+        "order": 24,
+        "block": 3
+      },
+      {
+        "name": "ひのでかいがん〜あの日の記憶〜",
+        "order": 25,
+        "block": 3
+      },
+      {
+        "name": "大福",
+        "order": 26,
+        "block": 3
+      },
+      {
+        "name": "勇者のくせに",
+        "order": 27,
+        "block": 3
+      },
+      {
+        "name": "蛇友人",
+        "order": 29,
+        "block": 3
+      },
+      {
+        "name": "安田なおき",
+        "order": 30,
+        "block": 3
+      },
+      {
+        "name": "石橋真尚",
+        "order": 31,
+        "block": 3
+      }
+    ],
+    "excludedSlots": [
+      {
+        "order": 28,
+        "block": 3
+      }
+    ],
+    "stageResults": [
+      {
+        "status": "pending",
+        "displayStyle": "qualified",
+        "performers": [],
+        "label": "最優秀者"
+      },
+      {
+        "status": "pending",
+        "displayStyle": "qualified",
+        "performers": [],
+        "label": "2位"
+      },
+      {
+        "status": "pending",
+        "displayStyle": "qualified",
+        "performers": [],
+        "label": "3位"
+      },
+      {
+        "status": "pending",
+        "displayStyle": "next-stage",
+        "performers": [],
+        "nextEventType": "sarani-agari-stage",
+        "label": "サラに！への進出"
+      }
+    ],
+    "ticket": {
+      "url": "https://ticket.fany.lol/event/detail/23033",
+      "linkLabel": "FANYチケット",
+      "purchaseNote": "※出演者からのチケット取り置き可能",
+      "streamingNote": "※配信はございません",
+      "saleInfo": "一般発売：2026年11月20日（金）10:00～"
     }
   },
   {
@@ -134,6 +603,238 @@
     }
   },
   {
+    "id": "2026-12-02-1700-agari-stage",
+    "eventType": "agari-stage",
+    "title": "アガり！ステージ",
+    "date": "2026-12-02",
+    "month": 12,
+    "day": 2,
+    "time": "17:00",
+    "timeMinutes": 1020,
+    "venue": "歌舞伎町Sparkle",
+    "mc": "マルモウケ",
+    "lineupOrder": true,
+    "performers": [
+      "エコノート",
+      "XYZ",
+      "アイライクモンキー",
+      "マサムネ",
+      "毒ザル",
+      "スクランブル",
+      "ツーバイフォー",
+      "不浄負け",
+      "ニセほっけ",
+      "チョコバナナ",
+      "ところてん",
+      "握りb",
+      "ボンボン・フェアリーズ",
+      "北欧ビリー",
+      "ハンドレール",
+      "ケケ系",
+      "スンスーン",
+      "雲雀",
+      "しゃちほこダイナソー",
+      "ペリカンせいじん",
+      "ファニーアズヘル",
+      "インパニー",
+      "ポトポトポトフ",
+      "ジョウ",
+      "山崎翔太",
+      "レオン",
+      "ポピー",
+      "アイオライト",
+      "パーチェス",
+      "渥美朝陽"
+    ],
+    "lineup": [
+      {
+        "name": "エコノート",
+        "order": 1,
+        "block": 1
+      },
+      {
+        "name": "XYZ",
+        "order": 2,
+        "block": 1
+      },
+      {
+        "name": "アイライクモンキー",
+        "order": 3,
+        "block": 1
+      },
+      {
+        "name": "マサムネ",
+        "order": 4,
+        "block": 1
+      },
+      {
+        "name": "毒ザル",
+        "order": 5,
+        "block": 1
+      },
+      {
+        "name": "スクランブル",
+        "order": 6,
+        "block": 1
+      },
+      {
+        "name": "ツーバイフォー",
+        "order": 7,
+        "block": 1
+      },
+      {
+        "name": "不浄負け",
+        "order": 8,
+        "block": 1
+      },
+      {
+        "name": "ニセほっけ",
+        "order": 9,
+        "block": 1
+      },
+      {
+        "name": "チョコバナナ",
+        "order": 10,
+        "block": 1
+      },
+      {
+        "name": "ところてん",
+        "order": 11,
+        "block": 2
+      },
+      {
+        "name": "握りb",
+        "order": 12,
+        "block": 2
+      },
+      {
+        "name": "ボンボン・フェアリーズ",
+        "order": 13,
+        "block": 2
+      },
+      {
+        "name": "北欧ビリー",
+        "order": 14,
+        "block": 2
+      },
+      {
+        "name": "ハンドレール",
+        "order": 15,
+        "block": 2
+      },
+      {
+        "name": "ケケ系",
+        "order": 16,
+        "block": 2
+      },
+      {
+        "name": "スンスーン",
+        "order": 17,
+        "block": 2
+      },
+      {
+        "name": "雲雀",
+        "order": 18,
+        "block": 2
+      },
+      {
+        "name": "しゃちほこダイナソー",
+        "order": 19,
+        "block": 2
+      },
+      {
+        "name": "ペリカンせいじん",
+        "order": 20,
+        "block": 2
+      },
+      {
+        "name": "ファニーアズヘル",
+        "order": 21,
+        "block": 3
+      },
+      {
+        "name": "インパニー",
+        "order": 22,
+        "block": 3
+      },
+      {
+        "name": "ポトポトポトフ",
+        "order": 23,
+        "block": 3
+      },
+      {
+        "name": "ジョウ",
+        "order": 24,
+        "block": 3
+      },
+      {
+        "name": "山崎翔太",
+        "order": 25,
+        "block": 3
+      },
+      {
+        "name": "レオン",
+        "order": 26,
+        "block": 3
+      },
+      {
+        "name": "ポピー",
+        "order": 27,
+        "block": 3
+      },
+      {
+        "name": "アイオライト",
+        "order": 28,
+        "block": 3
+      },
+      {
+        "name": "パーチェス",
+        "order": 29,
+        "block": 3
+      },
+      {
+        "name": "渥美朝陽",
+        "order": 30,
+        "block": 3
+      }
+    ],
+    "excludedSlots": [],
+    "stageResults": [
+      {
+        "status": "pending",
+        "displayStyle": "qualified",
+        "performers": [],
+        "label": "最優秀者"
+      },
+      {
+        "status": "pending",
+        "displayStyle": "qualified",
+        "performers": [],
+        "label": "2位"
+      },
+      {
+        "status": "pending",
+        "displayStyle": "qualified",
+        "performers": [],
+        "label": "3位"
+      },
+      {
+        "status": "pending",
+        "displayStyle": "next-stage",
+        "performers": [],
+        "nextEventType": "sarani-agari-stage",
+        "label": "サラに！への進出"
+      }
+    ],
+    "ticket": {
+      "url": "https://ticket.fany.lol/event/detail/23033",
+      "linkLabel": "FANYチケット",
+      "purchaseNote": "※出演者からのチケット取り置き可能",
+      "streamingNote": "※配信はございません",
+      "saleInfo": "一般発売：2026年11月20日（金）10:00～"
+    }
+  },
+  {
     "id": "2026-12-02-1830-audition-1st-east",
     "eventType": "audition-1st-east",
     "title": "オーディション1stステージ EAST",
@@ -175,6 +876,244 @@
       "url": "https://ticket.fany.lol/event/detail/23168",
       "streamingNote": "※配信はありません",
       "saleInfo": "※ FANY一般販売：11月18日(水) 10:00〜"
+    }
+  },
+  {
+    "id": "2026-12-02-1930-agari-stage",
+    "eventType": "agari-stage",
+    "title": "アガり！ステージ",
+    "date": "2026-12-02",
+    "month": 12,
+    "day": 2,
+    "time": "19:30",
+    "timeMinutes": 1170,
+    "venue": "歌舞伎町Sparkle",
+    "mc": "アイオライト",
+    "lineupOrder": true,
+    "performers": [
+      "カシイ",
+      "ツインギア",
+      "準特急久保田",
+      "六厘",
+      "きしゃぽっぽ",
+      "ぐりどる",
+      "中村右",
+      "カタパルトン",
+      "大和スーパー大回転",
+      "テンソーマ",
+      "イカ墨",
+      "都々逸",
+      "アサカヨルカ",
+      "毛極蜂空芯蝶々虻火鉢",
+      "トニー",
+      "ガーリックボーイ木村",
+      "押しがけラペラ",
+      "フィールドホース・スコフィールド",
+      "桜",
+      "あふれるペレ",
+      "ぼうずくん",
+      "ナツメグ",
+      "多摩こんにゃく",
+      "杵",
+      "フィッシュおさかな",
+      "全日本ガガンドゥ協会",
+      "マルモウケ",
+      "ペルソナ",
+      "つちふまず",
+      "アロマティック食堂",
+      "あか子"
+    ],
+    "lineup": [
+      {
+        "name": "カシイ",
+        "order": 1,
+        "block": 1
+      },
+      {
+        "name": "ツインギア",
+        "order": 2,
+        "block": 1
+      },
+      {
+        "name": "準特急久保田",
+        "order": 3,
+        "block": 1
+      },
+      {
+        "name": "六厘",
+        "order": 4,
+        "block": 1
+      },
+      {
+        "name": "きしゃぽっぽ",
+        "order": 5,
+        "block": 1
+      },
+      {
+        "name": "ぐりどる",
+        "order": 6,
+        "block": 1
+      },
+      {
+        "name": "中村右",
+        "order": 7,
+        "block": 1
+      },
+      {
+        "name": "カタパルトン",
+        "order": 8,
+        "block": 1
+      },
+      {
+        "name": "大和スーパー大回転",
+        "order": 9,
+        "block": 1
+      },
+      {
+        "name": "テンソーマ",
+        "order": 10,
+        "block": 1
+      },
+      {
+        "name": "イカ墨",
+        "order": 11,
+        "block": 2
+      },
+      {
+        "name": "都々逸",
+        "order": 12,
+        "block": 2
+      },
+      {
+        "name": "アサカヨルカ",
+        "order": 13,
+        "block": 2
+      },
+      {
+        "name": "毛極蜂空芯蝶々虻火鉢",
+        "order": 14,
+        "block": 2
+      },
+      {
+        "name": "トニー",
+        "order": 15,
+        "block": 2
+      },
+      {
+        "name": "ガーリックボーイ木村",
+        "order": 16,
+        "block": 2
+      },
+      {
+        "name": "押しがけラペラ",
+        "order": 17,
+        "block": 2
+      },
+      {
+        "name": "フィールドホース・スコフィールド",
+        "order": 18,
+        "block": 2
+      },
+      {
+        "name": "桜",
+        "order": 19,
+        "block": 2
+      },
+      {
+        "name": "あふれるペレ",
+        "order": 20,
+        "block": 2
+      },
+      {
+        "name": "ぼうずくん",
+        "order": 21,
+        "block": 3
+      },
+      {
+        "name": "ナツメグ",
+        "order": 22,
+        "block": 3
+      },
+      {
+        "name": "多摩こんにゃく",
+        "order": 23,
+        "block": 3
+      },
+      {
+        "name": "杵",
+        "order": 24,
+        "block": 3
+      },
+      {
+        "name": "フィッシュおさかな",
+        "order": 25,
+        "block": 3
+      },
+      {
+        "name": "全日本ガガンドゥ協会",
+        "order": 26,
+        "block": 3
+      },
+      {
+        "name": "マルモウケ",
+        "order": 27,
+        "block": 3
+      },
+      {
+        "name": "ペルソナ",
+        "order": 28,
+        "block": 3
+      },
+      {
+        "name": "つちふまず",
+        "order": 29,
+        "block": 3
+      },
+      {
+        "name": "アロマティック食堂",
+        "order": 30,
+        "block": 3
+      },
+      {
+        "name": "あか子",
+        "order": 31,
+        "block": 3
+      }
+    ],
+    "excludedSlots": [],
+    "stageResults": [
+      {
+        "status": "pending",
+        "displayStyle": "qualified",
+        "performers": [],
+        "label": "最優秀者"
+      },
+      {
+        "status": "pending",
+        "displayStyle": "qualified",
+        "performers": [],
+        "label": "2位"
+      },
+      {
+        "status": "pending",
+        "displayStyle": "qualified",
+        "performers": [],
+        "label": "3位"
+      },
+      {
+        "status": "pending",
+        "displayStyle": "next-stage",
+        "performers": [],
+        "nextEventType": "sarani-agari-stage",
+        "label": "サラに！への進出"
+      }
+    ],
+    "ticket": {
+      "url": "https://ticket.fany.lol/event/detail/23033",
+      "linkLabel": "FANYチケット",
+      "purchaseNote": "※出演者からのチケット取り置き可能",
+      "streamingNote": "※配信はございません",
+      "saleInfo": "一般発売：2026年11月20日（金）10:00～"
     }
   },
   {
@@ -223,6 +1162,238 @@
     }
   },
   {
+    "id": "2026-12-03-1700-agari-stage",
+    "eventType": "agari-stage",
+    "title": "アガり！ステージ",
+    "date": "2026-12-03",
+    "month": 12,
+    "day": 3,
+    "time": "17:00",
+    "timeMinutes": 1020,
+    "venue": "歌舞伎町Sparkle",
+    "mc": "祖よ祖よ",
+    "lineupOrder": true,
+    "performers": [
+      "まどろまない",
+      "ビル煮",
+      "ダルマザウルス",
+      "武丸",
+      "山本純大",
+      "ミシガンサック",
+      "たかのたかし",
+      "エンジェル温泉花火",
+      "モンド",
+      "伊藤にられば",
+      "そいそ〜す",
+      "ペンシルロケット",
+      "ショウジ",
+      "ミックストマトジュース",
+      "北陸関西",
+      "こしょ温泉",
+      "カレー記念日",
+      "いちねん",
+      "モーモーズ",
+      "永井ねごと",
+      "スティックセニョール",
+      "まっきいー",
+      "S字クランク",
+      "影坊主",
+      "ブレストン",
+      "井上バルキ",
+      "はしっこの妄想",
+      "アナーキーインザYK",
+      "豆腐404",
+      "そのこ"
+    ],
+    "lineup": [
+      {
+        "name": "まどろまない",
+        "order": 1,
+        "block": 1
+      },
+      {
+        "name": "ビル煮",
+        "order": 2,
+        "block": 1
+      },
+      {
+        "name": "ダルマザウルス",
+        "order": 3,
+        "block": 1
+      },
+      {
+        "name": "武丸",
+        "order": 4,
+        "block": 1
+      },
+      {
+        "name": "山本純大",
+        "order": 5,
+        "block": 1
+      },
+      {
+        "name": "ミシガンサック",
+        "order": 6,
+        "block": 1
+      },
+      {
+        "name": "たかのたかし",
+        "order": 7,
+        "block": 1
+      },
+      {
+        "name": "エンジェル温泉花火",
+        "order": 8,
+        "block": 1
+      },
+      {
+        "name": "モンド",
+        "order": 9,
+        "block": 1
+      },
+      {
+        "name": "伊藤にられば",
+        "order": 10,
+        "block": 1
+      },
+      {
+        "name": "そいそ〜す",
+        "order": 11,
+        "block": 2
+      },
+      {
+        "name": "ペンシルロケット",
+        "order": 12,
+        "block": 2
+      },
+      {
+        "name": "ショウジ",
+        "order": 13,
+        "block": 2
+      },
+      {
+        "name": "ミックストマトジュース",
+        "order": 14,
+        "block": 2
+      },
+      {
+        "name": "北陸関西",
+        "order": 15,
+        "block": 2
+      },
+      {
+        "name": "こしょ温泉",
+        "order": 16,
+        "block": 2
+      },
+      {
+        "name": "カレー記念日",
+        "order": 17,
+        "block": 2
+      },
+      {
+        "name": "いちねん",
+        "order": 18,
+        "block": 2
+      },
+      {
+        "name": "モーモーズ",
+        "order": 19,
+        "block": 2
+      },
+      {
+        "name": "永井ねごと",
+        "order": 20,
+        "block": 2
+      },
+      {
+        "name": "スティックセニョール",
+        "order": 21,
+        "block": 3
+      },
+      {
+        "name": "まっきいー",
+        "order": 22,
+        "block": 3
+      },
+      {
+        "name": "S字クランク",
+        "order": 23,
+        "block": 3
+      },
+      {
+        "name": "影坊主",
+        "order": 24,
+        "block": 3
+      },
+      {
+        "name": "ブレストン",
+        "order": 25,
+        "block": 3
+      },
+      {
+        "name": "井上バルキ",
+        "order": 26,
+        "block": 3
+      },
+      {
+        "name": "はしっこの妄想",
+        "order": 27,
+        "block": 3
+      },
+      {
+        "name": "アナーキーインザYK",
+        "order": 28,
+        "block": 3
+      },
+      {
+        "name": "豆腐404",
+        "order": 29,
+        "block": 3
+      },
+      {
+        "name": "そのこ",
+        "order": 30,
+        "block": 3
+      }
+    ],
+    "excludedSlots": [],
+    "stageResults": [
+      {
+        "status": "pending",
+        "displayStyle": "qualified",
+        "performers": [],
+        "label": "最優秀者"
+      },
+      {
+        "status": "pending",
+        "displayStyle": "qualified",
+        "performers": [],
+        "label": "2位"
+      },
+      {
+        "status": "pending",
+        "displayStyle": "qualified",
+        "performers": [],
+        "label": "3位"
+      },
+      {
+        "status": "pending",
+        "displayStyle": "next-stage",
+        "performers": [],
+        "nextEventType": "sarani-agari-stage",
+        "label": "サラに！への進出"
+      }
+    ],
+    "ticket": {
+      "url": "https://ticket.fany.lol/event/detail/23033",
+      "linkLabel": "FANYチケット",
+      "purchaseNote": "※出演者からのチケット取り置き可能",
+      "streamingNote": "※配信はございません",
+      "saleInfo": "一般発売：2026年11月20日（金）10:00～"
+    }
+  },
+  {
     "id": "2026-12-03-1830-audition-1st-east",
     "eventType": "audition-1st-east",
     "title": "オーディション1stステージ EAST",
@@ -264,6 +1435,244 @@
       "url": "https://ticket.fany.lol/event/detail/23168",
       "streamingNote": "※配信はありません",
       "saleInfo": "※ FANY一般販売：11月18日(水) 10:00〜"
+    }
+  },
+  {
+    "id": "2026-12-03-1930-agari-stage",
+    "eventType": "agari-stage",
+    "title": "アガり！ステージ",
+    "date": "2026-12-03",
+    "month": 12,
+    "day": 3,
+    "time": "19:30",
+    "timeMinutes": 1170,
+    "venue": "歌舞伎町Sparkle",
+    "mc": "エンジェル温泉花火",
+    "lineupOrder": true,
+    "performers": [
+      "カニだより",
+      "第八代",
+      "ツインタワー",
+      "グッドマナー根岸",
+      "ドブレーテ",
+      "横山智昭",
+      "クロキリ",
+      "かもぴす",
+      "大人とんとん",
+      "伊藤ロビンソン",
+      "ふりいくっ！",
+      "イチト",
+      "断然元気",
+      "ウリムクティー",
+      "ジェーン",
+      "帝国タクシー",
+      "ブルー",
+      "祖よ祖よ",
+      "パリストンズ",
+      "アンクレット",
+      "ウェリントン",
+      "どうでもいいゲンジロウ",
+      "はくみょう",
+      "プテラエリア 野田",
+      "餃子",
+      "ミイラボックス",
+      "薔薇飯店",
+      "桃舟",
+      "金ピカの10円",
+      "昭和プリン",
+      "ウェスタンジーニャ"
+    ],
+    "lineup": [
+      {
+        "name": "カニだより",
+        "order": 1,
+        "block": 1
+      },
+      {
+        "name": "第八代",
+        "order": 2,
+        "block": 1
+      },
+      {
+        "name": "ツインタワー",
+        "order": 3,
+        "block": 1
+      },
+      {
+        "name": "グッドマナー根岸",
+        "order": 4,
+        "block": 1
+      },
+      {
+        "name": "ドブレーテ",
+        "order": 5,
+        "block": 1
+      },
+      {
+        "name": "横山智昭",
+        "order": 6,
+        "block": 1
+      },
+      {
+        "name": "クロキリ",
+        "order": 7,
+        "block": 1
+      },
+      {
+        "name": "かもぴす",
+        "order": 8,
+        "block": 1
+      },
+      {
+        "name": "大人とんとん",
+        "order": 9,
+        "block": 1
+      },
+      {
+        "name": "伊藤ロビンソン",
+        "order": 10,
+        "block": 1
+      },
+      {
+        "name": "ふりいくっ！",
+        "order": 11,
+        "block": 2
+      },
+      {
+        "name": "イチト",
+        "order": 12,
+        "block": 2
+      },
+      {
+        "name": "断然元気",
+        "order": 13,
+        "block": 2
+      },
+      {
+        "name": "ウリムクティー",
+        "order": 14,
+        "block": 2
+      },
+      {
+        "name": "ジェーン",
+        "order": 15,
+        "block": 2
+      },
+      {
+        "name": "帝国タクシー",
+        "order": 16,
+        "block": 2
+      },
+      {
+        "name": "ブルー",
+        "order": 17,
+        "block": 2
+      },
+      {
+        "name": "祖よ祖よ",
+        "order": 18,
+        "block": 2
+      },
+      {
+        "name": "パリストンズ",
+        "order": 19,
+        "block": 2
+      },
+      {
+        "name": "アンクレット",
+        "order": 20,
+        "block": 2
+      },
+      {
+        "name": "ウェリントン",
+        "order": 21,
+        "block": 3
+      },
+      {
+        "name": "どうでもいいゲンジロウ",
+        "order": 22,
+        "block": 3
+      },
+      {
+        "name": "はくみょう",
+        "order": 23,
+        "block": 3
+      },
+      {
+        "name": "プテラエリア 野田",
+        "order": 24,
+        "block": 3
+      },
+      {
+        "name": "餃子",
+        "order": 25,
+        "block": 3
+      },
+      {
+        "name": "ミイラボックス",
+        "order": 26,
+        "block": 3
+      },
+      {
+        "name": "薔薇飯店",
+        "order": 27,
+        "block": 3
+      },
+      {
+        "name": "桃舟",
+        "order": 28,
+        "block": 3
+      },
+      {
+        "name": "金ピカの10円",
+        "order": 29,
+        "block": 3
+      },
+      {
+        "name": "昭和プリン",
+        "order": 30,
+        "block": 3
+      },
+      {
+        "name": "ウェスタンジーニャ",
+        "order": 31,
+        "block": 3
+      }
+    ],
+    "excludedSlots": [],
+    "stageResults": [
+      {
+        "status": "pending",
+        "displayStyle": "qualified",
+        "performers": [],
+        "label": "最優秀者"
+      },
+      {
+        "status": "pending",
+        "displayStyle": "qualified",
+        "performers": [],
+        "label": "2位"
+      },
+      {
+        "status": "pending",
+        "displayStyle": "qualified",
+        "performers": [],
+        "label": "3位"
+      },
+      {
+        "status": "pending",
+        "displayStyle": "next-stage",
+        "performers": [],
+        "nextEventType": "sarani-agari-stage",
+        "label": "サラに！への進出"
+      }
+    ],
+    "ticket": {
+      "url": "https://ticket.fany.lol/event/detail/23033",
+      "linkLabel": "FANYチケット",
+      "purchaseNote": "※出演者からのチケット取り置き可能",
+      "streamingNote": "※配信はございません",
+      "saleInfo": "一般発売：2026年11月20日（金）10:00～"
     }
   },
   {
@@ -312,6 +1721,238 @@
     }
   },
   {
+    "id": "2026-12-04-1700-agari-stage",
+    "eventType": "agari-stage",
+    "title": "アガり！ステージ",
+    "date": "2026-12-04",
+    "month": 12,
+    "day": 4,
+    "time": "17:00",
+    "timeMinutes": 1020,
+    "venue": "歌舞伎町Sparkle",
+    "mc": "ASANA",
+    "lineupOrder": true,
+    "performers": [
+      "泳ぐサメジマ",
+      "赤松圭",
+      "燦々メイデン",
+      "愛♡モーツ！",
+      "テキーラカンガルー",
+      "スピニングバックエルボー",
+      "まっすぐ加藤",
+      "右ストリート",
+      "ティッシュ鈴木",
+      "メルティ",
+      "ホームラン",
+      "たまゆら学園",
+      "横田宏樹",
+      "ハテナビヨリ",
+      "ヤングマロン",
+      "アミダライン",
+      "平岡優作",
+      "マーシャル・クイーン",
+      "未来ファンデ",
+      "ユンクフラワー",
+      "だらくデビル",
+      "ごぞんじ武田",
+      "とうもろこし専門病院",
+      "恩徳",
+      "しょーき",
+      "おいしい水",
+      "やぶつばき",
+      "ムッシュ",
+      "エルパン",
+      "白夜花火"
+    ],
+    "lineup": [
+      {
+        "name": "泳ぐサメジマ",
+        "order": 1,
+        "block": 1
+      },
+      {
+        "name": "赤松圭",
+        "order": 2,
+        "block": 1
+      },
+      {
+        "name": "燦々メイデン",
+        "order": 3,
+        "block": 1
+      },
+      {
+        "name": "愛♡モーツ！",
+        "order": 4,
+        "block": 1
+      },
+      {
+        "name": "テキーラカンガルー",
+        "order": 5,
+        "block": 1
+      },
+      {
+        "name": "スピニングバックエルボー",
+        "order": 6,
+        "block": 1
+      },
+      {
+        "name": "まっすぐ加藤",
+        "order": 7,
+        "block": 1
+      },
+      {
+        "name": "右ストリート",
+        "order": 8,
+        "block": 1
+      },
+      {
+        "name": "ティッシュ鈴木",
+        "order": 9,
+        "block": 1
+      },
+      {
+        "name": "メルティ",
+        "order": 10,
+        "block": 1
+      },
+      {
+        "name": "ホームラン",
+        "order": 11,
+        "block": 2
+      },
+      {
+        "name": "たまゆら学園",
+        "order": 12,
+        "block": 2
+      },
+      {
+        "name": "横田宏樹",
+        "order": 13,
+        "block": 2
+      },
+      {
+        "name": "ハテナビヨリ",
+        "order": 14,
+        "block": 2
+      },
+      {
+        "name": "ヤングマロン",
+        "order": 15,
+        "block": 2
+      },
+      {
+        "name": "アミダライン",
+        "order": 16,
+        "block": 2
+      },
+      {
+        "name": "平岡優作",
+        "order": 17,
+        "block": 2
+      },
+      {
+        "name": "マーシャル・クイーン",
+        "order": 18,
+        "block": 2
+      },
+      {
+        "name": "未来ファンデ",
+        "order": 19,
+        "block": 2
+      },
+      {
+        "name": "ユンクフラワー",
+        "order": 20,
+        "block": 2
+      },
+      {
+        "name": "だらくデビル",
+        "order": 21,
+        "block": 3
+      },
+      {
+        "name": "ごぞんじ武田",
+        "order": 22,
+        "block": 3
+      },
+      {
+        "name": "とうもろこし専門病院",
+        "order": 23,
+        "block": 3
+      },
+      {
+        "name": "恩徳",
+        "order": 24,
+        "block": 3
+      },
+      {
+        "name": "しょーき",
+        "order": 25,
+        "block": 3
+      },
+      {
+        "name": "おいしい水",
+        "order": 26,
+        "block": 3
+      },
+      {
+        "name": "やぶつばき",
+        "order": 27,
+        "block": 3
+      },
+      {
+        "name": "ムッシュ",
+        "order": 28,
+        "block": 3
+      },
+      {
+        "name": "エルパン",
+        "order": 29,
+        "block": 3
+      },
+      {
+        "name": "白夜花火",
+        "order": 30,
+        "block": 3
+      }
+    ],
+    "excludedSlots": [],
+    "stageResults": [
+      {
+        "status": "pending",
+        "displayStyle": "qualified",
+        "performers": [],
+        "label": "最優秀者"
+      },
+      {
+        "status": "pending",
+        "displayStyle": "qualified",
+        "performers": [],
+        "label": "2位"
+      },
+      {
+        "status": "pending",
+        "displayStyle": "qualified",
+        "performers": [],
+        "label": "3位"
+      },
+      {
+        "status": "pending",
+        "displayStyle": "next-stage",
+        "performers": [],
+        "nextEventType": "sarani-agari-stage",
+        "label": "サラに！への進出"
+      }
+    ],
+    "ticket": {
+      "url": "https://ticket.fany.lol/event/detail/23033",
+      "linkLabel": "FANYチケット",
+      "purchaseNote": "※出演者からのチケット取り置き可能",
+      "streamingNote": "※配信はございません",
+      "saleInfo": "一般発売：2026年11月20日（金）10:00～"
+    }
+  },
+  {
     "id": "2026-12-04-1830-audition-1st-east",
     "eventType": "audition-1st-east",
     "title": "オーディション1stステージ EAST",
@@ -353,6 +1994,244 @@
       "url": "https://ticket.fany.lol/event/detail/23168",
       "streamingNote": "※配信はありません",
       "saleInfo": "※ FANY一般販売：11月18日(水) 10:00〜"
+    }
+  },
+  {
+    "id": "2026-12-04-1930-agari-stage",
+    "eventType": "agari-stage",
+    "title": "アガり！ステージ",
+    "date": "2026-12-04",
+    "month": 12,
+    "day": 4,
+    "time": "19:30",
+    "timeMinutes": 1170,
+    "venue": "歌舞伎町Sparkle",
+    "mc": "恩徳",
+    "lineupOrder": true,
+    "performers": [
+      "かすがいしだ",
+      "ドラゴン・レディ",
+      "カランダダン",
+      "柴犬ユッキーちゃん。",
+      "キタカンバディーズ",
+      "増田ひまわり",
+      "二大キョン",
+      "ピーチキャッスル",
+      "島馬",
+      "永江節カツオ",
+      "義表",
+      "オトメゴコロ",
+      "国澤",
+      "ASANA",
+      "マシン語感",
+      "ブルズアイ",
+      "ディオマンデ",
+      "おのしおり",
+      "トーキョーマッド",
+      "エルダストリー",
+      "葉メガネ",
+      "クロフォード",
+      "フルーツマシーン猛レース",
+      "竹迫ゆうじだ！！！",
+      "オリオンハート",
+      "夢見る毛塚",
+      "パッキンガム",
+      "鈴木ララバイ",
+      "かるかん",
+      "中越",
+      "おじさんとおばさん"
+    ],
+    "lineup": [
+      {
+        "name": "かすがいしだ",
+        "order": 1,
+        "block": 1
+      },
+      {
+        "name": "ドラゴン・レディ",
+        "order": 2,
+        "block": 1
+      },
+      {
+        "name": "カランダダン",
+        "order": 3,
+        "block": 1
+      },
+      {
+        "name": "柴犬ユッキーちゃん。",
+        "order": 4,
+        "block": 1
+      },
+      {
+        "name": "キタカンバディーズ",
+        "order": 5,
+        "block": 1
+      },
+      {
+        "name": "増田ひまわり",
+        "order": 6,
+        "block": 1
+      },
+      {
+        "name": "二大キョン",
+        "order": 7,
+        "block": 1
+      },
+      {
+        "name": "ピーチキャッスル",
+        "order": 8,
+        "block": 1
+      },
+      {
+        "name": "島馬",
+        "order": 9,
+        "block": 1
+      },
+      {
+        "name": "永江節カツオ",
+        "order": 10,
+        "block": 1
+      },
+      {
+        "name": "義表",
+        "order": 11,
+        "block": 2
+      },
+      {
+        "name": "オトメゴコロ",
+        "order": 12,
+        "block": 2
+      },
+      {
+        "name": "国澤",
+        "order": 13,
+        "block": 2
+      },
+      {
+        "name": "ASANA",
+        "order": 14,
+        "block": 2
+      },
+      {
+        "name": "マシン語感",
+        "order": 15,
+        "block": 2
+      },
+      {
+        "name": "ブルズアイ",
+        "order": 16,
+        "block": 2
+      },
+      {
+        "name": "ディオマンデ",
+        "order": 17,
+        "block": 2
+      },
+      {
+        "name": "おのしおり",
+        "order": 18,
+        "block": 2
+      },
+      {
+        "name": "トーキョーマッド",
+        "order": 19,
+        "block": 2
+      },
+      {
+        "name": "エルダストリー",
+        "order": 20,
+        "block": 2
+      },
+      {
+        "name": "葉メガネ",
+        "order": 21,
+        "block": 3
+      },
+      {
+        "name": "クロフォード",
+        "order": 22,
+        "block": 3
+      },
+      {
+        "name": "フルーツマシーン猛レース",
+        "order": 23,
+        "block": 3
+      },
+      {
+        "name": "竹迫ゆうじだ！！！",
+        "order": 24,
+        "block": 3
+      },
+      {
+        "name": "オリオンハート",
+        "order": 25,
+        "block": 3
+      },
+      {
+        "name": "夢見る毛塚",
+        "order": 26,
+        "block": 3
+      },
+      {
+        "name": "パッキンガム",
+        "order": 27,
+        "block": 3
+      },
+      {
+        "name": "鈴木ララバイ",
+        "order": 28,
+        "block": 3
+      },
+      {
+        "name": "かるかん",
+        "order": 29,
+        "block": 3
+      },
+      {
+        "name": "中越",
+        "order": 30,
+        "block": 3
+      },
+      {
+        "name": "おじさんとおばさん",
+        "order": 31,
+        "block": 3
+      }
+    ],
+    "excludedSlots": [],
+    "stageResults": [
+      {
+        "status": "pending",
+        "displayStyle": "qualified",
+        "performers": [],
+        "label": "最優秀者"
+      },
+      {
+        "status": "pending",
+        "displayStyle": "qualified",
+        "performers": [],
+        "label": "2位"
+      },
+      {
+        "status": "pending",
+        "displayStyle": "qualified",
+        "performers": [],
+        "label": "3位"
+      },
+      {
+        "status": "pending",
+        "displayStyle": "next-stage",
+        "performers": [],
+        "nextEventType": "sarani-agari-stage",
+        "label": "サラに！への進出"
+      }
+    ],
+    "ticket": {
+      "url": "https://ticket.fany.lol/event/detail/23033",
+      "linkLabel": "FANYチケット",
+      "purchaseNote": "※出演者からのチケット取り置き可能",
+      "streamingNote": "※配信はございません",
+      "saleInfo": "一般発売：2026年11月20日（金）10:00～"
     }
   },
   {
@@ -401,6 +2280,238 @@
     }
   },
   {
+    "id": "2026-12-07-1700-agari-stage",
+    "eventType": "agari-stage",
+    "title": "アガり！ステージ",
+    "date": "2026-12-07",
+    "month": 12,
+    "day": 7,
+    "time": "17:00",
+    "timeMinutes": 1020,
+    "venue": "歌舞伎町Sparkle",
+    "mc": "ホルモン金魚",
+    "lineupOrder": true,
+    "performers": [
+      "あせらせ",
+      "なかおきアンシコースケー",
+      "夏桜",
+      "ぼくらサード",
+      "下駄ラッコ",
+      "中村祥司",
+      "軟弱者",
+      "よし",
+      "あやつり人形",
+      "平林たける",
+      "まぼろし組",
+      "名月マロン",
+      "てぃーし",
+      "ウルトラスーパーコバタナックス",
+      "鹿島志郎",
+      "サクラダ前線",
+      "ともはる",
+      "スライダー",
+      "渡邊コスメ",
+      "ラ・酒落",
+      "そま",
+      "もってい",
+      "もりちゃん",
+      "はなまつり",
+      "オーガニック加藤",
+      "よあけのかぜ",
+      "岩盤",
+      "なな十万",
+      "稲葉優心",
+      "ラデンバコ"
+    ],
+    "lineup": [
+      {
+        "name": "あせらせ",
+        "order": 1,
+        "block": 1
+      },
+      {
+        "name": "なかおきアンシコースケー",
+        "order": 2,
+        "block": 1
+      },
+      {
+        "name": "夏桜",
+        "order": 3,
+        "block": 1
+      },
+      {
+        "name": "ぼくらサード",
+        "order": 4,
+        "block": 1
+      },
+      {
+        "name": "下駄ラッコ",
+        "order": 5,
+        "block": 1
+      },
+      {
+        "name": "中村祥司",
+        "order": 6,
+        "block": 1
+      },
+      {
+        "name": "軟弱者",
+        "order": 7,
+        "block": 1
+      },
+      {
+        "name": "よし",
+        "order": 8,
+        "block": 1
+      },
+      {
+        "name": "あやつり人形",
+        "order": 9,
+        "block": 1
+      },
+      {
+        "name": "平林たける",
+        "order": 10,
+        "block": 1
+      },
+      {
+        "name": "まぼろし組",
+        "order": 11,
+        "block": 2
+      },
+      {
+        "name": "名月マロン",
+        "order": 12,
+        "block": 2
+      },
+      {
+        "name": "てぃーし",
+        "order": 13,
+        "block": 2
+      },
+      {
+        "name": "ウルトラスーパーコバタナックス",
+        "order": 14,
+        "block": 2
+      },
+      {
+        "name": "鹿島志郎",
+        "order": 15,
+        "block": 2
+      },
+      {
+        "name": "サクラダ前線",
+        "order": 16,
+        "block": 2
+      },
+      {
+        "name": "ともはる",
+        "order": 17,
+        "block": 2
+      },
+      {
+        "name": "スライダー",
+        "order": 18,
+        "block": 2
+      },
+      {
+        "name": "渡邊コスメ",
+        "order": 19,
+        "block": 2
+      },
+      {
+        "name": "ラ・酒落",
+        "order": 20,
+        "block": 2
+      },
+      {
+        "name": "そま",
+        "order": 21,
+        "block": 3
+      },
+      {
+        "name": "もってい",
+        "order": 22,
+        "block": 3
+      },
+      {
+        "name": "もりちゃん",
+        "order": 23,
+        "block": 3
+      },
+      {
+        "name": "はなまつり",
+        "order": 24,
+        "block": 3
+      },
+      {
+        "name": "オーガニック加藤",
+        "order": 25,
+        "block": 3
+      },
+      {
+        "name": "よあけのかぜ",
+        "order": 26,
+        "block": 3
+      },
+      {
+        "name": "岩盤",
+        "order": 27,
+        "block": 3
+      },
+      {
+        "name": "なな十万",
+        "order": 28,
+        "block": 3
+      },
+      {
+        "name": "稲葉優心",
+        "order": 29,
+        "block": 3
+      },
+      {
+        "name": "ラデンバコ",
+        "order": 30,
+        "block": 3
+      }
+    ],
+    "excludedSlots": [],
+    "stageResults": [
+      {
+        "status": "pending",
+        "displayStyle": "qualified",
+        "performers": [],
+        "label": "最優秀者"
+      },
+      {
+        "status": "pending",
+        "displayStyle": "qualified",
+        "performers": [],
+        "label": "2位"
+      },
+      {
+        "status": "pending",
+        "displayStyle": "qualified",
+        "performers": [],
+        "label": "3位"
+      },
+      {
+        "status": "pending",
+        "displayStyle": "next-stage",
+        "performers": [],
+        "nextEventType": "sarani-agari-stage",
+        "label": "サラに！への進出"
+      }
+    ],
+    "ticket": {
+      "url": "https://ticket.fany.lol/event/detail/23033",
+      "linkLabel": "FANYチケット",
+      "purchaseNote": "※出演者からのチケット取り置き可能",
+      "streamingNote": "※配信はございません",
+      "saleInfo": "一般発売：2026年11月20日（金）10:00～"
+    }
+  },
+  {
     "id": "2026-12-07-1830-audition-1st-east",
     "eventType": "audition-1st-east",
     "title": "オーディション1stステージ EAST",
@@ -442,6 +2553,244 @@
       "url": "https://ticket.fany.lol/event/detail/23168",
       "streamingNote": "※配信はありません",
       "saleInfo": "※ FANY一般販売：11月18日(水) 10:00〜"
+    }
+  },
+  {
+    "id": "2026-12-07-1930-agari-stage",
+    "eventType": "agari-stage",
+    "title": "アガり！ステージ",
+    "date": "2026-12-07",
+    "month": 12,
+    "day": 7,
+    "time": "19:30",
+    "timeMinutes": 1170,
+    "venue": "歌舞伎町Sparkle",
+    "mc": "ウルトラスーパーコバタナックス",
+    "lineupOrder": true,
+    "performers": [
+      "カノプス",
+      "ホルモン金魚",
+      "少女B",
+      "アオタケ",
+      "瀬戸佑樹",
+      "歓楽ラビット",
+      "ととのいマルチ",
+      "ドングラミ",
+      "官兵衛",
+      "桂馬大ジャンプ",
+      "キュ～ブ",
+      "太郎スペシャル",
+      "天神モンキー",
+      "ハタノハタ",
+      "キャリントン",
+      "けーと",
+      "俊ちゃん賢ちゃん",
+      "かなとカッパイ",
+      "ボレー",
+      "日照ボウリング",
+      "ほがらかぼっぷくん",
+      "カミラ",
+      "ガンスミス",
+      "あずみ",
+      "阿部直也",
+      "カー・ショー",
+      "きゃんぱす",
+      "かに当番",
+      "☆ミレー",
+      "ティラガルド",
+      "中山豆富店"
+    ],
+    "lineup": [
+      {
+        "name": "カノプス",
+        "order": 1,
+        "block": 1
+      },
+      {
+        "name": "ホルモン金魚",
+        "order": 2,
+        "block": 1
+      },
+      {
+        "name": "少女B",
+        "order": 3,
+        "block": 1
+      },
+      {
+        "name": "アオタケ",
+        "order": 4,
+        "block": 1
+      },
+      {
+        "name": "瀬戸佑樹",
+        "order": 5,
+        "block": 1
+      },
+      {
+        "name": "歓楽ラビット",
+        "order": 6,
+        "block": 1
+      },
+      {
+        "name": "ととのいマルチ",
+        "order": 7,
+        "block": 1
+      },
+      {
+        "name": "ドングラミ",
+        "order": 8,
+        "block": 1
+      },
+      {
+        "name": "官兵衛",
+        "order": 9,
+        "block": 1
+      },
+      {
+        "name": "桂馬大ジャンプ",
+        "order": 10,
+        "block": 1
+      },
+      {
+        "name": "キュ～ブ",
+        "order": 11,
+        "block": 2
+      },
+      {
+        "name": "太郎スペシャル",
+        "order": 12,
+        "block": 2
+      },
+      {
+        "name": "天神モンキー",
+        "order": 13,
+        "block": 2
+      },
+      {
+        "name": "ハタノハタ",
+        "order": 14,
+        "block": 2
+      },
+      {
+        "name": "キャリントン",
+        "order": 15,
+        "block": 2
+      },
+      {
+        "name": "けーと",
+        "order": 16,
+        "block": 2
+      },
+      {
+        "name": "俊ちゃん賢ちゃん",
+        "order": 17,
+        "block": 2
+      },
+      {
+        "name": "かなとカッパイ",
+        "order": 18,
+        "block": 2
+      },
+      {
+        "name": "ボレー",
+        "order": 19,
+        "block": 2
+      },
+      {
+        "name": "日照ボウリング",
+        "order": 20,
+        "block": 2
+      },
+      {
+        "name": "ほがらかぼっぷくん",
+        "order": 21,
+        "block": 3
+      },
+      {
+        "name": "カミラ",
+        "order": 22,
+        "block": 3
+      },
+      {
+        "name": "ガンスミス",
+        "order": 23,
+        "block": 3
+      },
+      {
+        "name": "あずみ",
+        "order": 24,
+        "block": 3
+      },
+      {
+        "name": "阿部直也",
+        "order": 25,
+        "block": 3
+      },
+      {
+        "name": "カー・ショー",
+        "order": 26,
+        "block": 3
+      },
+      {
+        "name": "きゃんぱす",
+        "order": 27,
+        "block": 3
+      },
+      {
+        "name": "かに当番",
+        "order": 28,
+        "block": 3
+      },
+      {
+        "name": "☆ミレー",
+        "order": 29,
+        "block": 3
+      },
+      {
+        "name": "ティラガルド",
+        "order": 30,
+        "block": 3
+      },
+      {
+        "name": "中山豆富店",
+        "order": 31,
+        "block": 3
+      }
+    ],
+    "excludedSlots": [],
+    "stageResults": [
+      {
+        "status": "pending",
+        "displayStyle": "qualified",
+        "performers": [],
+        "label": "最優秀者"
+      },
+      {
+        "status": "pending",
+        "displayStyle": "qualified",
+        "performers": [],
+        "label": "2位"
+      },
+      {
+        "status": "pending",
+        "displayStyle": "qualified",
+        "performers": [],
+        "label": "3位"
+      },
+      {
+        "status": "pending",
+        "displayStyle": "next-stage",
+        "performers": [],
+        "nextEventType": "sarani-agari-stage",
+        "label": "サラに！への進出"
+      }
+    ],
+    "ticket": {
+      "url": "https://ticket.fany.lol/event/detail/23033",
+      "linkLabel": "FANYチケット",
+      "purchaseNote": "※出演者からのチケット取り置き可能",
+      "streamingNote": "※配信はございません",
+      "saleInfo": "一般発売：2026年11月20日（金）10:00～"
     }
   },
   {
@@ -489,6 +2838,238 @@
     }
   },
   {
+    "id": "2026-12-08-1700-agari-stage",
+    "eventType": "agari-stage",
+    "title": "アガり！ステージ",
+    "date": "2026-12-08",
+    "month": 12,
+    "day": 8,
+    "time": "17:00",
+    "timeMinutes": 1020,
+    "venue": "歌舞伎町Sparkle",
+    "mc": "イエローテープ",
+    "lineupOrder": true,
+    "performers": [
+      "あやとり",
+      "なごみ御膳",
+      "アトランタ",
+      "スーズ",
+      "下町レントゲン",
+      "小笠原400m",
+      "セブンガール",
+      "ナイスゥてっぺー",
+      "ルックダック",
+      "りぼん選手権",
+      "ソラニテテ",
+      "ニシカワシアター",
+      "ばばちゃり",
+      "弁天フクロウ",
+      "リビングベッドダイニング",
+      "煩悩楽堂",
+      "バイバイスプリット",
+      "ザッケローニ",
+      "怪物ちゃん",
+      "おつかれさまです。テノール銀内",
+      "ミスターアンサー",
+      "プロビデンス",
+      "フロッグロック",
+      "巨牛",
+      "ボリー",
+      "吉右衛門",
+      "ルナ美人",
+      "ド根性建設",
+      "バチョフ",
+      "夜明けのヴィーナス"
+    ],
+    "lineup": [
+      {
+        "name": "あやとり",
+        "order": 1,
+        "block": 1
+      },
+      {
+        "name": "なごみ御膳",
+        "order": 2,
+        "block": 1
+      },
+      {
+        "name": "アトランタ",
+        "order": 3,
+        "block": 1
+      },
+      {
+        "name": "スーズ",
+        "order": 4,
+        "block": 1
+      },
+      {
+        "name": "下町レントゲン",
+        "order": 5,
+        "block": 1
+      },
+      {
+        "name": "小笠原400m",
+        "order": 6,
+        "block": 1
+      },
+      {
+        "name": "セブンガール",
+        "order": 7,
+        "block": 1
+      },
+      {
+        "name": "ナイスゥてっぺー",
+        "order": 8,
+        "block": 1
+      },
+      {
+        "name": "ルックダック",
+        "order": 9,
+        "block": 1
+      },
+      {
+        "name": "りぼん選手権",
+        "order": 10,
+        "block": 1
+      },
+      {
+        "name": "ソラニテテ",
+        "order": 11,
+        "block": 2
+      },
+      {
+        "name": "ニシカワシアター",
+        "order": 12,
+        "block": 2
+      },
+      {
+        "name": "ばばちゃり",
+        "order": 13,
+        "block": 2
+      },
+      {
+        "name": "弁天フクロウ",
+        "order": 14,
+        "block": 2
+      },
+      {
+        "name": "リビングベッドダイニング",
+        "order": 15,
+        "block": 2
+      },
+      {
+        "name": "煩悩楽堂",
+        "order": 16,
+        "block": 2
+      },
+      {
+        "name": "バイバイスプリット",
+        "order": 17,
+        "block": 2
+      },
+      {
+        "name": "ザッケローニ",
+        "order": 18,
+        "block": 2
+      },
+      {
+        "name": "怪物ちゃん",
+        "order": 19,
+        "block": 2
+      },
+      {
+        "name": "おつかれさまです。テノール銀内",
+        "order": 20,
+        "block": 2
+      },
+      {
+        "name": "ミスターアンサー",
+        "order": 21,
+        "block": 3
+      },
+      {
+        "name": "プロビデンス",
+        "order": 22,
+        "block": 3
+      },
+      {
+        "name": "フロッグロック",
+        "order": 23,
+        "block": 3
+      },
+      {
+        "name": "巨牛",
+        "order": 24,
+        "block": 3
+      },
+      {
+        "name": "ボリー",
+        "order": 25,
+        "block": 3
+      },
+      {
+        "name": "吉右衛門",
+        "order": 26,
+        "block": 3
+      },
+      {
+        "name": "ルナ美人",
+        "order": 27,
+        "block": 3
+      },
+      {
+        "name": "ド根性建設",
+        "order": 28,
+        "block": 3
+      },
+      {
+        "name": "バチョフ",
+        "order": 29,
+        "block": 3
+      },
+      {
+        "name": "夜明けのヴィーナス",
+        "order": 30,
+        "block": 3
+      }
+    ],
+    "excludedSlots": [],
+    "stageResults": [
+      {
+        "status": "pending",
+        "displayStyle": "qualified",
+        "performers": [],
+        "label": "最優秀者"
+      },
+      {
+        "status": "pending",
+        "displayStyle": "qualified",
+        "performers": [],
+        "label": "2位"
+      },
+      {
+        "status": "pending",
+        "displayStyle": "qualified",
+        "performers": [],
+        "label": "3位"
+      },
+      {
+        "status": "pending",
+        "displayStyle": "next-stage",
+        "performers": [],
+        "nextEventType": "sarani-agari-stage",
+        "label": "サラに！への進出"
+      }
+    ],
+    "ticket": {
+      "url": "https://ticket.fany.lol/event/detail/23033",
+      "linkLabel": "FANYチケット",
+      "purchaseNote": "※出演者からのチケット取り置き可能",
+      "streamingNote": "※配信はございません",
+      "saleInfo": "一般発売：2026年11月20日（金）10:00～"
+    }
+  },
+  {
     "id": "2026-12-08-1830-audition-1st-east",
     "eventType": "audition-1st-east",
     "title": "オーディション1stステージ EAST",
@@ -529,6 +3110,244 @@
       "url": "https://ticket.fany.lol/event/detail/23168",
       "streamingNote": "※配信はありません",
       "saleInfo": "※ FANY一般販売：11月18日(水) 10:00〜"
+    }
+  },
+  {
+    "id": "2026-12-08-1930-agari-stage",
+    "eventType": "agari-stage",
+    "title": "アガり！ステージ",
+    "date": "2026-12-08",
+    "month": 12,
+    "day": 8,
+    "time": "19:30",
+    "timeMinutes": 1170,
+    "venue": "歌舞伎町Sparkle",
+    "mc": "弁天フクロウ",
+    "lineupOrder": true,
+    "performers": [
+      "シンシンシンゲツメン",
+      "猫ノカケラ",
+      "灯リンド",
+      "輝",
+      "ギンカク",
+      "藤木良行",
+      "テクノカンフー",
+      "きょむきょむ巡り",
+      "ミニチュアエリート",
+      "キラキラ丼",
+      "とものかつみ(芸人)",
+      "濡れカバ",
+      "バレンタイン",
+      "佐々木啓祐",
+      "珍街道",
+      "ジャカンジャカンジャ",
+      "沼津",
+      "York Sr.（ヨークシニア）",
+      "スキーンズ",
+      "ノリ・C・ノリ",
+      "100万ボルト",
+      "大親友",
+      "こうそくどろん",
+      "サンチェスト",
+      "内山柊太",
+      "しゃーろっく",
+      "キャンディハウス",
+      "ポゾビスティー",
+      "ボルゾイ5秒前",
+      "イエローテープ",
+      "ベグBOG"
+    ],
+    "lineup": [
+      {
+        "name": "シンシンシンゲツメン",
+        "order": 1,
+        "block": 1
+      },
+      {
+        "name": "猫ノカケラ",
+        "order": 2,
+        "block": 1
+      },
+      {
+        "name": "灯リンド",
+        "order": 3,
+        "block": 1
+      },
+      {
+        "name": "輝",
+        "order": 4,
+        "block": 1
+      },
+      {
+        "name": "ギンカク",
+        "order": 5,
+        "block": 1
+      },
+      {
+        "name": "藤木良行",
+        "order": 6,
+        "block": 1
+      },
+      {
+        "name": "テクノカンフー",
+        "order": 7,
+        "block": 1
+      },
+      {
+        "name": "きょむきょむ巡り",
+        "order": 8,
+        "block": 1
+      },
+      {
+        "name": "ミニチュアエリート",
+        "order": 9,
+        "block": 1
+      },
+      {
+        "name": "キラキラ丼",
+        "order": 10,
+        "block": 1
+      },
+      {
+        "name": "とものかつみ(芸人)",
+        "order": 11,
+        "block": 2
+      },
+      {
+        "name": "濡れカバ",
+        "order": 12,
+        "block": 2
+      },
+      {
+        "name": "バレンタイン",
+        "order": 13,
+        "block": 2
+      },
+      {
+        "name": "佐々木啓祐",
+        "order": 14,
+        "block": 2
+      },
+      {
+        "name": "珍街道",
+        "order": 15,
+        "block": 2
+      },
+      {
+        "name": "ジャカンジャカンジャ",
+        "order": 16,
+        "block": 2
+      },
+      {
+        "name": "沼津",
+        "order": 17,
+        "block": 2
+      },
+      {
+        "name": "York Sr.（ヨークシニア）",
+        "order": 18,
+        "block": 2
+      },
+      {
+        "name": "スキーンズ",
+        "order": 19,
+        "block": 2
+      },
+      {
+        "name": "ノリ・C・ノリ",
+        "order": 20,
+        "block": 2
+      },
+      {
+        "name": "100万ボルト",
+        "order": 21,
+        "block": 3
+      },
+      {
+        "name": "大親友",
+        "order": 22,
+        "block": 3
+      },
+      {
+        "name": "こうそくどろん",
+        "order": 23,
+        "block": 3
+      },
+      {
+        "name": "サンチェスト",
+        "order": 24,
+        "block": 3
+      },
+      {
+        "name": "内山柊太",
+        "order": 25,
+        "block": 3
+      },
+      {
+        "name": "しゃーろっく",
+        "order": 26,
+        "block": 3
+      },
+      {
+        "name": "キャンディハウス",
+        "order": 27,
+        "block": 3
+      },
+      {
+        "name": "ポゾビスティー",
+        "order": 28,
+        "block": 3
+      },
+      {
+        "name": "ボルゾイ5秒前",
+        "order": 29,
+        "block": 3
+      },
+      {
+        "name": "イエローテープ",
+        "order": 30,
+        "block": 3
+      },
+      {
+        "name": "ベグBOG",
+        "order": 31,
+        "block": 3
+      }
+    ],
+    "excludedSlots": [],
+    "stageResults": [
+      {
+        "status": "pending",
+        "displayStyle": "qualified",
+        "performers": [],
+        "label": "最優秀者"
+      },
+      {
+        "status": "pending",
+        "displayStyle": "qualified",
+        "performers": [],
+        "label": "2位"
+      },
+      {
+        "status": "pending",
+        "displayStyle": "qualified",
+        "performers": [],
+        "label": "3位"
+      },
+      {
+        "status": "pending",
+        "displayStyle": "next-stage",
+        "performers": [],
+        "nextEventType": "sarani-agari-stage",
+        "label": "サラに！への進出"
+      }
+    ],
+    "ticket": {
+      "url": "https://ticket.fany.lol/event/detail/23033",
+      "linkLabel": "FANYチケット",
+      "purchaseNote": "※出演者からのチケット取り置き可能",
+      "streamingNote": "※配信はございません",
+      "saleInfo": "一般発売：2026年11月20日（金）10:00～"
     }
   },
   {
@@ -577,6 +3396,237 @@
     }
   },
   {
+    "id": "2026-12-09-1700-agari-stage",
+    "eventType": "agari-stage",
+    "title": "アガり！ステージ",
+    "date": "2026-12-09",
+    "month": 12,
+    "day": 9,
+    "time": "17:00",
+    "timeMinutes": 1020,
+    "venue": "歌舞伎町Sparkle",
+    "mc": "桃子",
+    "lineupOrder": true,
+    "performers": [
+      "柿ももたろう",
+      "深澤豊",
+      "木裂フリーマン",
+      "樋口ユーブラ",
+      "ヘップセンスダイレクト",
+      "ひつじぐも",
+      "亜麻色",
+      "おもち道場",
+      "宴",
+      "レディバード",
+      "前天優谷",
+      "ヤンクリージェ",
+      "ナビゲーター",
+      "橋本グランマ",
+      "ボンペイ",
+      "明日ラビスタ",
+      "下町ミリオン",
+      "レアメトロ",
+      "ニシャマ",
+      "魚を食べるトレーニング",
+      "はまテラス",
+      "うんの",
+      "笠川拓夢",
+      "パピヨン",
+      "ほるもんバーガー",
+      "ユキボ",
+      "タータンライナー",
+      "しーたん",
+      "おふくろパラダイス"
+    ],
+    "lineup": [
+      {
+        "name": "柿ももたろう",
+        "order": 1,
+        "block": 1
+      },
+      {
+        "name": "深澤豊",
+        "order": 2,
+        "block": 1
+      },
+      {
+        "name": "木裂フリーマン",
+        "order": 3,
+        "block": 1
+      },
+      {
+        "name": "樋口ユーブラ",
+        "order": 4,
+        "block": 1
+      },
+      {
+        "name": "ヘップセンスダイレクト",
+        "order": 5,
+        "block": 1
+      },
+      {
+        "name": "ひつじぐも",
+        "order": 6,
+        "block": 1
+      },
+      {
+        "name": "亜麻色",
+        "order": 7,
+        "block": 1
+      },
+      {
+        "name": "おもち道場",
+        "order": 8,
+        "block": 1
+      },
+      {
+        "name": "宴",
+        "order": 9,
+        "block": 1
+      },
+      {
+        "name": "レディバード",
+        "order": 10,
+        "block": 1
+      },
+      {
+        "name": "前天優谷",
+        "order": 11,
+        "block": 2
+      },
+      {
+        "name": "ヤンクリージェ",
+        "order": 12,
+        "block": 2
+      },
+      {
+        "name": "ナビゲーター",
+        "order": 13,
+        "block": 2
+      },
+      {
+        "name": "橋本グランマ",
+        "order": 14,
+        "block": 2
+      },
+      {
+        "name": "ボンペイ",
+        "order": 15,
+        "block": 2
+      },
+      {
+        "name": "明日ラビスタ",
+        "order": 16,
+        "block": 2
+      },
+      {
+        "name": "下町ミリオン",
+        "order": 17,
+        "block": 2
+      },
+      {
+        "name": "レアメトロ",
+        "order": 18,
+        "block": 2
+      },
+      {
+        "name": "ニシャマ",
+        "order": 19,
+        "block": 2
+      },
+      {
+        "name": "魚を食べるトレーニング",
+        "order": 21,
+        "block": 3
+      },
+      {
+        "name": "はまテラス",
+        "order": 22,
+        "block": 3
+      },
+      {
+        "name": "うんの",
+        "order": 23,
+        "block": 3
+      },
+      {
+        "name": "笠川拓夢",
+        "order": 24,
+        "block": 3
+      },
+      {
+        "name": "パピヨン",
+        "order": 25,
+        "block": 3
+      },
+      {
+        "name": "ほるもんバーガー",
+        "order": 26,
+        "block": 3
+      },
+      {
+        "name": "ユキボ",
+        "order": 27,
+        "block": 3
+      },
+      {
+        "name": "タータンライナー",
+        "order": 28,
+        "block": 3
+      },
+      {
+        "name": "しーたん",
+        "order": 29,
+        "block": 3
+      },
+      {
+        "name": "おふくろパラダイス",
+        "order": 30,
+        "block": 3
+      }
+    ],
+    "excludedSlots": [
+      {
+        "order": 20,
+        "block": 2
+      }
+    ],
+    "stageResults": [
+      {
+        "status": "pending",
+        "displayStyle": "qualified",
+        "performers": [],
+        "label": "最優秀者"
+      },
+      {
+        "status": "pending",
+        "displayStyle": "qualified",
+        "performers": [],
+        "label": "2位"
+      },
+      {
+        "status": "pending",
+        "displayStyle": "qualified",
+        "performers": [],
+        "label": "3位"
+      },
+      {
+        "status": "pending",
+        "displayStyle": "next-stage",
+        "performers": [],
+        "nextEventType": "sarani-agari-stage",
+        "label": "サラに！への進出"
+      }
+    ],
+    "ticket": {
+      "url": "https://ticket.fany.lol/event/detail/23033",
+      "linkLabel": "FANYチケット",
+      "purchaseNote": "※出演者からのチケット取り置き可能",
+      "streamingNote": "※配信はございません",
+      "saleInfo": "一般発売：2026年11月20日（金）10:00～"
+    }
+  },
+  {
     "id": "2026-12-09-1830-audition-1st-east",
     "eventType": "audition-1st-east",
     "title": "オーディション1stステージ EAST",
@@ -618,6 +3668,244 @@
       "url": "https://ticket.fany.lol/event/detail/23168",
       "streamingNote": "※配信はありません",
       "saleInfo": "※ FANY一般販売：11月18日(水) 10:00〜"
+    }
+  },
+  {
+    "id": "2026-12-09-1930-agari-stage",
+    "eventType": "agari-stage",
+    "title": "アガり！ステージ",
+    "date": "2026-12-09",
+    "month": 12,
+    "day": 9,
+    "time": "19:30",
+    "timeMinutes": 1170,
+    "venue": "歌舞伎町Sparkle",
+    "mc": "ナビゲーター",
+    "lineupOrder": true,
+    "performers": [
+      "八尋",
+      "き辰",
+      "ゴリシ",
+      "ワタル",
+      "ボンバニョ",
+      "ケンシン",
+      "森のくまさん",
+      "クボタ",
+      "桃子",
+      "おぐちちぐお",
+      "ドッグファーザー",
+      "くみねぇ",
+      "じゃっさい",
+      "セブンゴート",
+      "半分フィット",
+      "21世紀少年",
+      "シークレットずわい蟹",
+      "ボレロ",
+      "ピエロZX",
+      "奈落おとし",
+      "スマしゅん",
+      "大和",
+      "とてもあつや",
+      "顔面蒼白こぞう",
+      "TOBIMARU",
+      "アダン",
+      "ええいちにち",
+      "あかざきまさゆき",
+      "みるもんコット",
+      "ストロングブルジュニア",
+      "野澤輸出"
+    ],
+    "lineup": [
+      {
+        "name": "八尋",
+        "order": 1,
+        "block": 1
+      },
+      {
+        "name": "き辰",
+        "order": 2,
+        "block": 1
+      },
+      {
+        "name": "ゴリシ",
+        "order": 3,
+        "block": 1
+      },
+      {
+        "name": "ワタル",
+        "order": 4,
+        "block": 1
+      },
+      {
+        "name": "ボンバニョ",
+        "order": 5,
+        "block": 1
+      },
+      {
+        "name": "ケンシン",
+        "order": 6,
+        "block": 1
+      },
+      {
+        "name": "森のくまさん",
+        "order": 7,
+        "block": 1
+      },
+      {
+        "name": "クボタ",
+        "order": 8,
+        "block": 1
+      },
+      {
+        "name": "桃子",
+        "order": 9,
+        "block": 1
+      },
+      {
+        "name": "おぐちちぐお",
+        "order": 10,
+        "block": 1
+      },
+      {
+        "name": "ドッグファーザー",
+        "order": 11,
+        "block": 2
+      },
+      {
+        "name": "くみねぇ",
+        "order": 12,
+        "block": 2
+      },
+      {
+        "name": "じゃっさい",
+        "order": 13,
+        "block": 2
+      },
+      {
+        "name": "セブンゴート",
+        "order": 14,
+        "block": 2
+      },
+      {
+        "name": "半分フィット",
+        "order": 15,
+        "block": 2
+      },
+      {
+        "name": "21世紀少年",
+        "order": 16,
+        "block": 2
+      },
+      {
+        "name": "シークレットずわい蟹",
+        "order": 17,
+        "block": 2
+      },
+      {
+        "name": "ボレロ",
+        "order": 18,
+        "block": 2
+      },
+      {
+        "name": "ピエロZX",
+        "order": 19,
+        "block": 2
+      },
+      {
+        "name": "奈落おとし",
+        "order": 20,
+        "block": 2
+      },
+      {
+        "name": "スマしゅん",
+        "order": 21,
+        "block": 3
+      },
+      {
+        "name": "大和",
+        "order": 22,
+        "block": 3
+      },
+      {
+        "name": "とてもあつや",
+        "order": 23,
+        "block": 3
+      },
+      {
+        "name": "顔面蒼白こぞう",
+        "order": 24,
+        "block": 3
+      },
+      {
+        "name": "TOBIMARU",
+        "order": 25,
+        "block": 3
+      },
+      {
+        "name": "アダン",
+        "order": 26,
+        "block": 3
+      },
+      {
+        "name": "ええいちにち",
+        "order": 27,
+        "block": 3
+      },
+      {
+        "name": "あかざきまさゆき",
+        "order": 28,
+        "block": 3
+      },
+      {
+        "name": "みるもんコット",
+        "order": 29,
+        "block": 3
+      },
+      {
+        "name": "ストロングブルジュニア",
+        "order": 30,
+        "block": 3
+      },
+      {
+        "name": "野澤輸出",
+        "order": 31,
+        "block": 3
+      }
+    ],
+    "excludedSlots": [],
+    "stageResults": [
+      {
+        "status": "pending",
+        "displayStyle": "qualified",
+        "performers": [],
+        "label": "最優秀者"
+      },
+      {
+        "status": "pending",
+        "displayStyle": "qualified",
+        "performers": [],
+        "label": "2位"
+      },
+      {
+        "status": "pending",
+        "displayStyle": "qualified",
+        "performers": [],
+        "label": "3位"
+      },
+      {
+        "status": "pending",
+        "displayStyle": "next-stage",
+        "performers": [],
+        "nextEventType": "sarani-agari-stage",
+        "label": "サラに！への進出"
+      }
+    ],
+    "ticket": {
+      "url": "https://ticket.fany.lol/event/detail/23033",
+      "linkLabel": "FANYチケット",
+      "purchaseNote": "※出演者からのチケット取り置き可能",
+      "streamingNote": "※配信はございません",
+      "saleInfo": "一般発売：2026年11月20日（金）10:00～"
     }
   },
   {
@@ -666,6 +3954,238 @@
     }
   },
   {
+    "id": "2026-12-10-1700-agari-stage",
+    "eventType": "agari-stage",
+    "title": "アガり！ステージ",
+    "date": "2026-12-10",
+    "month": 12,
+    "day": 10,
+    "time": "17:00",
+    "timeMinutes": 1020,
+    "venue": "歌舞伎町Sparkle",
+    "mc": "ナターリア",
+    "lineupOrder": true,
+    "performers": [
+      "乱数ホタル",
+      "急に宮本",
+      "享年55歳",
+      "薬師寺",
+      "ネオン堂",
+      "丸山大芽",
+      "赤いこころ",
+      "模試",
+      "バラボラ",
+      "グリフォン國松",
+      "ウィークリー習慣",
+      "金城尚弥P",
+      "甘口メンマ",
+      "ボボちゃん",
+      "スカイトレイン",
+      "たっくまん",
+      "楽しいスポーツぷるぷるつんつん",
+      "鬼河童",
+      "ムラオカ",
+      "金〆",
+      "イサト",
+      "おもちバンド",
+      "福来る",
+      "九十州",
+      "戸退竜之介",
+      "ダダ",
+      "奇跡叔",
+      "ニャンニャンスーブレックス",
+      "和田べこ吉",
+      "まんぱつばさ"
+    ],
+    "lineup": [
+      {
+        "name": "乱数ホタル",
+        "order": 1,
+        "block": 1
+      },
+      {
+        "name": "急に宮本",
+        "order": 2,
+        "block": 1
+      },
+      {
+        "name": "享年55歳",
+        "order": 3,
+        "block": 1
+      },
+      {
+        "name": "薬師寺",
+        "order": 4,
+        "block": 1
+      },
+      {
+        "name": "ネオン堂",
+        "order": 5,
+        "block": 1
+      },
+      {
+        "name": "丸山大芽",
+        "order": 6,
+        "block": 1
+      },
+      {
+        "name": "赤いこころ",
+        "order": 7,
+        "block": 1
+      },
+      {
+        "name": "模試",
+        "order": 8,
+        "block": 1
+      },
+      {
+        "name": "バラボラ",
+        "order": 9,
+        "block": 1
+      },
+      {
+        "name": "グリフォン國松",
+        "order": 10,
+        "block": 1
+      },
+      {
+        "name": "ウィークリー習慣",
+        "order": 11,
+        "block": 2
+      },
+      {
+        "name": "金城尚弥P",
+        "order": 12,
+        "block": 2
+      },
+      {
+        "name": "甘口メンマ",
+        "order": 13,
+        "block": 2
+      },
+      {
+        "name": "ボボちゃん",
+        "order": 14,
+        "block": 2
+      },
+      {
+        "name": "スカイトレイン",
+        "order": 15,
+        "block": 2
+      },
+      {
+        "name": "たっくまん",
+        "order": 16,
+        "block": 2
+      },
+      {
+        "name": "楽しいスポーツぷるぷるつんつん",
+        "order": 17,
+        "block": 2
+      },
+      {
+        "name": "鬼河童",
+        "order": 18,
+        "block": 2
+      },
+      {
+        "name": "ムラオカ",
+        "order": 19,
+        "block": 2
+      },
+      {
+        "name": "金〆",
+        "order": 20,
+        "block": 2
+      },
+      {
+        "name": "イサト",
+        "order": 21,
+        "block": 3
+      },
+      {
+        "name": "おもちバンド",
+        "order": 22,
+        "block": 3
+      },
+      {
+        "name": "福来る",
+        "order": 23,
+        "block": 3
+      },
+      {
+        "name": "九十州",
+        "order": 24,
+        "block": 3
+      },
+      {
+        "name": "戸退竜之介",
+        "order": 25,
+        "block": 3
+      },
+      {
+        "name": "ダダ",
+        "order": 26,
+        "block": 3
+      },
+      {
+        "name": "奇跡叔",
+        "order": 27,
+        "block": 3
+      },
+      {
+        "name": "ニャンニャンスーブレックス",
+        "order": 28,
+        "block": 3
+      },
+      {
+        "name": "和田べこ吉",
+        "order": 29,
+        "block": 3
+      },
+      {
+        "name": "まんぱつばさ",
+        "order": 30,
+        "block": 3
+      }
+    ],
+    "excludedSlots": [],
+    "stageResults": [
+      {
+        "status": "pending",
+        "displayStyle": "qualified",
+        "performers": [],
+        "label": "最優秀者"
+      },
+      {
+        "status": "pending",
+        "displayStyle": "qualified",
+        "performers": [],
+        "label": "2位"
+      },
+      {
+        "status": "pending",
+        "displayStyle": "qualified",
+        "performers": [],
+        "label": "3位"
+      },
+      {
+        "status": "pending",
+        "displayStyle": "next-stage",
+        "performers": [],
+        "nextEventType": "sarani-agari-stage",
+        "label": "サラに！への進出"
+      }
+    ],
+    "ticket": {
+      "url": "https://ticket.fany.lol/event/detail/23033",
+      "linkLabel": "FANYチケット",
+      "purchaseNote": "※出演者からのチケット取り置き可能",
+      "streamingNote": "※配信はございません",
+      "saleInfo": "一般発売：2026年11月20日（金）10:00～"
+    }
+  },
+  {
     "id": "2026-12-10-1830-audition-1st-east",
     "eventType": "audition-1st-east",
     "title": "オーディション1stステージ EAST",
@@ -707,6 +4227,244 @@
       "url": "https://ticket.fany.lol/event/detail/23168",
       "streamingNote": "※配信はありません",
       "saleInfo": "※ FANY一般販売：11月18日(水) 10:00〜"
+    }
+  },
+  {
+    "id": "2026-12-10-1930-agari-stage",
+    "eventType": "agari-stage",
+    "title": "アガり！ステージ",
+    "date": "2026-12-10",
+    "month": 12,
+    "day": 10,
+    "time": "19:30",
+    "timeMinutes": 1170,
+    "venue": "歌舞伎町Sparkle",
+    "mc": "九十州",
+    "lineupOrder": true,
+    "performers": [
+      "ナターリア",
+      "ギャグセンテンス",
+      "ゴールデンますけん。",
+      "南北もん",
+      "ケンジ",
+      "波田美佳",
+      "マイケル・ベイトマン",
+      "逆転のモリモリ",
+      "弾力",
+      "麦わら",
+      "あすま",
+      "トシジ",
+      "ムーンライト頑固",
+      "おかもつ",
+      "ケルルン",
+      "まあちゃん&エリィ",
+      "福籠",
+      "サーエメーター",
+      "ザ・ストロングパワーマシン",
+      "ゲジヒト",
+      "坊主ボーイズ",
+      "キャディーのこいちゃん",
+      "野球とサッカー",
+      "ピースサイン",
+      "おちぼり",
+      "西向くじゃんいち",
+      "スーパートマト",
+      "くぬぎフォーフォー",
+      "JAM",
+      "クリスピン",
+      "シャングリラS"
+    ],
+    "lineup": [
+      {
+        "name": "ナターリア",
+        "order": 1,
+        "block": 1
+      },
+      {
+        "name": "ギャグセンテンス",
+        "order": 2,
+        "block": 1
+      },
+      {
+        "name": "ゴールデンますけん。",
+        "order": 3,
+        "block": 1
+      },
+      {
+        "name": "南北もん",
+        "order": 4,
+        "block": 1
+      },
+      {
+        "name": "ケンジ",
+        "order": 5,
+        "block": 1
+      },
+      {
+        "name": "波田美佳",
+        "order": 6,
+        "block": 1
+      },
+      {
+        "name": "マイケル・ベイトマン",
+        "order": 7,
+        "block": 1
+      },
+      {
+        "name": "逆転のモリモリ",
+        "order": 8,
+        "block": 1
+      },
+      {
+        "name": "弾力",
+        "order": 9,
+        "block": 1
+      },
+      {
+        "name": "麦わら",
+        "order": 10,
+        "block": 1
+      },
+      {
+        "name": "あすま",
+        "order": 11,
+        "block": 2
+      },
+      {
+        "name": "トシジ",
+        "order": 12,
+        "block": 2
+      },
+      {
+        "name": "ムーンライト頑固",
+        "order": 13,
+        "block": 2
+      },
+      {
+        "name": "おかもつ",
+        "order": 14,
+        "block": 2
+      },
+      {
+        "name": "ケルルン",
+        "order": 15,
+        "block": 2
+      },
+      {
+        "name": "まあちゃん&エリィ",
+        "order": 16,
+        "block": 2
+      },
+      {
+        "name": "福籠",
+        "order": 17,
+        "block": 2
+      },
+      {
+        "name": "サーエメーター",
+        "order": 18,
+        "block": 2
+      },
+      {
+        "name": "ザ・ストロングパワーマシン",
+        "order": 19,
+        "block": 2
+      },
+      {
+        "name": "ゲジヒト",
+        "order": 20,
+        "block": 2
+      },
+      {
+        "name": "坊主ボーイズ",
+        "order": 21,
+        "block": 3
+      },
+      {
+        "name": "キャディーのこいちゃん",
+        "order": 22,
+        "block": 3
+      },
+      {
+        "name": "野球とサッカー",
+        "order": 23,
+        "block": 3
+      },
+      {
+        "name": "ピースサイン",
+        "order": 24,
+        "block": 3
+      },
+      {
+        "name": "おちぼり",
+        "order": 25,
+        "block": 3
+      },
+      {
+        "name": "西向くじゃんいち",
+        "order": 26,
+        "block": 3
+      },
+      {
+        "name": "スーパートマト",
+        "order": 27,
+        "block": 3
+      },
+      {
+        "name": "くぬぎフォーフォー",
+        "order": 28,
+        "block": 3
+      },
+      {
+        "name": "JAM",
+        "order": 29,
+        "block": 3
+      },
+      {
+        "name": "クリスピン",
+        "order": 30,
+        "block": 3
+      },
+      {
+        "name": "シャングリラS",
+        "order": 31,
+        "block": 3
+      }
+    ],
+    "excludedSlots": [],
+    "stageResults": [
+      {
+        "status": "pending",
+        "displayStyle": "qualified",
+        "performers": [],
+        "label": "最優秀者"
+      },
+      {
+        "status": "pending",
+        "displayStyle": "qualified",
+        "performers": [],
+        "label": "2位"
+      },
+      {
+        "status": "pending",
+        "displayStyle": "qualified",
+        "performers": [],
+        "label": "3位"
+      },
+      {
+        "status": "pending",
+        "displayStyle": "next-stage",
+        "performers": [],
+        "nextEventType": "sarani-agari-stage",
+        "label": "サラに！への進出"
+      }
+    ],
+    "ticket": {
+      "url": "https://ticket.fany.lol/event/detail/23033",
+      "linkLabel": "FANYチケット",
+      "purchaseNote": "※出演者からのチケット取り置き可能",
+      "streamingNote": "※配信はございません",
+      "saleInfo": "一般発売：2026年11月20日（金）10:00～"
     }
   },
   {
@@ -755,6 +4513,238 @@
     }
   },
   {
+    "id": "2026-12-11-1700-agari-stage",
+    "eventType": "agari-stage",
+    "title": "アガり！ステージ",
+    "date": "2026-12-11",
+    "month": 12,
+    "day": 11,
+    "time": "17:00",
+    "timeMinutes": 1020,
+    "venue": "歌舞伎町Sparkle",
+    "mc": "ゲルマニウム",
+    "lineupOrder": true,
+    "performers": [
+      "カザカミ",
+      "レイメイ",
+      "高橋ごとき",
+      "ノーランズ",
+      "菊重直希",
+      "やままん",
+      "逆さ道理",
+      "劇団シンドバッド",
+      "ヒガシ",
+      "ミサンガロク",
+      "シャープペンソー",
+      "ガスバニック",
+      "ミスターりぼん∞",
+      "既婚者",
+      "業火",
+      "熊ヶ家だんご",
+      "ちゃらん婆",
+      "金剛力士",
+      "明後日の方向",
+      "片翼のチキン",
+      "ネネネ",
+      "たっぱ",
+      "アロハロイヤル東京",
+      "犬まゆみ",
+      "金銅ニッチ",
+      "花束ジェシー",
+      "ハヤシナツキ",
+      "千年ぶり",
+      "タラ",
+      "うれしい予感"
+    ],
+    "lineup": [
+      {
+        "name": "カザカミ",
+        "order": 1,
+        "block": 1
+      },
+      {
+        "name": "レイメイ",
+        "order": 2,
+        "block": 1
+      },
+      {
+        "name": "高橋ごとき",
+        "order": 3,
+        "block": 1
+      },
+      {
+        "name": "ノーランズ",
+        "order": 4,
+        "block": 1
+      },
+      {
+        "name": "菊重直希",
+        "order": 5,
+        "block": 1
+      },
+      {
+        "name": "やままん",
+        "order": 6,
+        "block": 1
+      },
+      {
+        "name": "逆さ道理",
+        "order": 7,
+        "block": 1
+      },
+      {
+        "name": "劇団シンドバッド",
+        "order": 8,
+        "block": 1
+      },
+      {
+        "name": "ヒガシ",
+        "order": 9,
+        "block": 1
+      },
+      {
+        "name": "ミサンガロク",
+        "order": 10,
+        "block": 1
+      },
+      {
+        "name": "シャープペンソー",
+        "order": 11,
+        "block": 2
+      },
+      {
+        "name": "ガスバニック",
+        "order": 12,
+        "block": 2
+      },
+      {
+        "name": "ミスターりぼん∞",
+        "order": 13,
+        "block": 2
+      },
+      {
+        "name": "既婚者",
+        "order": 14,
+        "block": 2
+      },
+      {
+        "name": "業火",
+        "order": 15,
+        "block": 2
+      },
+      {
+        "name": "熊ヶ家だんご",
+        "order": 16,
+        "block": 2
+      },
+      {
+        "name": "ちゃらん婆",
+        "order": 17,
+        "block": 2
+      },
+      {
+        "name": "金剛力士",
+        "order": 18,
+        "block": 2
+      },
+      {
+        "name": "明後日の方向",
+        "order": 19,
+        "block": 2
+      },
+      {
+        "name": "片翼のチキン",
+        "order": 20,
+        "block": 2
+      },
+      {
+        "name": "ネネネ",
+        "order": 21,
+        "block": 3
+      },
+      {
+        "name": "たっぱ",
+        "order": 22,
+        "block": 3
+      },
+      {
+        "name": "アロハロイヤル東京",
+        "order": 23,
+        "block": 3
+      },
+      {
+        "name": "犬まゆみ",
+        "order": 24,
+        "block": 3
+      },
+      {
+        "name": "金銅ニッチ",
+        "order": 25,
+        "block": 3
+      },
+      {
+        "name": "花束ジェシー",
+        "order": 26,
+        "block": 3
+      },
+      {
+        "name": "ハヤシナツキ",
+        "order": 27,
+        "block": 3
+      },
+      {
+        "name": "千年ぶり",
+        "order": 28,
+        "block": 3
+      },
+      {
+        "name": "タラ",
+        "order": 29,
+        "block": 3
+      },
+      {
+        "name": "うれしい予感",
+        "order": 30,
+        "block": 3
+      }
+    ],
+    "excludedSlots": [],
+    "stageResults": [
+      {
+        "status": "pending",
+        "displayStyle": "qualified",
+        "performers": [],
+        "label": "最優秀者"
+      },
+      {
+        "status": "pending",
+        "displayStyle": "qualified",
+        "performers": [],
+        "label": "2位"
+      },
+      {
+        "status": "pending",
+        "displayStyle": "qualified",
+        "performers": [],
+        "label": "3位"
+      },
+      {
+        "status": "pending",
+        "displayStyle": "next-stage",
+        "performers": [],
+        "nextEventType": "sarani-agari-stage",
+        "label": "サラに！への進出"
+      }
+    ],
+    "ticket": {
+      "url": "https://ticket.fany.lol/event/detail/23033",
+      "linkLabel": "FANYチケット",
+      "purchaseNote": "※出演者からのチケット取り置き可能",
+      "streamingNote": "※配信はございません",
+      "saleInfo": "一般発売：2026年11月20日（金）10:00～"
+    }
+  },
+  {
     "id": "2026-12-11-1830-audition-1st-east",
     "eventType": "audition-1st-east",
     "title": "オーディション1stステージ EAST",
@@ -795,6 +4785,244 @@
       "url": "https://ticket.fany.lol/event/detail/23168",
       "streamingNote": "※配信はありません",
       "saleInfo": "※ FANY一般販売：11月18日(水) 10:00〜"
+    }
+  },
+  {
+    "id": "2026-12-11-1930-agari-stage",
+    "eventType": "agari-stage",
+    "title": "アガり！ステージ",
+    "date": "2026-12-11",
+    "month": 12,
+    "day": 11,
+    "time": "19:30",
+    "timeMinutes": 1170,
+    "venue": "歌舞伎町Sparkle",
+    "mc": "金銅ニッチ",
+    "lineupOrder": true,
+    "performers": [
+      "えれじい",
+      "Hey日",
+      "2人のトイボックス",
+      "内弁士ごくろ",
+      "コウジャク",
+      "太公望",
+      "明乃真湖",
+      "マグサイサイ",
+      "鷹狩り",
+      "ごきげん主婦マコト",
+      "サンライズ",
+      "トリガーセンサー",
+      "ゲルマニウム",
+      "ドッペル",
+      "二十八",
+      "空里ゴハン",
+      "ザナルカンド",
+      "ただならぬ刀",
+      "けんし",
+      "弥生フラッグ",
+      "メイドニンドー",
+      "せみ時雨",
+      "エナジー生活",
+      "はぎちゃん",
+      "タイブレーク",
+      "ギャラガーズ",
+      "ひょうま",
+      "ソビト",
+      "マイモリズ",
+      "そまざわ",
+      "ブルーレディ"
+    ],
+    "lineup": [
+      {
+        "name": "えれじい",
+        "order": 1,
+        "block": 1
+      },
+      {
+        "name": "Hey日",
+        "order": 2,
+        "block": 1
+      },
+      {
+        "name": "2人のトイボックス",
+        "order": 3,
+        "block": 1
+      },
+      {
+        "name": "内弁士ごくろ",
+        "order": 4,
+        "block": 1
+      },
+      {
+        "name": "コウジャク",
+        "order": 5,
+        "block": 1
+      },
+      {
+        "name": "太公望",
+        "order": 6,
+        "block": 1
+      },
+      {
+        "name": "明乃真湖",
+        "order": 7,
+        "block": 1
+      },
+      {
+        "name": "マグサイサイ",
+        "order": 8,
+        "block": 1
+      },
+      {
+        "name": "鷹狩り",
+        "order": 9,
+        "block": 1
+      },
+      {
+        "name": "ごきげん主婦マコト",
+        "order": 10,
+        "block": 1
+      },
+      {
+        "name": "サンライズ",
+        "order": 11,
+        "block": 2
+      },
+      {
+        "name": "トリガーセンサー",
+        "order": 12,
+        "block": 2
+      },
+      {
+        "name": "ゲルマニウム",
+        "order": 13,
+        "block": 2
+      },
+      {
+        "name": "ドッペル",
+        "order": 14,
+        "block": 2
+      },
+      {
+        "name": "二十八",
+        "order": 15,
+        "block": 2
+      },
+      {
+        "name": "空里ゴハン",
+        "order": 16,
+        "block": 2
+      },
+      {
+        "name": "ザナルカンド",
+        "order": 17,
+        "block": 2
+      },
+      {
+        "name": "ただならぬ刀",
+        "order": 18,
+        "block": 2
+      },
+      {
+        "name": "けんし",
+        "order": 19,
+        "block": 2
+      },
+      {
+        "name": "弥生フラッグ",
+        "order": 20,
+        "block": 2
+      },
+      {
+        "name": "メイドニンドー",
+        "order": 21,
+        "block": 3
+      },
+      {
+        "name": "せみ時雨",
+        "order": 22,
+        "block": 3
+      },
+      {
+        "name": "エナジー生活",
+        "order": 23,
+        "block": 3
+      },
+      {
+        "name": "はぎちゃん",
+        "order": 24,
+        "block": 3
+      },
+      {
+        "name": "タイブレーク",
+        "order": 25,
+        "block": 3
+      },
+      {
+        "name": "ギャラガーズ",
+        "order": 26,
+        "block": 3
+      },
+      {
+        "name": "ひょうま",
+        "order": 27,
+        "block": 3
+      },
+      {
+        "name": "ソビト",
+        "order": 28,
+        "block": 3
+      },
+      {
+        "name": "マイモリズ",
+        "order": 29,
+        "block": 3
+      },
+      {
+        "name": "そまざわ",
+        "order": 30,
+        "block": 3
+      },
+      {
+        "name": "ブルーレディ",
+        "order": 31,
+        "block": 3
+      }
+    ],
+    "excludedSlots": [],
+    "stageResults": [
+      {
+        "status": "pending",
+        "displayStyle": "qualified",
+        "performers": [],
+        "label": "最優秀者"
+      },
+      {
+        "status": "pending",
+        "displayStyle": "qualified",
+        "performers": [],
+        "label": "2位"
+      },
+      {
+        "status": "pending",
+        "displayStyle": "qualified",
+        "performers": [],
+        "label": "3位"
+      },
+      {
+        "status": "pending",
+        "displayStyle": "next-stage",
+        "performers": [],
+        "nextEventType": "sarani-agari-stage",
+        "label": "サラに！への進出"
+      }
+    ],
+    "ticket": {
+      "url": "https://ticket.fany.lol/event/detail/23033",
+      "linkLabel": "FANYチケット",
+      "purchaseNote": "※出演者からのチケット取り置き可能",
+      "streamingNote": "※配信はございません",
+      "saleInfo": "一般発売：2026年11月20日（金）10:00～"
     }
   },
   {
@@ -914,6 +5142,238 @@
     }
   },
   {
+    "id": "2026-12-14-1700-agari-stage",
+    "eventType": "agari-stage",
+    "title": "アガり！ステージ",
+    "date": "2026-12-14",
+    "month": 12,
+    "day": 14,
+    "time": "17:00",
+    "timeMinutes": 1020,
+    "venue": "歌舞伎町Sparkle",
+    "mc": "さよならチェンジアップ",
+    "lineupOrder": true,
+    "performers": [
+      "御馳走",
+      "たなかしょうこ",
+      "五輪",
+      "御番菜",
+      "パリ",
+      "カムナ",
+      "エニーパー",
+      "やさしい王様",
+      "でんりべら。",
+      "ミラノ小町",
+      "かいりき",
+      "桜ヌンチャク",
+      "クランクWIN",
+      "バクラテン",
+      "モリオハザード",
+      "高速ベビーカー",
+      "午後2時の砂漠",
+      "ノリ子",
+      "国産み",
+      "ザ・ギター",
+      "弁けえ",
+      "晃治",
+      "タケゾウ",
+      "高橋知",
+      "夕焼けとごめんね",
+      "テンブルカントリー",
+      "要",
+      "義理ギリ",
+      "細ビタミン",
+      "草枕"
+    ],
+    "lineup": [
+      {
+        "name": "御馳走",
+        "order": 1,
+        "block": 1
+      },
+      {
+        "name": "たなかしょうこ",
+        "order": 2,
+        "block": 1
+      },
+      {
+        "name": "五輪",
+        "order": 3,
+        "block": 1
+      },
+      {
+        "name": "御番菜",
+        "order": 4,
+        "block": 1
+      },
+      {
+        "name": "パリ",
+        "order": 5,
+        "block": 1
+      },
+      {
+        "name": "カムナ",
+        "order": 6,
+        "block": 1
+      },
+      {
+        "name": "エニーパー",
+        "order": 7,
+        "block": 1
+      },
+      {
+        "name": "やさしい王様",
+        "order": 8,
+        "block": 1
+      },
+      {
+        "name": "でんりべら。",
+        "order": 9,
+        "block": 1
+      },
+      {
+        "name": "ミラノ小町",
+        "order": 10,
+        "block": 1
+      },
+      {
+        "name": "かいりき",
+        "order": 11,
+        "block": 2
+      },
+      {
+        "name": "桜ヌンチャク",
+        "order": 12,
+        "block": 2
+      },
+      {
+        "name": "クランクWIN",
+        "order": 13,
+        "block": 2
+      },
+      {
+        "name": "バクラテン",
+        "order": 14,
+        "block": 2
+      },
+      {
+        "name": "モリオハザード",
+        "order": 15,
+        "block": 2
+      },
+      {
+        "name": "高速ベビーカー",
+        "order": 16,
+        "block": 2
+      },
+      {
+        "name": "午後2時の砂漠",
+        "order": 17,
+        "block": 2
+      },
+      {
+        "name": "ノリ子",
+        "order": 18,
+        "block": 2
+      },
+      {
+        "name": "国産み",
+        "order": 19,
+        "block": 2
+      },
+      {
+        "name": "ザ・ギター",
+        "order": 20,
+        "block": 2
+      },
+      {
+        "name": "弁けえ",
+        "order": 21,
+        "block": 3
+      },
+      {
+        "name": "晃治",
+        "order": 22,
+        "block": 3
+      },
+      {
+        "name": "タケゾウ",
+        "order": 23,
+        "block": 3
+      },
+      {
+        "name": "高橋知",
+        "order": 24,
+        "block": 3
+      },
+      {
+        "name": "夕焼けとごめんね",
+        "order": 25,
+        "block": 3
+      },
+      {
+        "name": "テンブルカントリー",
+        "order": 26,
+        "block": 3
+      },
+      {
+        "name": "要",
+        "order": 27,
+        "block": 3
+      },
+      {
+        "name": "義理ギリ",
+        "order": 28,
+        "block": 3
+      },
+      {
+        "name": "細ビタミン",
+        "order": 29,
+        "block": 3
+      },
+      {
+        "name": "草枕",
+        "order": 30,
+        "block": 3
+      }
+    ],
+    "excludedSlots": [],
+    "stageResults": [
+      {
+        "status": "pending",
+        "displayStyle": "qualified",
+        "performers": [],
+        "label": "最優秀者"
+      },
+      {
+        "status": "pending",
+        "displayStyle": "qualified",
+        "performers": [],
+        "label": "2位"
+      },
+      {
+        "status": "pending",
+        "displayStyle": "qualified",
+        "performers": [],
+        "label": "3位"
+      },
+      {
+        "status": "pending",
+        "displayStyle": "next-stage",
+        "performers": [],
+        "nextEventType": "sarani-agari-stage",
+        "label": "サラに！への進出"
+      }
+    ],
+    "ticket": {
+      "url": "https://ticket.fany.lol/event/detail/23033",
+      "linkLabel": "FANYチケット",
+      "purchaseNote": "※出演者からのチケット取り置き可能",
+      "streamingNote": "※配信はございません",
+      "saleInfo": "一般発売：2026年11月20日（金）10:00～"
+    }
+  },
+  {
     "id": "2026-12-14-1830-audition-1st-east",
     "eventType": "audition-1st-east",
     "title": "オーディション1stステージ EAST",
@@ -959,6 +5419,244 @@
     }
   },
   {
+    "id": "2026-12-14-1930-agari-stage",
+    "eventType": "agari-stage",
+    "title": "アガり！ステージ",
+    "date": "2026-12-14",
+    "month": 12,
+    "day": 14,
+    "time": "19:30",
+    "timeMinutes": 1170,
+    "venue": "歌舞伎町Sparkle",
+    "mc": "やさしい王様",
+    "lineupOrder": true,
+    "performers": [
+      "地下卓球",
+      "まじクレープ",
+      "ゴジュウナナ",
+      "さよならチェンジアップ",
+      "ダイレクト",
+      "コガネック",
+      "野間燃体",
+      "だんす",
+      "チコ",
+      "うるち",
+      "たゆたう",
+      "ぺいちょす",
+      "がわら",
+      "発群の一鶏",
+      "ぐりんさむ",
+      "TOP GOLD",
+      "おもいで卵",
+      "そっとしといてくれ",
+      "だもんで",
+      "しゃっこつ",
+      "こしあん百貨店",
+      "とは言うものの",
+      "鷹メイソン",
+      "コロネケン",
+      "ナッケンパデン",
+      "田畑祐一",
+      "二上がり",
+      "メッシュタイプ",
+      "無頼漢",
+      "まろやか",
+      "きっと君はくるさ"
+    ],
+    "lineup": [
+      {
+        "name": "地下卓球",
+        "order": 1,
+        "block": 1
+      },
+      {
+        "name": "まじクレープ",
+        "order": 2,
+        "block": 1
+      },
+      {
+        "name": "ゴジュウナナ",
+        "order": 3,
+        "block": 1
+      },
+      {
+        "name": "さよならチェンジアップ",
+        "order": 4,
+        "block": 1
+      },
+      {
+        "name": "ダイレクト",
+        "order": 5,
+        "block": 1
+      },
+      {
+        "name": "コガネック",
+        "order": 6,
+        "block": 1
+      },
+      {
+        "name": "野間燃体",
+        "order": 7,
+        "block": 1
+      },
+      {
+        "name": "だんす",
+        "order": 8,
+        "block": 1
+      },
+      {
+        "name": "チコ",
+        "order": 9,
+        "block": 1
+      },
+      {
+        "name": "うるち",
+        "order": 10,
+        "block": 1
+      },
+      {
+        "name": "たゆたう",
+        "order": 11,
+        "block": 2
+      },
+      {
+        "name": "ぺいちょす",
+        "order": 12,
+        "block": 2
+      },
+      {
+        "name": "がわら",
+        "order": 13,
+        "block": 2
+      },
+      {
+        "name": "発群の一鶏",
+        "order": 14,
+        "block": 2
+      },
+      {
+        "name": "ぐりんさむ",
+        "order": 15,
+        "block": 2
+      },
+      {
+        "name": "TOP GOLD",
+        "order": 16,
+        "block": 2
+      },
+      {
+        "name": "おもいで卵",
+        "order": 17,
+        "block": 2
+      },
+      {
+        "name": "そっとしといてくれ",
+        "order": 18,
+        "block": 2
+      },
+      {
+        "name": "だもんで",
+        "order": 19,
+        "block": 2
+      },
+      {
+        "name": "しゃっこつ",
+        "order": 20,
+        "block": 2
+      },
+      {
+        "name": "こしあん百貨店",
+        "order": 21,
+        "block": 3
+      },
+      {
+        "name": "とは言うものの",
+        "order": 22,
+        "block": 3
+      },
+      {
+        "name": "鷹メイソン",
+        "order": 23,
+        "block": 3
+      },
+      {
+        "name": "コロネケン",
+        "order": 24,
+        "block": 3
+      },
+      {
+        "name": "ナッケンパデン",
+        "order": 25,
+        "block": 3
+      },
+      {
+        "name": "田畑祐一",
+        "order": 26,
+        "block": 3
+      },
+      {
+        "name": "二上がり",
+        "order": 27,
+        "block": 3
+      },
+      {
+        "name": "メッシュタイプ",
+        "order": 28,
+        "block": 3
+      },
+      {
+        "name": "無頼漢",
+        "order": 29,
+        "block": 3
+      },
+      {
+        "name": "まろやか",
+        "order": 30,
+        "block": 3
+      },
+      {
+        "name": "きっと君はくるさ",
+        "order": 31,
+        "block": 3
+      }
+    ],
+    "excludedSlots": [],
+    "stageResults": [
+      {
+        "status": "pending",
+        "displayStyle": "qualified",
+        "performers": [],
+        "label": "最優秀者"
+      },
+      {
+        "status": "pending",
+        "displayStyle": "qualified",
+        "performers": [],
+        "label": "2位"
+      },
+      {
+        "status": "pending",
+        "displayStyle": "qualified",
+        "performers": [],
+        "label": "3位"
+      },
+      {
+        "status": "pending",
+        "displayStyle": "next-stage",
+        "performers": [],
+        "nextEventType": "sarani-agari-stage",
+        "label": "サラに！への進出"
+      }
+    ],
+    "ticket": {
+      "url": "https://ticket.fany.lol/event/detail/23033",
+      "linkLabel": "FANYチケット",
+      "purchaseNote": "※出演者からのチケット取り置き可能",
+      "streamingNote": "※配信はございません",
+      "saleInfo": "一般発売：2026年11月20日（金）10:00～"
+    }
+  },
+  {
     "id": "2026-12-15-1600-audition-1st-east",
     "eventType": "audition-1st-east",
     "title": "オーディション1stステージ EAST",
@@ -999,6 +5697,238 @@
       "url": "https://ticket.fany.lol/event/detail/23168",
       "streamingNote": "※配信はありません",
       "saleInfo": "※ FANY一般販売：11月18日(水) 10:00〜"
+    }
+  },
+  {
+    "id": "2026-12-15-1700-agari-stage",
+    "eventType": "agari-stage",
+    "title": "アガり！ステージ",
+    "date": "2026-12-15",
+    "month": 12,
+    "day": 15,
+    "time": "17:00",
+    "timeMinutes": 1020,
+    "venue": "歌舞伎町Sparkle",
+    "mc": "マルカ食堂",
+    "lineupOrder": true,
+    "performers": [
+      "もしもし☆コールミーテレフォン",
+      "三笠ヴァイオレット",
+      "村雨",
+      "チェッ素",
+      "藍染サーベイ",
+      "才門",
+      "バルカン",
+      "恒星ボカン",
+      "笹川さこつ",
+      "エレキマン",
+      "山下博士",
+      "ぜいたく",
+      "佐竹大地",
+      "ハシャトラ",
+      "細井ジェントルマメ",
+      "今夜はブルース",
+      "エリー",
+      "佐野もつに",
+      "ばしょう",
+      "たま",
+      "流線リタ",
+      "財閥",
+      "ラーフル",
+      "ベン山形",
+      "宝物",
+      "かばんびかび科",
+      "山口ときただ",
+      "ラビッツ",
+      "ガタ山",
+      "つつがないね"
+    ],
+    "lineup": [
+      {
+        "name": "もしもし☆コールミーテレフォン",
+        "order": 1,
+        "block": 1
+      },
+      {
+        "name": "三笠ヴァイオレット",
+        "order": 2,
+        "block": 1
+      },
+      {
+        "name": "村雨",
+        "order": 3,
+        "block": 1
+      },
+      {
+        "name": "チェッ素",
+        "order": 4,
+        "block": 1
+      },
+      {
+        "name": "藍染サーベイ",
+        "order": 5,
+        "block": 1
+      },
+      {
+        "name": "才門",
+        "order": 6,
+        "block": 1
+      },
+      {
+        "name": "バルカン",
+        "order": 7,
+        "block": 1
+      },
+      {
+        "name": "恒星ボカン",
+        "order": 8,
+        "block": 1
+      },
+      {
+        "name": "笹川さこつ",
+        "order": 9,
+        "block": 1
+      },
+      {
+        "name": "エレキマン",
+        "order": 10,
+        "block": 1
+      },
+      {
+        "name": "山下博士",
+        "order": 11,
+        "block": 2
+      },
+      {
+        "name": "ぜいたく",
+        "order": 12,
+        "block": 2
+      },
+      {
+        "name": "佐竹大地",
+        "order": 13,
+        "block": 2
+      },
+      {
+        "name": "ハシャトラ",
+        "order": 14,
+        "block": 2
+      },
+      {
+        "name": "細井ジェントルマメ",
+        "order": 15,
+        "block": 2
+      },
+      {
+        "name": "今夜はブルース",
+        "order": 16,
+        "block": 2
+      },
+      {
+        "name": "エリー",
+        "order": 17,
+        "block": 2
+      },
+      {
+        "name": "佐野もつに",
+        "order": 18,
+        "block": 2
+      },
+      {
+        "name": "ばしょう",
+        "order": 19,
+        "block": 2
+      },
+      {
+        "name": "たま",
+        "order": 20,
+        "block": 2
+      },
+      {
+        "name": "流線リタ",
+        "order": 21,
+        "block": 3
+      },
+      {
+        "name": "財閥",
+        "order": 22,
+        "block": 3
+      },
+      {
+        "name": "ラーフル",
+        "order": 23,
+        "block": 3
+      },
+      {
+        "name": "ベン山形",
+        "order": 24,
+        "block": 3
+      },
+      {
+        "name": "宝物",
+        "order": 25,
+        "block": 3
+      },
+      {
+        "name": "かばんびかび科",
+        "order": 26,
+        "block": 3
+      },
+      {
+        "name": "山口ときただ",
+        "order": 27,
+        "block": 3
+      },
+      {
+        "name": "ラビッツ",
+        "order": 28,
+        "block": 3
+      },
+      {
+        "name": "ガタ山",
+        "order": 29,
+        "block": 3
+      },
+      {
+        "name": "つつがないね",
+        "order": 30,
+        "block": 3
+      }
+    ],
+    "excludedSlots": [],
+    "stageResults": [
+      {
+        "status": "pending",
+        "displayStyle": "qualified",
+        "performers": [],
+        "label": "最優秀者"
+      },
+      {
+        "status": "pending",
+        "displayStyle": "qualified",
+        "performers": [],
+        "label": "2位"
+      },
+      {
+        "status": "pending",
+        "displayStyle": "qualified",
+        "performers": [],
+        "label": "3位"
+      },
+      {
+        "status": "pending",
+        "displayStyle": "next-stage",
+        "performers": [],
+        "nextEventType": "sarani-agari-stage",
+        "label": "サラに！への進出"
+      }
+    ],
+    "ticket": {
+      "url": "https://ticket.fany.lol/event/detail/23033",
+      "linkLabel": "FANYチケット",
+      "purchaseNote": "※出演者からのチケット取り置き可能",
+      "streamingNote": "※配信はございません",
+      "saleInfo": "一般発売：2026年11月20日（金）10:00～"
     }
   },
   {
@@ -1047,6 +5977,237 @@
     }
   },
   {
+    "id": "2026-12-15-1930-agari-stage",
+    "eventType": "agari-stage",
+    "title": "アガり！ステージ",
+    "date": "2026-12-15",
+    "month": 12,
+    "day": 15,
+    "time": "19:30",
+    "timeMinutes": 1170,
+    "venue": "歌舞伎町Sparkle",
+    "mc": "今夜はブルース",
+    "lineupOrder": true,
+    "performers": [
+      "月面ビート",
+      "チッタぺろる",
+      "鶴田",
+      "ちな、ケイティ",
+      "サヤカ・ブラックマンバ",
+      "シングシング",
+      "650",
+      "お月見ズ",
+      "塚野",
+      "バーモントラブシール",
+      "マンスーパー",
+      "ジ・オーガ",
+      "とまんてぃあ",
+      "バグハグ",
+      "凛",
+      "マルティンス",
+      "つなえり",
+      "茶飯事",
+      "チャンステーマ",
+      "ザブ",
+      "グライシンガー",
+      "towl",
+      "ちわた",
+      "こへい",
+      "マルカ食堂",
+      "ゴスケ",
+      "やめてよ、そよ風",
+      "岡本知己",
+      "白鳥パーク劇場"
+    ],
+    "lineup": [
+      {
+        "name": "月面ビート",
+        "order": 1,
+        "block": 1
+      },
+      {
+        "name": "チッタぺろる",
+        "order": 3,
+        "block": 1
+      },
+      {
+        "name": "鶴田",
+        "order": 4,
+        "block": 1
+      },
+      {
+        "name": "ちな、ケイティ",
+        "order": 5,
+        "block": 1
+      },
+      {
+        "name": "サヤカ・ブラックマンバ",
+        "order": 6,
+        "block": 1
+      },
+      {
+        "name": "シングシング",
+        "order": 7,
+        "block": 1
+      },
+      {
+        "name": "650",
+        "order": 8,
+        "block": 1
+      },
+      {
+        "name": "お月見ズ",
+        "order": 9,
+        "block": 1
+      },
+      {
+        "name": "塚野",
+        "order": 10,
+        "block": 1
+      },
+      {
+        "name": "バーモントラブシール",
+        "order": 11,
+        "block": 2
+      },
+      {
+        "name": "マンスーパー",
+        "order": 12,
+        "block": 2
+      },
+      {
+        "name": "ジ・オーガ",
+        "order": 13,
+        "block": 2
+      },
+      {
+        "name": "とまんてぃあ",
+        "order": 14,
+        "block": 2
+      },
+      {
+        "name": "バグハグ",
+        "order": 15,
+        "block": 2
+      },
+      {
+        "name": "凛",
+        "order": 16,
+        "block": 2
+      },
+      {
+        "name": "マルティンス",
+        "order": 17,
+        "block": 2
+      },
+      {
+        "name": "つなえり",
+        "order": 18,
+        "block": 2
+      },
+      {
+        "name": "茶飯事",
+        "order": 19,
+        "block": 2
+      },
+      {
+        "name": "チャンステーマ",
+        "order": 20,
+        "block": 2
+      },
+      {
+        "name": "ザブ",
+        "order": 21,
+        "block": 3
+      },
+      {
+        "name": "グライシンガー",
+        "order": 22,
+        "block": 3
+      },
+      {
+        "name": "towl",
+        "order": 23,
+        "block": 3
+      },
+      {
+        "name": "ちわた",
+        "order": 24,
+        "block": 3
+      },
+      {
+        "name": "こへい",
+        "order": 25,
+        "block": 3
+      },
+      {
+        "name": "マルカ食堂",
+        "order": 26,
+        "block": 3
+      },
+      {
+        "name": "ゴスケ",
+        "order": 27,
+        "block": 3
+      },
+      {
+        "name": "やめてよ、そよ風",
+        "order": 28,
+        "block": 3
+      },
+      {
+        "name": "岡本知己",
+        "order": 29,
+        "block": 3
+      },
+      {
+        "name": "白鳥パーク劇場",
+        "order": 30,
+        "block": 3
+      }
+    ],
+    "excludedSlots": [
+      {
+        "order": 2,
+        "block": 1
+      }
+    ],
+    "stageResults": [
+      {
+        "status": "pending",
+        "displayStyle": "qualified",
+        "performers": [],
+        "label": "最優秀者"
+      },
+      {
+        "status": "pending",
+        "displayStyle": "qualified",
+        "performers": [],
+        "label": "2位"
+      },
+      {
+        "status": "pending",
+        "displayStyle": "qualified",
+        "performers": [],
+        "label": "3位"
+      },
+      {
+        "status": "pending",
+        "displayStyle": "next-stage",
+        "performers": [],
+        "nextEventType": "sarani-agari-stage",
+        "label": "サラに！への進出"
+      }
+    ],
+    "ticket": {
+      "url": "https://ticket.fany.lol/event/detail/23033",
+      "linkLabel": "FANYチケット",
+      "purchaseNote": "※出演者からのチケット取り置き可能",
+      "streamingNote": "※配信はございません",
+      "saleInfo": "一般発売：2026年11月20日（金）10:00～"
+    }
+  },
+  {
     "id": "2026-12-16-1600-audition-1st-east",
     "eventType": "audition-1st-east",
     "title": "オーディション1stステージ EAST",
@@ -1089,6 +6250,238 @@
       "url": "https://ticket.fany.lol/event/detail/23168",
       "streamingNote": "※配信はありません",
       "saleInfo": "※ FANY一般販売：11月18日(水) 10:00〜"
+    }
+  },
+  {
+    "id": "2026-12-16-1700-agari-stage",
+    "eventType": "agari-stage",
+    "title": "アガり！ステージ",
+    "date": "2026-12-16",
+    "month": 12,
+    "day": 16,
+    "time": "17:00",
+    "timeMinutes": 1020,
+    "venue": "歌舞伎町Sparkle",
+    "mc": "ゴーヤゴー",
+    "lineupOrder": true,
+    "performers": [
+      "マリーにくびったけ",
+      "三ツ矢",
+      "輪になるズ",
+      "私の最終兵器",
+      "ザ・ITO",
+      "かぴん",
+      "山狂喜。",
+      "からくり電球",
+      "ちゅーぼー",
+      "ラクダ人生",
+      "林怜志",
+      "三枚目",
+      "おーしま",
+      "ねづみ大根",
+      "峰岸",
+      "山崎ゆーせー",
+      "タルミ座",
+      "パパプリンス",
+      "山下野村",
+      "斎藤北極星",
+      "バライチゾク",
+      "大きくブリガラって",
+      "銀幕シネマ",
+      "セプテンバー杉山",
+      "パチューカ",
+      "坂東律",
+      "仕立館",
+      "焼肉末",
+      "酒井孝太",
+      "ランデヴー"
+    ],
+    "lineup": [
+      {
+        "name": "マリーにくびったけ",
+        "order": 1,
+        "block": 1
+      },
+      {
+        "name": "三ツ矢",
+        "order": 2,
+        "block": 1
+      },
+      {
+        "name": "輪になるズ",
+        "order": 3,
+        "block": 1
+      },
+      {
+        "name": "私の最終兵器",
+        "order": 4,
+        "block": 1
+      },
+      {
+        "name": "ザ・ITO",
+        "order": 5,
+        "block": 1
+      },
+      {
+        "name": "かぴん",
+        "order": 6,
+        "block": 1
+      },
+      {
+        "name": "山狂喜。",
+        "order": 7,
+        "block": 1
+      },
+      {
+        "name": "からくり電球",
+        "order": 8,
+        "block": 1
+      },
+      {
+        "name": "ちゅーぼー",
+        "order": 9,
+        "block": 1
+      },
+      {
+        "name": "ラクダ人生",
+        "order": 10,
+        "block": 1
+      },
+      {
+        "name": "林怜志",
+        "order": 11,
+        "block": 2
+      },
+      {
+        "name": "三枚目",
+        "order": 12,
+        "block": 2
+      },
+      {
+        "name": "おーしま",
+        "order": 13,
+        "block": 2
+      },
+      {
+        "name": "ねづみ大根",
+        "order": 14,
+        "block": 2
+      },
+      {
+        "name": "峰岸",
+        "order": 15,
+        "block": 2
+      },
+      {
+        "name": "山崎ゆーせー",
+        "order": 16,
+        "block": 2
+      },
+      {
+        "name": "タルミ座",
+        "order": 17,
+        "block": 2
+      },
+      {
+        "name": "パパプリンス",
+        "order": 18,
+        "block": 2
+      },
+      {
+        "name": "山下野村",
+        "order": 19,
+        "block": 2
+      },
+      {
+        "name": "斎藤北極星",
+        "order": 20,
+        "block": 2
+      },
+      {
+        "name": "バライチゾク",
+        "order": 21,
+        "block": 3
+      },
+      {
+        "name": "大きくブリガラって",
+        "order": 22,
+        "block": 3
+      },
+      {
+        "name": "銀幕シネマ",
+        "order": 23,
+        "block": 3
+      },
+      {
+        "name": "セプテンバー杉山",
+        "order": 24,
+        "block": 3
+      },
+      {
+        "name": "パチューカ",
+        "order": 25,
+        "block": 3
+      },
+      {
+        "name": "坂東律",
+        "order": 26,
+        "block": 3
+      },
+      {
+        "name": "仕立館",
+        "order": 27,
+        "block": 3
+      },
+      {
+        "name": "焼肉末",
+        "order": 28,
+        "block": 3
+      },
+      {
+        "name": "酒井孝太",
+        "order": 29,
+        "block": 3
+      },
+      {
+        "name": "ランデヴー",
+        "order": 30,
+        "block": 3
+      }
+    ],
+    "excludedSlots": [],
+    "stageResults": [
+      {
+        "status": "pending",
+        "displayStyle": "qualified",
+        "performers": [],
+        "label": "最優秀者"
+      },
+      {
+        "status": "pending",
+        "displayStyle": "qualified",
+        "performers": [],
+        "label": "2位"
+      },
+      {
+        "status": "pending",
+        "displayStyle": "qualified",
+        "performers": [],
+        "label": "3位"
+      },
+      {
+        "status": "pending",
+        "displayStyle": "next-stage",
+        "performers": [],
+        "nextEventType": "sarani-agari-stage",
+        "label": "サラに！への進出"
+      }
+    ],
+    "ticket": {
+      "url": "https://ticket.fany.lol/event/detail/23033",
+      "linkLabel": "FANYチケット",
+      "purchaseNote": "※出演者からのチケット取り置き可能",
+      "streamingNote": "※配信はございません",
+      "saleInfo": "一般発売：2026年11月20日（金）10:00～"
     }
   },
   {
@@ -1137,6 +6530,238 @@
     }
   },
   {
+    "id": "2026-12-16-1930-agari-stage",
+    "eventType": "agari-stage",
+    "title": "アガり！ステージ",
+    "date": "2026-12-16",
+    "month": 12,
+    "day": 16,
+    "time": "19:30",
+    "timeMinutes": 1170,
+    "venue": "歌舞伎町Sparkle",
+    "mc": "峰岸",
+    "lineupOrder": true,
+    "performers": [
+      "SundayMandyTuesdays",
+      "サッカー選手",
+      "サダキヨ",
+      "100",
+      "コーデリア",
+      "〆のスキップ",
+      "Vチキン田代",
+      "ザ・石像",
+      "バンジージャンプ",
+      "ミッドナイトウルフ",
+      "スイラン",
+      "すぎむら",
+      "アマフク",
+      "ももなり",
+      "バンカイ",
+      "ギュウニュウ",
+      "原山ッテルゼ",
+      "コウフク",
+      "まっきっき",
+      "りとるハーツ",
+      "さそり",
+      "浮き草デイズ",
+      "ジョー村店長",
+      "バム！",
+      "サブローJr.",
+      "泥舟",
+      "ゴーヤゴー",
+      "鉄果鴨",
+      "カイちゃん",
+      "ニブルスブレス"
+    ],
+    "lineup": [
+      {
+        "name": "SundayMandyTuesdays",
+        "order": 1,
+        "block": 1
+      },
+      {
+        "name": "サッカー選手",
+        "order": 2,
+        "block": 1
+      },
+      {
+        "name": "サダキヨ",
+        "order": 3,
+        "block": 1
+      },
+      {
+        "name": "100",
+        "order": 4,
+        "block": 1
+      },
+      {
+        "name": "コーデリア",
+        "order": 5,
+        "block": 1
+      },
+      {
+        "name": "〆のスキップ",
+        "order": 6,
+        "block": 1
+      },
+      {
+        "name": "Vチキン田代",
+        "order": 7,
+        "block": 1
+      },
+      {
+        "name": "ザ・石像",
+        "order": 8,
+        "block": 1
+      },
+      {
+        "name": "バンジージャンプ",
+        "order": 9,
+        "block": 1
+      },
+      {
+        "name": "ミッドナイトウルフ",
+        "order": 10,
+        "block": 1
+      },
+      {
+        "name": "スイラン",
+        "order": 11,
+        "block": 2
+      },
+      {
+        "name": "すぎむら",
+        "order": 12,
+        "block": 2
+      },
+      {
+        "name": "アマフク",
+        "order": 13,
+        "block": 2
+      },
+      {
+        "name": "ももなり",
+        "order": 14,
+        "block": 2
+      },
+      {
+        "name": "バンカイ",
+        "order": 15,
+        "block": 2
+      },
+      {
+        "name": "ギュウニュウ",
+        "order": 16,
+        "block": 2
+      },
+      {
+        "name": "原山ッテルゼ",
+        "order": 17,
+        "block": 2
+      },
+      {
+        "name": "コウフク",
+        "order": 18,
+        "block": 2
+      },
+      {
+        "name": "まっきっき",
+        "order": 19,
+        "block": 2
+      },
+      {
+        "name": "りとるハーツ",
+        "order": 20,
+        "block": 2
+      },
+      {
+        "name": "さそり",
+        "order": 21,
+        "block": 3
+      },
+      {
+        "name": "浮き草デイズ",
+        "order": 22,
+        "block": 3
+      },
+      {
+        "name": "ジョー村店長",
+        "order": 23,
+        "block": 3
+      },
+      {
+        "name": "バム！",
+        "order": 24,
+        "block": 3
+      },
+      {
+        "name": "サブローJr.",
+        "order": 25,
+        "block": 3
+      },
+      {
+        "name": "泥舟",
+        "order": 26,
+        "block": 3
+      },
+      {
+        "name": "ゴーヤゴー",
+        "order": 27,
+        "block": 3
+      },
+      {
+        "name": "鉄果鴨",
+        "order": 28,
+        "block": 3
+      },
+      {
+        "name": "カイちゃん",
+        "order": 29,
+        "block": 3
+      },
+      {
+        "name": "ニブルスブレス",
+        "order": 30,
+        "block": 3
+      }
+    ],
+    "excludedSlots": [],
+    "stageResults": [
+      {
+        "status": "pending",
+        "displayStyle": "qualified",
+        "performers": [],
+        "label": "最優秀者"
+      },
+      {
+        "status": "pending",
+        "displayStyle": "qualified",
+        "performers": [],
+        "label": "2位"
+      },
+      {
+        "status": "pending",
+        "displayStyle": "qualified",
+        "performers": [],
+        "label": "3位"
+      },
+      {
+        "status": "pending",
+        "displayStyle": "next-stage",
+        "performers": [],
+        "nextEventType": "sarani-agari-stage",
+        "label": "サラに！への進出"
+      }
+    ],
+    "ticket": {
+      "url": "https://ticket.fany.lol/event/detail/23033",
+      "linkLabel": "FANYチケット",
+      "purchaseNote": "※出演者からのチケット取り置き可能",
+      "streamingNote": "※配信はございません",
+      "saleInfo": "一般発売：2026年11月20日（金）10:00～"
+    }
+  },
+  {
     "id": "2026-12-17-1600-audition-1st-east",
     "eventType": "audition-1st-east",
     "title": "オーディション1stステージ EAST",
@@ -1182,6 +6807,238 @@
     }
   },
   {
+    "id": "2026-12-17-1700-agari-stage",
+    "eventType": "agari-stage",
+    "title": "アガり！ステージ",
+    "date": "2026-12-17",
+    "month": 12,
+    "day": 17,
+    "time": "17:00",
+    "timeMinutes": 1020,
+    "venue": "歌舞伎町Sparkle",
+    "mc": "ノコノコみさき",
+    "lineupOrder": true,
+    "performers": [
+      "至福の唄",
+      "腸革",
+      "高みつを",
+      "がらんじく",
+      "パンツ万博",
+      "疾風ミモザ",
+      "仲悟ワンカラー",
+      "上げ膳据え膳",
+      "次元エース",
+      "捨てがたき人々",
+      "七色フラン",
+      "出目金",
+      "謝花",
+      "つよけん",
+      "ラフライフ！",
+      "バンケンハート",
+      "夢乙女",
+      "零点星人",
+      "チャオ",
+      "史也",
+      "夏目一年生",
+      "ぴーかーぶ",
+      "おざぶとん",
+      "カレーー",
+      "犬と犬",
+      "畠山達也",
+      "ハハカタノハハ",
+      "レンギョウ",
+      "タカサゴ",
+      "サンリオレンジ"
+    ],
+    "lineup": [
+      {
+        "name": "至福の唄",
+        "order": 1,
+        "block": 1
+      },
+      {
+        "name": "腸革",
+        "order": 2,
+        "block": 1
+      },
+      {
+        "name": "高みつを",
+        "order": 3,
+        "block": 1
+      },
+      {
+        "name": "がらんじく",
+        "order": 4,
+        "block": 1
+      },
+      {
+        "name": "パンツ万博",
+        "order": 5,
+        "block": 1
+      },
+      {
+        "name": "疾風ミモザ",
+        "order": 6,
+        "block": 1
+      },
+      {
+        "name": "仲悟ワンカラー",
+        "order": 7,
+        "block": 1
+      },
+      {
+        "name": "上げ膳据え膳",
+        "order": 8,
+        "block": 1
+      },
+      {
+        "name": "次元エース",
+        "order": 9,
+        "block": 1
+      },
+      {
+        "name": "捨てがたき人々",
+        "order": 10,
+        "block": 1
+      },
+      {
+        "name": "七色フラン",
+        "order": 11,
+        "block": 2
+      },
+      {
+        "name": "出目金",
+        "order": 12,
+        "block": 2
+      },
+      {
+        "name": "謝花",
+        "order": 13,
+        "block": 2
+      },
+      {
+        "name": "つよけん",
+        "order": 14,
+        "block": 2
+      },
+      {
+        "name": "ラフライフ！",
+        "order": 15,
+        "block": 2
+      },
+      {
+        "name": "バンケンハート",
+        "order": 16,
+        "block": 2
+      },
+      {
+        "name": "夢乙女",
+        "order": 17,
+        "block": 2
+      },
+      {
+        "name": "零点星人",
+        "order": 18,
+        "block": 2
+      },
+      {
+        "name": "チャオ",
+        "order": 19,
+        "block": 2
+      },
+      {
+        "name": "史也",
+        "order": 20,
+        "block": 2
+      },
+      {
+        "name": "夏目一年生",
+        "order": 21,
+        "block": 3
+      },
+      {
+        "name": "ぴーかーぶ",
+        "order": 22,
+        "block": 3
+      },
+      {
+        "name": "おざぶとん",
+        "order": 23,
+        "block": 3
+      },
+      {
+        "name": "カレーー",
+        "order": 24,
+        "block": 3
+      },
+      {
+        "name": "犬と犬",
+        "order": 25,
+        "block": 3
+      },
+      {
+        "name": "畠山達也",
+        "order": 26,
+        "block": 3
+      },
+      {
+        "name": "ハハカタノハハ",
+        "order": 27,
+        "block": 3
+      },
+      {
+        "name": "レンギョウ",
+        "order": 28,
+        "block": 3
+      },
+      {
+        "name": "タカサゴ",
+        "order": 29,
+        "block": 3
+      },
+      {
+        "name": "サンリオレンジ",
+        "order": 30,
+        "block": 3
+      }
+    ],
+    "excludedSlots": [],
+    "stageResults": [
+      {
+        "status": "pending",
+        "displayStyle": "qualified",
+        "performers": [],
+        "label": "最優秀者"
+      },
+      {
+        "status": "pending",
+        "displayStyle": "qualified",
+        "performers": [],
+        "label": "2位"
+      },
+      {
+        "status": "pending",
+        "displayStyle": "qualified",
+        "performers": [],
+        "label": "3位"
+      },
+      {
+        "status": "pending",
+        "displayStyle": "next-stage",
+        "performers": [],
+        "nextEventType": "sarani-agari-stage",
+        "label": "サラに！への進出"
+      }
+    ],
+    "ticket": {
+      "url": "https://ticket.fany.lol/event/detail/23033",
+      "linkLabel": "FANYチケット",
+      "purchaseNote": "※出演者からのチケット取り置き可能",
+      "streamingNote": "※配信はございません",
+      "saleInfo": "一般発売：2026年11月20日（金）10:00～"
+    }
+  },
+  {
     "id": "2026-12-17-1830-audition-1st-east",
     "eventType": "audition-1st-east",
     "title": "オーディション1stステージ EAST",
@@ -1223,6 +7080,1166 @@
       "url": "https://ticket.fany.lol/event/detail/23168",
       "streamingNote": "※配信はありません",
       "saleInfo": "※ FANY一般販売：11月18日(水) 10:00〜"
+    }
+  },
+  {
+    "id": "2026-12-17-1930-agari-stage",
+    "eventType": "agari-stage",
+    "title": "アガり！ステージ",
+    "date": "2026-12-17",
+    "month": 12,
+    "day": 17,
+    "time": "19:30",
+    "timeMinutes": 1170,
+    "venue": "歌舞伎町Sparkle",
+    "mc": "零点星人",
+    "lineupOrder": true,
+    "performers": [
+      "ヨーコ",
+      "ばら組",
+      "それありき",
+      "バクバクちゃん",
+      "ジェラシーズ",
+      "添えたがり",
+      "ナイスボム",
+      "ロケットダイアリー",
+      "ながみねきちょう",
+      "ノコノコみさき",
+      "ゆめゆめ",
+      "1000タコ",
+      "武士炒め",
+      "YO！",
+      "ガシヒ",
+      "シャムショッカン",
+      "高砂",
+      "天ぷら畑",
+      "源泉さし水",
+      "パウパッド",
+      "きり",
+      "ナガオサフェスタオカダ",
+      "サンパドル",
+      "ニシムラ",
+      "ぐるぐる",
+      "ラムネキッシュ18",
+      "しまやん",
+      "昆虫ズ",
+      "しず音",
+      "アイガモシーサー"
+    ],
+    "lineup": [
+      {
+        "name": "ヨーコ",
+        "order": 1,
+        "block": 1
+      },
+      {
+        "name": "ばら組",
+        "order": 2,
+        "block": 1
+      },
+      {
+        "name": "それありき",
+        "order": 3,
+        "block": 1
+      },
+      {
+        "name": "バクバクちゃん",
+        "order": 4,
+        "block": 1
+      },
+      {
+        "name": "ジェラシーズ",
+        "order": 5,
+        "block": 1
+      },
+      {
+        "name": "添えたがり",
+        "order": 6,
+        "block": 1
+      },
+      {
+        "name": "ナイスボム",
+        "order": 7,
+        "block": 1
+      },
+      {
+        "name": "ロケットダイアリー",
+        "order": 8,
+        "block": 1
+      },
+      {
+        "name": "ながみねきちょう",
+        "order": 9,
+        "block": 1
+      },
+      {
+        "name": "ノコノコみさき",
+        "order": 10,
+        "block": 1
+      },
+      {
+        "name": "ゆめゆめ",
+        "order": 11,
+        "block": 2
+      },
+      {
+        "name": "1000タコ",
+        "order": 12,
+        "block": 2
+      },
+      {
+        "name": "武士炒め",
+        "order": 13,
+        "block": 2
+      },
+      {
+        "name": "YO！",
+        "order": 14,
+        "block": 2
+      },
+      {
+        "name": "ガシヒ",
+        "order": 15,
+        "block": 2
+      },
+      {
+        "name": "シャムショッカン",
+        "order": 16,
+        "block": 2
+      },
+      {
+        "name": "高砂",
+        "order": 17,
+        "block": 2
+      },
+      {
+        "name": "天ぷら畑",
+        "order": 18,
+        "block": 2
+      },
+      {
+        "name": "源泉さし水",
+        "order": 19,
+        "block": 2
+      },
+      {
+        "name": "パウパッド",
+        "order": 20,
+        "block": 2
+      },
+      {
+        "name": "きり",
+        "order": 21,
+        "block": 3
+      },
+      {
+        "name": "ナガオサフェスタオカダ",
+        "order": 22,
+        "block": 3
+      },
+      {
+        "name": "サンパドル",
+        "order": 23,
+        "block": 3
+      },
+      {
+        "name": "ニシムラ",
+        "order": 24,
+        "block": 3
+      },
+      {
+        "name": "ぐるぐる",
+        "order": 25,
+        "block": 3
+      },
+      {
+        "name": "ラムネキッシュ18",
+        "order": 26,
+        "block": 3
+      },
+      {
+        "name": "しまやん",
+        "order": 27,
+        "block": 3
+      },
+      {
+        "name": "昆虫ズ",
+        "order": 28,
+        "block": 3
+      },
+      {
+        "name": "しず音",
+        "order": 29,
+        "block": 3
+      },
+      {
+        "name": "アイガモシーサー",
+        "order": 30,
+        "block": 3
+      }
+    ],
+    "excludedSlots": [],
+    "stageResults": [
+      {
+        "status": "pending",
+        "displayStyle": "qualified",
+        "performers": [],
+        "label": "最優秀者"
+      },
+      {
+        "status": "pending",
+        "displayStyle": "qualified",
+        "performers": [],
+        "label": "2位"
+      },
+      {
+        "status": "pending",
+        "displayStyle": "qualified",
+        "performers": [],
+        "label": "3位"
+      },
+      {
+        "status": "pending",
+        "displayStyle": "next-stage",
+        "performers": [],
+        "nextEventType": "sarani-agari-stage",
+        "label": "サラに！への進出"
+      }
+    ],
+    "ticket": {
+      "url": "https://ticket.fany.lol/event/detail/23033",
+      "linkLabel": "FANYチケット",
+      "purchaseNote": "※出演者からのチケット取り置き可能",
+      "streamingNote": "※配信はございません",
+      "saleInfo": "一般発売：2026年11月20日（金）10:00～"
+    }
+  },
+  {
+    "id": "2026-12-18-1700-agari-stage",
+    "eventType": "agari-stage",
+    "title": "アガり！ステージ",
+    "date": "2026-12-18",
+    "month": 12,
+    "day": 18,
+    "time": "17:00",
+    "timeMinutes": 1020,
+    "venue": "歌舞伎町Sparkle",
+    "mc": "タナバタ",
+    "lineupOrder": true,
+    "performers": [
+      "ミロデジャネイロ",
+      "ハンマラッソ",
+      "キューブリック",
+      "カルボアナ",
+      "酒ゴメス",
+      "湘南ブースト",
+      "神楽姫",
+      "ダスティローデス",
+      "ブラウンジップ",
+      "致遠",
+      "オランダの涙",
+      "チューリップ",
+      "オトメタチ",
+      "象美人",
+      "手塚ボンバー！",
+      "ビィワゴン",
+      "秋麗",
+      "松田じめん",
+      "和田ンス",
+      "六調",
+      "すしまる",
+      "寝坊助",
+      "味さと",
+      "安田えがお",
+      "蹴王",
+      "黒板",
+      "ランジタクロス",
+      "魚卵パフェ",
+      "デカベガス",
+      "大泉ジャンクション"
+    ],
+    "lineup": [
+      {
+        "name": "ミロデジャネイロ",
+        "order": 1,
+        "block": 1
+      },
+      {
+        "name": "ハンマラッソ",
+        "order": 2,
+        "block": 1
+      },
+      {
+        "name": "キューブリック",
+        "order": 3,
+        "block": 1
+      },
+      {
+        "name": "カルボアナ",
+        "order": 4,
+        "block": 1
+      },
+      {
+        "name": "酒ゴメス",
+        "order": 5,
+        "block": 1
+      },
+      {
+        "name": "湘南ブースト",
+        "order": 6,
+        "block": 1
+      },
+      {
+        "name": "神楽姫",
+        "order": 7,
+        "block": 1
+      },
+      {
+        "name": "ダスティローデス",
+        "order": 8,
+        "block": 1
+      },
+      {
+        "name": "ブラウンジップ",
+        "order": 9,
+        "block": 1
+      },
+      {
+        "name": "致遠",
+        "order": 10,
+        "block": 1
+      },
+      {
+        "name": "オランダの涙",
+        "order": 11,
+        "block": 2
+      },
+      {
+        "name": "チューリップ",
+        "order": 12,
+        "block": 2
+      },
+      {
+        "name": "オトメタチ",
+        "order": 13,
+        "block": 2
+      },
+      {
+        "name": "象美人",
+        "order": 14,
+        "block": 2
+      },
+      {
+        "name": "手塚ボンバー！",
+        "order": 15,
+        "block": 2
+      },
+      {
+        "name": "ビィワゴン",
+        "order": 16,
+        "block": 2
+      },
+      {
+        "name": "秋麗",
+        "order": 17,
+        "block": 2
+      },
+      {
+        "name": "松田じめん",
+        "order": 18,
+        "block": 2
+      },
+      {
+        "name": "和田ンス",
+        "order": 19,
+        "block": 2
+      },
+      {
+        "name": "六調",
+        "order": 20,
+        "block": 2
+      },
+      {
+        "name": "すしまる",
+        "order": 21,
+        "block": 3
+      },
+      {
+        "name": "寝坊助",
+        "order": 22,
+        "block": 3
+      },
+      {
+        "name": "味さと",
+        "order": 23,
+        "block": 3
+      },
+      {
+        "name": "安田えがお",
+        "order": 24,
+        "block": 3
+      },
+      {
+        "name": "蹴王",
+        "order": 25,
+        "block": 3
+      },
+      {
+        "name": "黒板",
+        "order": 26,
+        "block": 3
+      },
+      {
+        "name": "ランジタクロス",
+        "order": 27,
+        "block": 3
+      },
+      {
+        "name": "魚卵パフェ",
+        "order": 28,
+        "block": 3
+      },
+      {
+        "name": "デカベガス",
+        "order": 29,
+        "block": 3
+      },
+      {
+        "name": "大泉ジャンクション",
+        "order": 30,
+        "block": 3
+      }
+    ],
+    "excludedSlots": [],
+    "stageResults": [
+      {
+        "status": "pending",
+        "displayStyle": "qualified",
+        "performers": [],
+        "label": "最優秀者"
+      },
+      {
+        "status": "pending",
+        "displayStyle": "qualified",
+        "performers": [],
+        "label": "2位"
+      },
+      {
+        "status": "pending",
+        "displayStyle": "qualified",
+        "performers": [],
+        "label": "3位"
+      },
+      {
+        "status": "pending",
+        "displayStyle": "next-stage",
+        "performers": [],
+        "nextEventType": "sarani-agari-stage",
+        "label": "サラに！への進出"
+      }
+    ],
+    "ticket": {
+      "url": "https://ticket.fany.lol/event/detail/23033",
+      "linkLabel": "FANYチケット",
+      "purchaseNote": "※出演者からのチケット取り置き可能",
+      "streamingNote": "※配信はございません",
+      "saleInfo": "一般発売：2026年11月20日（金）10:00～"
+    }
+  },
+  {
+    "id": "2026-12-18-1930-agari-stage",
+    "eventType": "agari-stage",
+    "title": "アガり！ステージ",
+    "date": "2026-12-18",
+    "month": 12,
+    "day": 18,
+    "time": "19:30",
+    "timeMinutes": 1170,
+    "venue": "歌舞伎町Sparkle",
+    "mc": "すしまる",
+    "lineupOrder": true,
+    "performers": [
+      "＆竜",
+      "パネンカ",
+      "ジャスたけ",
+      "くろさとう",
+      "kome",
+      "ミズドリ",
+      "ナガレ蟹",
+      "戸谷向陽",
+      "スーパーロバ",
+      "ハルバル",
+      "電波木口",
+      "サンズデイ",
+      "ココナッツ",
+      "福耳",
+      "しるばーまん",
+      "はるちゃん先生",
+      "アイマイン",
+      "ビンゲゴー",
+      "ヤマダ",
+      "すけだち",
+      "ゲラゲラ星人",
+      "タナバタ",
+      "倍マンス",
+      "ライダーキック",
+      "大山瑛三",
+      "ロックドッグ",
+      "ヒゲツラマンボウ",
+      "ビールモンスター",
+      "よし乃",
+      "ピーター・ハミルトン"
+    ],
+    "lineup": [
+      {
+        "name": "＆竜",
+        "order": 1,
+        "block": 1
+      },
+      {
+        "name": "パネンカ",
+        "order": 2,
+        "block": 1
+      },
+      {
+        "name": "ジャスたけ",
+        "order": 3,
+        "block": 1
+      },
+      {
+        "name": "くろさとう",
+        "order": 4,
+        "block": 1
+      },
+      {
+        "name": "kome",
+        "order": 5,
+        "block": 1
+      },
+      {
+        "name": "ミズドリ",
+        "order": 6,
+        "block": 1
+      },
+      {
+        "name": "ナガレ蟹",
+        "order": 7,
+        "block": 1
+      },
+      {
+        "name": "戸谷向陽",
+        "order": 8,
+        "block": 1
+      },
+      {
+        "name": "スーパーロバ",
+        "order": 9,
+        "block": 1
+      },
+      {
+        "name": "ハルバル",
+        "order": 10,
+        "block": 1
+      },
+      {
+        "name": "電波木口",
+        "order": 11,
+        "block": 2
+      },
+      {
+        "name": "サンズデイ",
+        "order": 12,
+        "block": 2
+      },
+      {
+        "name": "ココナッツ",
+        "order": 13,
+        "block": 2
+      },
+      {
+        "name": "福耳",
+        "order": 14,
+        "block": 2
+      },
+      {
+        "name": "しるばーまん",
+        "order": 15,
+        "block": 2
+      },
+      {
+        "name": "はるちゃん先生",
+        "order": 16,
+        "block": 2
+      },
+      {
+        "name": "アイマイン",
+        "order": 17,
+        "block": 2
+      },
+      {
+        "name": "ビンゲゴー",
+        "order": 18,
+        "block": 2
+      },
+      {
+        "name": "ヤマダ",
+        "order": 19,
+        "block": 2
+      },
+      {
+        "name": "すけだち",
+        "order": 20,
+        "block": 2
+      },
+      {
+        "name": "ゲラゲラ星人",
+        "order": 21,
+        "block": 3
+      },
+      {
+        "name": "タナバタ",
+        "order": 22,
+        "block": 3
+      },
+      {
+        "name": "倍マンス",
+        "order": 23,
+        "block": 3
+      },
+      {
+        "name": "ライダーキック",
+        "order": 24,
+        "block": 3
+      },
+      {
+        "name": "大山瑛三",
+        "order": 25,
+        "block": 3
+      },
+      {
+        "name": "ロックドッグ",
+        "order": 26,
+        "block": 3
+      },
+      {
+        "name": "ヒゲツラマンボウ",
+        "order": 27,
+        "block": 3
+      },
+      {
+        "name": "ビールモンスター",
+        "order": 28,
+        "block": 3
+      },
+      {
+        "name": "よし乃",
+        "order": 29,
+        "block": 3
+      },
+      {
+        "name": "ピーター・ハミルトン",
+        "order": 30,
+        "block": 3
+      }
+    ],
+    "excludedSlots": [],
+    "stageResults": [
+      {
+        "status": "pending",
+        "displayStyle": "qualified",
+        "performers": [],
+        "label": "最優秀者"
+      },
+      {
+        "status": "pending",
+        "displayStyle": "qualified",
+        "performers": [],
+        "label": "2位"
+      },
+      {
+        "status": "pending",
+        "displayStyle": "qualified",
+        "performers": [],
+        "label": "3位"
+      },
+      {
+        "status": "pending",
+        "displayStyle": "next-stage",
+        "performers": [],
+        "nextEventType": "sarani-agari-stage",
+        "label": "サラに！への進出"
+      }
+    ],
+    "ticket": {
+      "url": "https://ticket.fany.lol/event/detail/23033",
+      "linkLabel": "FANYチケット",
+      "purchaseNote": "※出演者からのチケット取り置き可能",
+      "streamingNote": "※配信はございません",
+      "saleInfo": "一般発売：2026年11月20日（金）10:00～"
+    }
+  },
+  {
+    "id": "2026-12-21-1700-agari-stage",
+    "eventType": "agari-stage",
+    "title": "アガり！ステージ",
+    "date": "2026-12-21",
+    "month": 12,
+    "day": 21,
+    "time": "17:00",
+    "timeMinutes": 1020,
+    "venue": "歌舞伎町Sparkle",
+    "mc": "機運ダンク",
+    "lineupOrder": true,
+    "performers": [
+      "超アジア",
+      "扇の要",
+      "ピコノリ",
+      "上海バンスキング",
+      "大貫",
+      "自家製",
+      "城ヶ崎綺羅",
+      "デジタルバッハ",
+      "24禁",
+      "ふじさわゆーき",
+      "強い電気",
+      "アイアン青山",
+      "優作",
+      "ぶるうすん",
+      "チョコレート・スターフィッシュ",
+      "ギリギリ",
+      "心の底から",
+      "ファーソン",
+      "ドラゴン",
+      "絶命",
+      "右上太陽",
+      "竹下陸",
+      "切り抜きピッチャー",
+      "玉城 理恩",
+      "心愛",
+      "骨ゴロアキラ",
+      "蝉和爽次郎",
+      "お茶天狗",
+      "崇三朗",
+      "キイロイゾウサン"
+    ],
+    "lineup": [
+      {
+        "name": "超アジア",
+        "order": 1,
+        "block": 1
+      },
+      {
+        "name": "扇の要",
+        "order": 2,
+        "block": 1
+      },
+      {
+        "name": "ピコノリ",
+        "order": 3,
+        "block": 1
+      },
+      {
+        "name": "上海バンスキング",
+        "order": 4,
+        "block": 1
+      },
+      {
+        "name": "大貫",
+        "order": 5,
+        "block": 1
+      },
+      {
+        "name": "自家製",
+        "order": 6,
+        "block": 1
+      },
+      {
+        "name": "城ヶ崎綺羅",
+        "order": 7,
+        "block": 1
+      },
+      {
+        "name": "デジタルバッハ",
+        "order": 8,
+        "block": 1
+      },
+      {
+        "name": "24禁",
+        "order": 9,
+        "block": 1
+      },
+      {
+        "name": "ふじさわゆーき",
+        "order": 10,
+        "block": 1
+      },
+      {
+        "name": "強い電気",
+        "order": 11,
+        "block": 2
+      },
+      {
+        "name": "アイアン青山",
+        "order": 12,
+        "block": 2
+      },
+      {
+        "name": "優作",
+        "order": 13,
+        "block": 2
+      },
+      {
+        "name": "ぶるうすん",
+        "order": 14,
+        "block": 2
+      },
+      {
+        "name": "チョコレート・スターフィッシュ",
+        "order": 15,
+        "block": 2
+      },
+      {
+        "name": "ギリギリ",
+        "order": 16,
+        "block": 2
+      },
+      {
+        "name": "心の底から",
+        "order": 17,
+        "block": 2
+      },
+      {
+        "name": "ファーソン",
+        "order": 18,
+        "block": 2
+      },
+      {
+        "name": "ドラゴン",
+        "order": 19,
+        "block": 2
+      },
+      {
+        "name": "絶命",
+        "order": 20,
+        "block": 2
+      },
+      {
+        "name": "右上太陽",
+        "order": 21,
+        "block": 3
+      },
+      {
+        "name": "竹下陸",
+        "order": 22,
+        "block": 3
+      },
+      {
+        "name": "切り抜きピッチャー",
+        "order": 23,
+        "block": 3
+      },
+      {
+        "name": "玉城 理恩",
+        "order": 24,
+        "block": 3
+      },
+      {
+        "name": "心愛",
+        "order": 25,
+        "block": 3
+      },
+      {
+        "name": "骨ゴロアキラ",
+        "order": 26,
+        "block": 3
+      },
+      {
+        "name": "蝉和爽次郎",
+        "order": 27,
+        "block": 3
+      },
+      {
+        "name": "お茶天狗",
+        "order": 28,
+        "block": 3
+      },
+      {
+        "name": "崇三朗",
+        "order": 29,
+        "block": 3
+      },
+      {
+        "name": "キイロイゾウサン",
+        "order": 30,
+        "block": 3
+      }
+    ],
+    "excludedSlots": [],
+    "stageResults": [
+      {
+        "status": "pending",
+        "displayStyle": "qualified",
+        "performers": [],
+        "label": "最優秀者"
+      },
+      {
+        "status": "pending",
+        "displayStyle": "qualified",
+        "performers": [],
+        "label": "2位"
+      },
+      {
+        "status": "pending",
+        "displayStyle": "qualified",
+        "performers": [],
+        "label": "3位"
+      },
+      {
+        "status": "pending",
+        "displayStyle": "next-stage",
+        "performers": [],
+        "nextEventType": "sarani-agari-stage",
+        "label": "サラに！への進出"
+      }
+    ],
+    "ticket": {
+      "url": "https://ticket.fany.lol/event/detail/23033",
+      "linkLabel": "FANYチケット",
+      "purchaseNote": "※出演者からのチケット取り置き可能",
+      "streamingNote": "※配信はございません",
+      "saleInfo": "一般発売：2026年11月20日（金）10:00～"
+    }
+  },
+  {
+    "id": "2026-12-21-1930-agari-stage",
+    "eventType": "agari-stage",
+    "title": "アガり！ステージ",
+    "date": "2026-12-21",
+    "month": 12,
+    "day": 21,
+    "time": "19:30",
+    "timeMinutes": 1170,
+    "venue": "歌舞伎町Sparkle",
+    "mc": "切り抜きピッチャー",
+    "lineupOrder": true,
+    "performers": [
+      "シシュウ",
+      "ランス39号",
+      "鳩ピース",
+      "しみず",
+      "ワイキキビーチ",
+      "iふらす",
+      "プレデュード",
+      "ふたりぼっち革命",
+      "ターコイズ",
+      "GRAVITY",
+      "ゾンビのアトリエ",
+      "島袋ライブラリ",
+      "ターマネーギ",
+      "フローズンミヤビ",
+      "福岡",
+      "フクロクジュ",
+      "でっかい！くぼた",
+      "ミラ",
+      "ロリポップキャンディたけお",
+      "スティンガー",
+      "機運ダンク",
+      "クリアノート",
+      "石川ユウマ",
+      "ロリータ強豪区に到着♪",
+      "サマソ",
+      "と金",
+      "広告主",
+      "ピン山本諒",
+      "アイミーニット",
+      "ラデンバイン"
+    ],
+    "lineup": [
+      {
+        "name": "シシュウ",
+        "order": 1,
+        "block": 1
+      },
+      {
+        "name": "ランス39号",
+        "order": 2,
+        "block": 1
+      },
+      {
+        "name": "鳩ピース",
+        "order": 3,
+        "block": 1
+      },
+      {
+        "name": "しみず",
+        "order": 4,
+        "block": 1
+      },
+      {
+        "name": "ワイキキビーチ",
+        "order": 5,
+        "block": 1
+      },
+      {
+        "name": "iふらす",
+        "order": 6,
+        "block": 1
+      },
+      {
+        "name": "プレデュード",
+        "order": 7,
+        "block": 1
+      },
+      {
+        "name": "ふたりぼっち革命",
+        "order": 8,
+        "block": 1
+      },
+      {
+        "name": "ターコイズ",
+        "order": 9,
+        "block": 1
+      },
+      {
+        "name": "GRAVITY",
+        "order": 10,
+        "block": 1
+      },
+      {
+        "name": "ゾンビのアトリエ",
+        "order": 11,
+        "block": 2
+      },
+      {
+        "name": "島袋ライブラリ",
+        "order": 12,
+        "block": 2
+      },
+      {
+        "name": "ターマネーギ",
+        "order": 13,
+        "block": 2
+      },
+      {
+        "name": "フローズンミヤビ",
+        "order": 14,
+        "block": 2
+      },
+      {
+        "name": "福岡",
+        "order": 15,
+        "block": 2
+      },
+      {
+        "name": "フクロクジュ",
+        "order": 16,
+        "block": 2
+      },
+      {
+        "name": "でっかい！くぼた",
+        "order": 17,
+        "block": 2
+      },
+      {
+        "name": "ミラ",
+        "order": 18,
+        "block": 2
+      },
+      {
+        "name": "ロリポップキャンディたけお",
+        "order": 19,
+        "block": 2
+      },
+      {
+        "name": "スティンガー",
+        "order": 20,
+        "block": 2
+      },
+      {
+        "name": "機運ダンク",
+        "order": 21,
+        "block": 3
+      },
+      {
+        "name": "クリアノート",
+        "order": 22,
+        "block": 3
+      },
+      {
+        "name": "石川ユウマ",
+        "order": 23,
+        "block": 3
+      },
+      {
+        "name": "ロリータ強豪区に到着♪",
+        "order": 24,
+        "block": 3
+      },
+      {
+        "name": "サマソ",
+        "order": 25,
+        "block": 3
+      },
+      {
+        "name": "と金",
+        "order": 26,
+        "block": 3
+      },
+      {
+        "name": "広告主",
+        "order": 27,
+        "block": 3
+      },
+      {
+        "name": "ピン山本諒",
+        "order": 28,
+        "block": 3
+      },
+      {
+        "name": "アイミーニット",
+        "order": 29,
+        "block": 3
+      },
+      {
+        "name": "ラデンバイン",
+        "order": 30,
+        "block": 3
+      }
+    ],
+    "excludedSlots": [],
+    "stageResults": [
+      {
+        "status": "pending",
+        "displayStyle": "qualified",
+        "performers": [],
+        "label": "最優秀者"
+      },
+      {
+        "status": "pending",
+        "displayStyle": "qualified",
+        "performers": [],
+        "label": "2位"
+      },
+      {
+        "status": "pending",
+        "displayStyle": "qualified",
+        "performers": [],
+        "label": "3位"
+      },
+      {
+        "status": "pending",
+        "displayStyle": "next-stage",
+        "performers": [],
+        "nextEventType": "sarani-agari-stage",
+        "label": "サラに！への進出"
+      }
+    ],
+    "ticket": {
+      "url": "https://ticket.fany.lol/event/detail/23033",
+      "linkLabel": "FANYチケット",
+      "purchaseNote": "※出演者からのチケット取り置き可能",
+      "streamingNote": "※配信はございません",
+      "saleInfo": "一般発売：2026年11月20日（金）10:00～"
     }
   }
 ]
