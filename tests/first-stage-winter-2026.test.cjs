@@ -334,7 +334,7 @@ test('冬期1st全33公演の11/18一般販売・配信なし／アガり全30�
     assert.equal(e.ticket.saleInfo,'※ FANY一般販売：11月18日(水) 10:00〜',e.id);
     const html=app.context.buildEventCardHTML(e,'results',[]);
     assert.ok(html.includes('class="ticket-streaming-note">※配信はありません</div>'),e.id);
-    assert.ok(html.includes('class="ticket-sale-info">※ FANY一般販売：11月18日(水) 10:00〜</div>'),e.id);
+    assert.ok(html.includes('class="ticket-sale-info">※FANY一般発売：11月18日(水)10:00〜</div>'),e.id);
     assert.ok(!html.includes('10月19日(月)'),e.id);
   }
   const agari=all.filter(e=>e.eventType==='agari-stage'&&e.date.startsWith('2026-11'));
@@ -343,7 +343,7 @@ test('冬期1st全33公演の11/18一般販売・配信なし／アガり全30�
     assert.equal(e.ticket.saleInfo,'一般発売：2026年10月19日（月）10:00～',e.id);
     const html=app.context.buildEventCardHTML(e,'results',[]);
     assert.ok(html.includes('※FANY一般発売：10月19日(月)10:00〜'),e.id);
-    assert.ok(!html.includes('class="ticket-sale-info">※ FANY一般販売：11月18日(水) 10:00〜'),e.id);
+    assert.ok(!html.includes('class="ticket-sale-info">※FANY一般発売：11月18日(水)10:00〜'),e.id);
   }
 });
 test('目視修正済みの22件を1-based香盤位置へそのまま反映（自動同一化なし）',()=>{
