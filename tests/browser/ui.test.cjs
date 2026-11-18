@@ -97,6 +97,47 @@ for(const width of [1280,390,375,320]){
   });
 }
 
+for(const width of [1280,390,375,320]){
+  test('FANYチケット4行・文字サイズと太さの統一 '+width+'px',{timeout:60000},async()=>{
+    const {context,page,errors}=await openPage(width,'2026-11-18T03:00:00Z');
+    try{
+      const cases=[
+        ['agari-stage','11','24','2026-11-24-1700-agari-stage','※FANY一般発売：10月19日(月)10:00〜','https://ticket.fany.lol/event/detail/22035'],
+        ['agari-stage','12','1','2026-12-01-1700-agari-stage','※FANY一般発売：11月20日(金)10:00〜','https://ticket.fany.lol/event/detail/23033'],
+        ['audition-1st-east','11','24','2026-11-24-1600-audition-1st-east','※FANY一般発売：11月18日(水)10:00〜','https://ticket.fany.lol/event/detail/23168'],
+        ['audition-1st-east','11','30','2026-11-30-1600-audition-1st-east','※FANY一般発売：11月18日(水)10:00〜','https://ticket.fany.lol/event/detail/23161'],
+      ];
+      for(const [eventType,month,day,id,sale,url] of cases){
+        await page.locator('#eventType').selectOption(eventType);
+        await page.locator('#month').selectOption(month);
+        await page.locator('#day').selectOption(day);
+        const note=page.locator('#event-'+id+' .ticket-note-unified');
+        assert.equal(await note.count(),1,id);
+        assert.deepEqual(await note.locator('.ticket-purchase-link > div').allTextContents(),[
+          'チケットの購入は FANY','もしくは出演者への取り置きも可能です'
+        ],id);
+        assert.deepEqual(await note.evaluate(el=>[...el.children].map(n=>n.className)),[
+          'ticket-purchase-link','ticket-sale-info','ticket-streaming-note'
+        ],id);
+        assert.equal(await note.locator('.ticket-sale-info').textContent(),sale,id);
+        assert.equal(await note.locator('.ticket-streaming-note').textContent(),'※配信はありません',id);
+        assert.equal(await note.locator('a').textContent(),'FANY',id);
+        assert.equal(await note.locator('a').getAttribute('href'),url,id);
+        const computed=await note.evaluate(el=>[
+          ...el.querySelectorAll('.ticket-purchase-link > div, .ticket-purchase-link a, .ticket-sale-info, .ticket-streaming-note')
+        ].map(n=>({size:getComputedStyle(n).fontSize,weight:getComputedStyle(n).fontWeight})));
+        assert.ok(computed.every(x=>x.size==='12px'&&x.weight==='400'),'4行は12px・通常ウェイト: '+id+' '+JSON.stringify(computed));
+      }
+      await page.locator('#eventType').selectOption('kiwami-grand-battle-east');
+      await page.locator('#month').selectOption('12');
+      await page.locator('#day').selectOption('12');
+      assert.equal(await page.locator('#results .ticket-note-unified').count(),0,'取り置き不可等の他公演へ流用しない');
+      assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),'横スクロールを発生させない');
+      assert.deepEqual(errors,[]);
+    }finally{await context.close();}
+  });
+}
+
 for (const width of [1280,390,375,320]) {
   test(`アガり ${width}px: 両候補検索・1枠・1お気に入り・URL復元・香盤順・ブロック（番号表示なし）`, {timeout:60000}, async () => {
     const {context,page,errors}=await openPage(width);
@@ -1088,7 +1129,7 @@ for(const width of [1280,390,375,320]){
       assert.match(await sparkle.locator('.venue-line').textContent(),/歌舞伎町Sparkle/);
       assert.equal(await sparkle.locator('.ticket-purchase-link a').getAttribute('href'),'https://ticket.fany.lol/event/detail/23161');
        assert.equal(await sparkle.locator('.ticket-streaming-note').textContent(),'※配信はありません');
-       assert.equal(await sparkle.locator('.ticket-sale-info').textContent(),'※ FANY一般販売：11月18日(水) 10:00〜');
+       assert.equal(await sparkle.locator('.ticket-sale-info').textContent(),'※FANY一般発売：11月18日(水)10:00〜');
       await page.locator('#day').selectOption('24');
       assert.equal(await page.locator('#results .result-card').count(),2);
       const november=page.locator('#event-2026-11-24-1600-audition-1st-east');
@@ -1096,7 +1137,7 @@ for(const width of [1280,390,375,320]){
       assert.match(await november.locator('.venue-line').textContent(),/LEFKADA新宿/);
       assert.equal(await november.locator('.ticket-purchase-link a').getAttribute('href'),'https://ticket.fany.lol/event/detail/23168');
        assert.equal(await november.locator('.ticket-streaming-note').textContent(),'※配信はありません');
-       assert.equal(await november.locator('.ticket-sale-info').textContent(),'※ FANY一般販売：11月18日(水) 10:00〜');
+       assert.equal(await november.locator('.ticket-sale-info').textContent(),'※FANY一般発売：11月18日(水)10:00〜');
       await page.locator('#month').selectOption('12');
       await page.locator('#day').selectOption('1');
       assert.equal(await page.locator('#results .result-card').count(),2);
@@ -1105,7 +1146,7 @@ for(const width of [1280,390,375,320]){
       assert.equal(await dec.locator('.performer-section .star').nth(8).getAttribute('data-name'),'ayu♡','12月の目視校正を確認');
       assert.equal(await dec.locator('.ticket-purchase-link a').getAttribute('href'),'https://ticket.fany.lol/event/detail/23168');
        assert.equal(await dec.locator('.ticket-streaming-note').textContent(),'※配信はありません');
-       assert.equal(await dec.locator('.ticket-sale-info').textContent(),'※ FANY一般販売：11月18日(水) 10:00〜');
+       assert.equal(await dec.locator('.ticket-sale-info').textContent(),'※FANY一般発売：11月18日(水)10:00〜');
       assert.equal(new URL(page.url()).searchParams.get('eventType'),'audition-1st-east');
       await page.locator('#nameQuery').fill('毛極蜂空芯蝶々虻火鉢');
       await page.waitForFunction(()=>new URL(location.href).searchParams.get('name')==='毛極蜂空芯蝶々虻火鉢' && document.querySelectorAll('#results .result-card').length===1);
