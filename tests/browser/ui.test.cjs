@@ -57,6 +57,46 @@ async function filterSecondStage(page) {
   await page.locator('#day').selectOption('30');
   assert.equal(await page.locator('#results .result-card').count(), 3);
 }
+for(const width of [1280,390,375,320]){
+  test('12月アガり '+width+'px: 30公演・907出演記録・MC/3ブロック・チケット発売日・お気に入り',{timeout:60000},async()=>{
+    const {context,page,errors}=await openPage(width,'2026-11-18T03:00:00Z');
+    try{
+      assert.equal(decemberAgari.length,30);
+      await page.locator('#eventType').selectOption('agari-stage');
+      await page.locator('#month').selectOption('12');
+      assert.equal(await page.locator('#results .result-card').count(),30);
+      assert.equal(await page.locator('#results .lineup-block').count(),90);
+      assert.equal(await page.locator('#results .lineup-block .star').count(),907);
+      assert.equal(await page.locator('#results .lineup-order').count(),0);
+      const first=page.locator('#event-2026-12-01-1700-agari-stage');
+      assert.match(await first.locator('.event-mc').textContent(),/MC：超巨大/);
+      assert.deepEqual(await first.locator('.lineup-block .star').evaluateAll(nodes=>nodes.map(n=>n.dataset.name)),decemberAgari[0].lineup.map(x=>x.name));
+      assert.equal(await first.locator('.ticket-purchase-link a').getAttribute('href'),'https://ticket.fany.lol/event/detail/23033');
+      assert.equal(await first.locator('.ticket-streaming-note').textContent(),'※配信はありません');
+      assert.equal(await first.locator('.ticket-sale-info').textContent(),'※FANY一般発売：11月20日(金)10:00〜');
+      assert.equal(await first.locator('.qualified-performers .star').count(),0,'未発表の順位を表示しない');
+      const second=page.locator('#event-2026-12-01-1930-agari-stage');
+      assert.match(await second.locator('.event-mc').textContent(),/MC：広島兄弟/);
+      assert.equal(await second.locator('.lineup-block .star').count(),30,'黒塗りの28番は出演者に加えない');
+      await page.locator('#day').selectOption('1');
+      assert.equal(await page.locator('#results .result-card').count(),2);
+      await page.locator('#nameQuery').fill('JJブッツ');
+      await page.waitForFunction(()=>new URL(location.href).searchParams.get('name')==='JJブッツ');
+      assert.equal(await page.locator('#results .result-card').count(),1);
+      assert.equal(await first.locator('.star[data-name="JJブッツ"]').count(),1);
+      await first.locator('.star[data-name="JJブッツ"]').click();
+      assert.equal(await first.locator('.star[data-name="JJブッツ"]').getAttribute('aria-pressed'),'true');
+      await page.reload();
+      await readySearchPage(page);
+      assert.equal(await first.locator('.star[data-name="JJブッツ"]').getAttribute('aria-pressed'),'true');
+      assert.equal(await page.locator('#eventType').inputValue(),'agari-stage');
+      assert.equal(await page.locator('#month').inputValue(),'12');
+      assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),'スマホでも横はみ出しなし');
+      assert.deepEqual(errors,[]);
+    }finally{await context.close();}
+  });
+}
+
 for (const width of [1280,390,375,320]) {
   test(`アガり ${width}px: 両候補検索・1枠・1お気に入り・URL復元・香盤順・ブロック（番号表示なし）`, {timeout:60000}, async () => {
     const {context,page,errors}=await openPage(width);
