@@ -304,7 +304,7 @@ const fixes=[
     "楽しいスポーツぷるぷるつんつん"
   ]
 ];
-const targetNotice="🆕 アガり！ステージの掲載を始めました　⚠️ 吉本のタレント検索サービスが一時停止中のためプロフィールリンクが飛べなくなっています";
+const targetNotice="🆕 12月アガり！ステージの香盤を掲載しました（出演者名は目視確認中です）　⚠️ 吉本のタレント検索サービスが一時停止中のためプロフィールリンクが飛べなくなっています";
 
 test('11/24〜12/17 1st新規33公演・841出演記録と開催時刻・欠場枠',()=>{
   assert.equal(all.length,257);
@@ -354,7 +354,7 @@ test('目視修正済みの22件を1-based香盤位置へそのまま反映（�
     assert.equal(e.performers[index-1],name,date+time+' #'+index);
   }
 });
-test('11月・12月の目視校正後、従来のアガり告知を復元',()=>{
+test('12月アガり初稿の目視確認中告知とプロフィール案内を表示',()=>{
   const notice=readJSON('data/site-notice.json');
   assert.equal(notice.enabled,true);
   assert.equal(notice.items.length,1);
