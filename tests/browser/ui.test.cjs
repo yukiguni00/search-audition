@@ -632,6 +632,7 @@ for (const width of [1280,390,375,320]) {
     const expected = readJSON('tests/fixtures/2026-10-30-stage-results.json');
     const futureIDs=[...readJSON('tests/fixtures/2026-nov-dec-audition-path.json').decemberEventIds,
       ...agari.filter(e=>e.date>='2026-11-07').map(e=>e.id),
+      ...decemberAgari.map(e=>e.id),
       ...winterFirst.map(e=>e.id)].map(id=>'event-'+id).sort();
     try {
       // Change only this test's clock; existing regression cases retain their own date.
@@ -1011,7 +1012,7 @@ for(const width of [1280,390,375,320]){
  assert.equal(await page.locator('#searchResultSummary').getAttribute('class'),'visually-hidden');assert.equal(await page.locator('#searchResultSummary').getAttribute('role'),'status');assert.equal(await page.locator('footer a[href="https://x.com/agaristage"]').count(),1);
  assert.equal(await page.locator('#siteNotice').isVisible(),true);
  assert.equal(await page.locator('#siteNoticeTrack span').count(),2,'流れる告知はシームレスループ用に同じ内容を2回描画');
- assert.equal((await page.locator('#siteNoticeTrack span').first().textContent()).replace(/\s+/g,' '),'🆕 アガり！ステージの掲載を始めました ⚠️ 吉本のタレント検索サービスが一時停止中のためプロフィールリンクが飛べなくなっています');
+ assert.equal((await page.locator('#siteNoticeTrack span').first().textContent()).replace(/\s+/g,' '),'🆕 12月アガり！ステージの香盤を掲載しました（出演者名は目視確認中です） ⚠️ 吉本のタレント検索サービスが一時停止中のためプロフィールリンクが飛べなくなっています');
  await page.locator('#eventType').selectOption('agari-stage');await page.locator('#month').selectOption('11');await page.locator('#day').selectOption('2');await page.locator('#nameQuery').fill(' サンライズ ');
  await page.waitForFunction(()=>new URL(location.href).searchParams.get('name')===' サンライズ ');await page.locator('#archiveBody').waitFor({state:'visible'});
  const card=page.locator('#event-2026-11-02-1700-agari-stage');assert.equal(await card.locator('.event-mc .mc-name.search-match').count(),1);assert.equal(await card.locator('.event-mc .star').count(),0);assert.equal(await card.locator('.event-mc').textContent(),'MC：サンライズ（芸人名の検索条件に一致）');
@@ -1074,7 +1075,7 @@ for(const width of [1280,390,375,320]){
     const {context,page,errors}=await openPage(width,'2026-11-17T03:00:00Z');
     try{
       assert.equal(winterFirst.length,33);
-      assert.equal((await page.locator('#siteNoticeTrack span').first().textContent()).trim(),'🆕 アガり！ステージの掲載を始めました　⚠️ 吉本のタレント検索サービスが一時停止中のためプロフィールリンクが飛べなくなっています');
+      assert.equal((await page.locator('#siteNoticeTrack span').first().textContent()).trim(),'🆕 12月アガり！ステージの香盤を掲載しました（出演者名は目視確認中です）　⚠️ 吉本のタレント検索サービスが一時停止中のためプロフィールリンクが飛べなくなっています');
       await page.locator('#eventType').selectOption('audition-1st-east');
       await page.locator('#month').selectOption('11');
       await page.locator('#day').selectOption('30');
