@@ -291,7 +291,7 @@ for (const width of [1280,390,375,320]) {
   test(`バックアップ操作領域 ${width}px: 移動前後・閉じるボタンは縦横44px以上、CSSバージョン・下線を確認`, {timeout:30000}, async () => {
     const {context, page, errors} = await openPage(width);
     try {
-      assert.equal(await page.locator('link[rel="stylesheet"]').getAttribute('href'), 'style.css?v=20261111-v6-3');
+      assert.equal(await page.locator('link[rel="stylesheet"]').getAttribute('href'), 'style.css?v=20261119-orange-highlight');
       const metrics = [];
       const checkLink = async locator => {
         const style = await locator.evaluate(el => {
@@ -801,7 +801,7 @@ for(const width of [1280,390,375,320]) {
     const {context,page,errors}=await openPage(width);
     try {
       assert.deepEqual(await assertVisibleCounts(page),{future:101,pending:2,past:156});
-      assert.equal(await page.locator('#searchMatchLegend').isHidden(),true);
+      assert.equal(await page.locator('#searchMatchLegend').count(),0);
       assert.equal(await assertMatchChips(page),0);
       await page.locator('#nameQuery').fill(' ｚａｚｙ ');
       await page.waitForFunction(()=>getCurrentFilters().nameQuery==='zazy'&&document.querySelector('.search-match'));
@@ -819,18 +819,20 @@ for(const width of [1280,390,375,320]) {
       assert.deepEqual(await page.locator('#results .performer-section .star').evaluateAll(nodes=>nodes.map(n=>n.dataset.name)),order);
       assert.equal(await chip.locator('.performer-profile-link').getAttribute('href'),profile);
       const colors=await chip.evaluate(el=>({bg:getComputedStyle(el).backgroundColor,border:getComputedStyle(el).outlineColor}));
-      assert.equal(colors.bg,'rgb(255, 245, 157)');assert.equal(colors.border,'rgb(24, 90, 157)');
+      assert.equal(colors.bg,'rgb(255, 245, 157)');assert.equal(colors.border,'rgb(198, 83, 0)');
+      assert.ok((await chip.locator('.performer-name').evaluate(el=>getComputedStyle(el).textDecorationLine)).includes('underline'));
+      assert.equal(await page.locator('#searchMatchLegend').count(),0);
       await page.reload();await readySearchPage(page);
       assert.equal(await page.locator('#nameQuery').inputValue(),' ｚａｚｙ ');
       await assertVisibleCounts(page);assert.ok(await assertMatchChips(page)>0);
       assert.equal(await page.locator('#searchResultSummary').getAttribute('role'),'status');
       assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true);
-      const overflow=await page.locator('#results .performer, #searchMatchLegend').evaluateAll(nodes=>nodes.filter(el=>el.scrollWidth>el.clientWidth+1).length);
+      const overflow=await page.locator('#results .performer').evaluateAll(nodes=>nodes.filter(el=>el.scrollWidth>el.clientWidth+1).length);
       assert.equal(overflow,0);
       for(const id of ['clearBtn','favoriteBackupBtn','archiveToggleBtn']) {const rect=await page.locator('#'+id).boundingBox();assert.ok(rect.height>=44&&rect.width>=44,id);}
       if(process.env.TEST_SCREENSHOT_DIR)await page.screenshot({path:path.join(process.env.TEST_SCREENSHOT_DIR,`visibility-${width}.png`),fullPage:true});
       await page.locator('#clearBtn').click();assert.equal(await assertMatchChips(page),0);
-      assert.equal(await page.locator('#searchMatchLegend').isHidden(),true);
+      assert.equal(await page.locator('#searchMatchLegend').count(),0);
       await page.locator('#nameQuery').fill('存在しない視認性テスト');
       await page.waitForFunction(()=>document.querySelector('#searchResultSummary').textContent==='今後の開催：0件 ／ 進出者・出演予定者一覧：0件 ／ 過去の開催：0件');
       assert.deepEqual(await assertVisibleCounts(page),{future:0,pending:0,past:0});assert.deepEqual(errors,[]);
@@ -1117,7 +1119,8 @@ for(const width of [1280,390,375,320]){
  assert.equal((await page.locator('#siteNoticeTrack span').first().textContent()).replace(/\s+/g,' '),'🆕 12月アガり！ステージの香盤を掲載しました（出演者名は目視確認中です） ⚠️ 吉本のタレント検索サービスが一時停止中のためプロフィールリンクが飛べなくなっています');
  await page.locator('#eventType').selectOption('agari-stage');await page.locator('#month').selectOption('11');await page.locator('#day').selectOption('2');await page.locator('#nameQuery').fill(' サンライズ ');
  await page.waitForFunction(()=>new URL(location.href).searchParams.get('name')===' サンライズ ');await page.locator('#archiveBody').waitFor({state:'visible'});
- const card=page.locator('#event-2026-11-02-1700-agari-stage');assert.equal(await card.locator('.event-mc .mc-name.search-match').count(),1);assert.equal(await card.locator('.event-mc .star').count(),0);assert.equal(await card.locator('.event-mc').textContent(),'MC：サンライズ（芸人名の検索条件に一致）');
+ const card=page.locator('#event-2026-11-02-1700-agari-stage');assert.equal(await card.locator('.event-mc .mc-name.search-match').count(),1);assert.equal(await card.locator('.event-mc .star').count(),0);
+ assert.equal(await card.locator('.event-mc .mc-name.search-match').evaluate(el=>getComputedStyle(el).outlineColor),'rgb(198, 83, 0)');assert.equal(await card.locator('.event-mc').textContent(),'MC：サンライズ（芸人名の検索条件に一致）');
  assert.equal(await card.locator('.lineup-order-note').textContent(),'※香盤順');assert.deepEqual(await card.locator('.performer-section').evaluate(el=>[...el.children].map(n=>n.className).slice(0,3)),['card-section-label','event-mc','lineup-block']);
  assert.match(await card.locator('.event-notice').textContent(),/公式Xでは第3位「サンライズ」/);assert.equal(await card.locator('.ticket-purchase-link a').getAttribute('href'),'https://ticket.fany.lol/event/detail/22035');assert.equal(await card.locator('.ticket-streaming-note').textContent(),'※配信はありません');assert.equal(await card.locator('.ticket-sale-info').textContent(),'※FANY一般発売：10月19日(月)10:00〜');
  const before=await searchCardIDs(page,'#archiveResults');await page.reload();await readySearchPage(page);assert.deepEqual(await searchCardIDs(page,'#archiveResults'),before);assert.equal(await card.locator('.event-mc .search-match').count(),1);
