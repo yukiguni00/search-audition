@@ -84,11 +84,9 @@ function emphasizeSearchMatches(target, normalizedQuery) {
   });
 }
 
-function updateSearchResultSummary(futureResults, pendingCount, pastResults, filters) {
+function updateSearchResultSummary(futureResults, pendingCount, pastResults) {
   const summary = document.getElementById("searchResultSummary");
   if (summary) summary.textContent = `今後の開催：${futureResults.length}件 ／ 進出者・出演予定者一覧：${pendingCount}件 ／ 過去の開催：${pastResults.length}件`;
-  const legend = document.getElementById("searchMatchLegend");
-  if (legend) legend.hidden = !filters.nameQuery;
 }
 
 function buildPerformerAliasMap(data) {
@@ -1743,7 +1741,7 @@ function runSearch() {
   const pendingCount = renderMainEvents("results", futureResults, filters);
   const hasUpcomingResults = futureResults.length > 0 || pendingCount > 0;
   const pastOnlyHit = activeFilters && !hasUpcomingResults && pastResults.length > 0;
-  updateSearchResultSummary(futureResults, pendingCount, pastResults, filters);
+  updateSearchResultSummary(futureResults, pendingCount, pastResults);
 
   if (pastOnlyHit) {
     setArchiveOpen(true);
