@@ -158,7 +158,7 @@ test('ライブ名選択にサラに！を追加し、日時未確認の24組だ
   assert.equal(groups[0].nextEventType,'sarani-agari-stage');
   assert.equal(groups[0].nextEventTitle,'サラに！アガり！ステージ');
   assert.equal(groups[0].nextDate,'','開催日時を推測しない');
-  assert.equal(groups[0].names.length,22);
+  assert.equal(groups[0].names.length,24);
   const htmlCard=app.context.buildPendingStageCardHTML(groups[0],[]);
   assert.match(htmlCard,/出場権獲得者/);
   assert.match(htmlCard,/出演日時未確認/);
