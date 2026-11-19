@@ -29,9 +29,11 @@ const expected=[
   ['2026-11-17','19:30','ただならぬ刀','千年ぶり',['まろやか']],
   ['2026-11-18','17:00','きしゃぽっぽ',['笠川拓夢'],['ナターリア']],
   ['2026-11-18','19:30','スーパートマト',['くろざとう','しゃちほこダイナソー'],['せらっきょ']],
+  ['2026-11-19','17:00','ミックストマトジュース','デンゼル',['ムエタイ出身']],
+  ['2026-11-19','19:30','ゴスケ','スティックセニョール',['ラクダ人生']],
 ];
 const key=e=>e.date+'T'+e.time;
-test('公式発表24公演の入賞結果を正しく記録し、その他6公演は未発表',()=>{
+test('公式発表26公演の入賞結果を正しく記録し、その他4公演は未発表',()=>{
   assert.equal(all.length,257);assert.equal(events.length,30);
   const resultKeys=new Set(expected.map(x=>x[0]+'T'+x[1]));
   for(const [date,time,winner,second,third] of expected){
@@ -57,7 +59,7 @@ test('公式発表24公演の入賞結果を正しく記録し、その他6公�
     }
     assert.deepEqual(monthly.find(x=>key(x)===key(e)),e);
   }
-  assert.equal(events.filter(e=>!resultKeys.has(key(e))).length,6);
+  assert.equal(events.filter(e=>!resultKeys.has(key(e))).length,4);
   assert.ok(events.filter(e=>!resultKeys.has(key(e))).every(e=>e.stageResults.every(r=>r.status==='pending'&&r.performers.length===0)));
   assert.equal(events.find(e=>e.date==='2026-11-04'&&e.time==='19:30').stageResults[2].performers.length,3);
 });
@@ -72,14 +74,14 @@ test('30公演の共通FANYと販売・取り置き・配信なし',()=>{
     assert.ok(app.context.getTicketLinkHTML(e,'results').includes('href="https://ticket.fany.lol/event/detail/22035"'));
   }
 });
-test('サラに！出場権24組は1枚の専用カード。3位同順位は3名表示',()=>{
+test('サラに！出場権26組は1枚の専用カード。3位同順位は3名表示',()=>{
   const app=loadApp();
   const e=events.find(e=>e.date==='2026-11-04'&&e.time==='19:30');
   const html=app.context.getStageResultsHTML(e,[]);
   for(const n of ['プテラエリア','こへい','鬼河童','フィッシュおさかな','ユンクフラワー'])assert.ok(html.includes(n),n);
   const groups=app.context.getPendingStageGroups({nameQuery:'',eventType:'all',month:'all',day:'all',hour:'all'});
   const rights=groups.filter(g=>g.nextEventType==='sarani-agari-stage');
-  assert.equal(rights.length,1);assert.equal(rights[0].names.length,24);
+  assert.equal(rights.length,1);assert.equal(rights[0].names.length,26);
   assert.equal(rights[0].nextDate,'');
   const output=app.context.buildPendingStageCardHTML(rights[0],[]);
   assert.match(output,/出場権獲得者/);assert.match(output,/出演日時未確認/);
@@ -144,7 +146,7 @@ test('11/12・13の4公演は発表順位・出場権のみ更新、香盤とMC�
   assert.equal(late.excludedSlots[0].order,4,'既存の判読不可枠を維持');
 });
 
-test('ライブ名選択にサラに！を追加し、日時未確認の24組だけを絞り込める。スタンドアップ項目を削除',()=>{
+test('ライブ名選択にサラに！を追加し、日時未確認の26組だけを絞り込める。スタンドアップ項目を削除',()=>{
   const fs=require('node:fs');
   const path=require('node:path');
   const html=fs.readFileSync(path.join(__dirname,'../index.html'),'utf8');
@@ -158,14 +160,14 @@ test('ライブ名選択にサラに！を追加し、日時未確認の24組だ
   assert.equal(groups[0].nextEventType,'sarani-agari-stage');
   assert.equal(groups[0].nextEventTitle,'サラに！アガり！ステージ');
   assert.equal(groups[0].nextDate,'','開催日時を推測しない');
-  assert.equal(groups[0].names.length,24);
+  assert.equal(groups[0].names.length,26);
   const htmlCard=app.context.buildPendingStageCardHTML(groups[0],[]);
   assert.match(htmlCard,/出場権獲得者/);
   assert.match(htmlCard,/出演日時未確認/);
   const one=app.context.getPendingStageGroups({...filters,nameQuery:app.context.normalizeText('ランス39号')});
   assert.equal(one.length,1);
   assert.deepEqual([...one[0].names],['ランス39号']);
-  assert.equal(one[0].totalCount,24);
+  assert.equal(one[0].totalCount,26);
   assert.equal(app.context.getPendingStageGroups({...filters,month:'11'}).length,0,'日時未確認のため月指定ではヒットさせない');
 });
 
@@ -192,11 +194,11 @@ test('11/17の2公演の1位・2位・3位、サラに！出場権を保存し�
     for(const name of [winner,second,third])assert.ok(html.includes(name),name);
     assert.match(html,/サラに！アガり！ステージ出場権/);
   }
-  assert.equal(events.filter(e=>e.stageResults[0].status==='ranked').length,24);
-  assert.equal(events.filter(e=>e.stageResults[0].status==='pending').length,6);
+  assert.equal(events.filter(e=>e.stageResults[0].status==='ranked').length,26);
+  assert.equal(events.filter(e=>e.stageResults[0].status==='pending').length,4);
   const rights=app.context.getPendingStageGroups({nameQuery:'',eventType:'sarani-agari-stage',month:'all',day:'all',hour:'all'});
   assert.equal(rights.length,1);
-  assert.equal(rights[0].names.length,24);
+  assert.equal(rights[0].names.length,26);
   assert.equal(rights[0].nextDate,'');
 });
 
@@ -250,4 +252,34 @@ test('11/18の順位・同率2位と香盤不一致の注記を確認',()=>{
    assert.ok(!e.eventNotice);
   }
  }
+});
+
+test('11/19の2公演の順位・出場権を保持し、香盤やMCを変更しない',()=>{
+ const app=loadApp();
+ const cases=[['2026-11-19-1700-agari-stage','ミックストマトジュース','デンゼル','ムエタイ出身','ラクダ人生'],['2026-11-19-1930-agari-stage','ゴスケ','スティックセニョール','ラクダ人生','キゲンゼン']];
+ for(const [id,winner,second,third,mc] of cases){
+  const e=events.find(x=>x.id===id);assert.ok(e,id);
+  assert.equal(e.mc,mc,'元のMCを変更しない');
+  assert.deepEqual(e.performers,e.lineup.map(x=>x.name),'香盤順と出演者を維持');
+  assert.equal(e.performers.length,28);
+  assert.ok([winner,second,third].every(n=>e.performers.includes(n)),'全入賞者は出演者一覧にいる');
+  assert.deepEqual(e.stageResults.map(x=>x.status),['ranked','ranked','ranked','advanced']);
+  assert.deepEqual(e.stageResults.map(x=>x.performers),[[winner],[second],[third],[winner]]);
+  assert.equal(e.stageResults[3].nextEventType,'sarani-agari-stage');
+  assert.equal(e.stageResults[3].nextEventTitle,'サラに！アガり！ステージ');
+  assert.ok(!('nextDate' in e.stageResults[3])&&!('nextTime' in e.stageResults[3]),'進出日時は未確認');
+  assert.ok(!e.eventNotice,'香盤不一致の注記は不要');
+  assert.deepEqual(monthly.find(x=>x.id===id),e,'月別と集約の同期');
+  const html=app.context.buildEventCardHTML(e,'archiveResults',[]);
+  for(const name of [winner,second,third])assert.ok(html.includes(name),name);
+  assert.match(html,/サラに！アガり！ステージ出場権/);
+ }
+ const a=events.find(x=>x.id==='2026-11-19-1700-agari-stage');
+ const b=events.find(x=>x.id==='2026-11-19-1930-agari-stage');
+ assert.equal(a.mc,'ラクダ人生');
+ assert.ok(!a.performers.includes('ラクダ人生'),'1部MCを勝手に出演者へ追加しない');
+ assert.deepEqual(b.stageResults[2].performers,['ラクダ人生'],'2部第3位と1部MCを区別');
+ const rights=app.context.getPendingStageGroups({nameQuery:'',eventType:'sarani-agari-stage',month:'all',day:'all',hour:'all'});
+ assert.equal(rights.length,1);assert.equal(rights[0].names.length,26);
+ assert.equal(events.filter(x=>x.stageResults[0].status==='pending').length,4);
 });
