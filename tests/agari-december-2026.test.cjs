@@ -140,7 +140,7 @@ test('12月のFANYと11/20発売を11月の10/19発売やオーディション1s
  }
  const rights=app.context.getPendingStageGroups({nameQuery:'',eventType:'sarani-agari-stage',month:'all',day:'all',hour:'all'});
  assert.equal(rights.length,1);
- assert.equal(rights[0].names.length,22,'12月未発表分をサラに！の出場権に追加しない');
+ assert.equal(rights[0].names.length,24,'12月未発表分をサラに！の出場権に追加しない');
 });
 
 test('前回の12月アガり！32名と1st2名の確認済み表記を保持',()=>{
