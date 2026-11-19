@@ -165,7 +165,7 @@ test('ライブ名選択にサラに！を追加し、日時未確認の24組だ
   const one=app.context.getPendingStageGroups({...filters,nameQuery:app.context.normalizeText('ランス39号')});
   assert.equal(one.length,1);
   assert.deepEqual([...one[0].names],['ランス39号']);
-  assert.equal(one[0].totalCount,22);
+  assert.equal(one[0].totalCount,24);
   assert.equal(app.context.getPendingStageGroups({...filters,month:'11'}).length,0,'日時未確認のため月指定ではヒットさせない');
 });
 
