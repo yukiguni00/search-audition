@@ -79,5 +79,17 @@ test('翔15組の次回は掲載済み11/6と一致。3組の所属を通常の�
     assert.equal(result.nextDate,'2026-11-06');assert.equal(result.nextTime,'19:30');
     assert.equal(a.context.hasPublishedStageDetails(result),true);
   }
-  for(const name of f.promoted){a.set('name',name);a.run('saveFavorites([normalizeText(name)])');assert.ok(a.context.getFavoriteScheduleData().eventGroups.every(g=>g.event.eventType==='agari-stage'));}
+  for(const name of f.promoted){
+    a.set('name',name);a.run('saveFavorites([normalizeText(name)])');
+    const groups=a.context.getFavoriteScheduleData().eventGroups;
+    if(name==='ミックストマトジュース'){
+      assert.ok(groups.some(g=>g.event.eventType==='agari-stage'),'11/19の出演情報を維持');
+      const sarani=groups.filter(g=>g.event.eventType==='sarani-agari-stage');
+      assert.equal(sarani.length,1,'11/19の最優秀者はサラに！出場権を1枚保持');
+      assert.equal(sarani[0].event.date,'','サラに！日時は未発表');
+      assert.deepEqual(Array.from(sarani[0].names),['ミックストマトジュース']);
+    }else{
+      assert.ok(groups.every(g=>g.event.eventType==='agari-stage'),'出場権を獲得していない芸人へ進出情報を付与しない: '+name);
+    }
+  }
 });

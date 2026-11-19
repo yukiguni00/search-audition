@@ -13215,29 +13215,38 @@
     "excludedSlots": [],
     "stageResults": [
       {
-        "status": "pending",
+        "status": "ranked",
         "displayStyle": "qualified",
-        "performers": [],
+        "performers": [
+          "ミックストマトジュース"
+        ],
         "label": "最優秀者"
       },
       {
-        "status": "pending",
+        "status": "ranked",
         "displayStyle": "qualified",
-        "performers": [],
+        "performers": [
+          "デンゼル"
+        ],
         "label": "2位"
       },
       {
-        "status": "pending",
+        "status": "ranked",
         "displayStyle": "qualified",
-        "performers": [],
+        "performers": [
+          "ムエタイ出身"
+        ],
         "label": "3位"
       },
       {
-        "status": "pending",
+        "status": "advanced",
         "displayStyle": "next-stage",
-        "performers": [],
+        "performers": [
+          "ミックストマトジュース"
+        ],
         "nextEventType": "sarani-agari-stage",
-        "label": "サラに！への進出"
+        "label": "サラに！アガり！ステージ出場権",
+        "nextEventTitle": "サラに！アガり！ステージ"
       }
     ],
     "ticket": {
@@ -13435,29 +13444,38 @@
     "excludedSlots": [],
     "stageResults": [
       {
-        "status": "pending",
+        "status": "ranked",
         "displayStyle": "qualified",
-        "performers": [],
+        "performers": [
+          "ゴスケ"
+        ],
         "label": "最優秀者"
       },
       {
-        "status": "pending",
+        "status": "ranked",
         "displayStyle": "qualified",
-        "performers": [],
+        "performers": [
+          "スティックセニョール"
+        ],
         "label": "2位"
       },
       {
-        "status": "pending",
+        "status": "ranked",
         "displayStyle": "qualified",
-        "performers": [],
+        "performers": [
+          "ラクダ人生"
+        ],
         "label": "3位"
       },
       {
-        "status": "pending",
+        "status": "advanced",
         "displayStyle": "next-stage",
-        "performers": [],
+        "performers": [
+          "ゴスケ"
+        ],
         "nextEventType": "sarani-agari-stage",
-        "label": "サラに！への進出"
+        "label": "サラに！アガり！ステージ出場権",
+        "nextEventTitle": "サラに！アガり！ステージ"
       }
     ],
     "ticket": {
