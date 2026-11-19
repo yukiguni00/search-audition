@@ -1077,8 +1077,8 @@ for(const width of [1280,320]){
         assert.equal(await card.locator('.event-notice').count(),0);
       }
       await page.locator('#day').selectOption('18');
-      const n18a=page.locator('#archiveResults #event-2026-11-18-1700-agari-stage');
-      const n18b=page.locator('#archiveResults #event-2026-11-18-1930-agari-stage');
+      const n18a=page.locator('#results #event-2026-11-18-1700-agari-stage');
+      const n18b=page.locator('#results #event-2026-11-18-1930-agari-stage');
       assert.equal(await n18a.locator('.qualified-performers').nth(0).locator('.star').getAttribute('data-name'),'きしゃぽっぽ');
       assert.equal(await n18a.locator('.qualified-performers').nth(1).locator('.star').getAttribute('data-name'),'笠川拓夢');
       assert.equal(await n18a.locator('.qualified-performers').nth(2).locator('.star').getAttribute('data-name'),'ナターリア');
