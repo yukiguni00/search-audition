@@ -10,12 +10,10 @@ test('一致強調は検索と同じ正規化・部分一致。空白、全角�
 });
 test('件数はカード単位。複数セッションも1件、一覧は別枠、ゼロ件も明記', () => {
   const a=loadApp();
-  a.context.updateSearchResultSummary([{sessions:[{},{}]}],2,[{}],{nameQuery:'a'});
+  a.context.updateSearchResultSummary([{sessions:[{},{}]}],2,[{}]);
   assert.equal(a.element('searchResultSummary').textContent,'今後の開催：1件 ／ 進出者・出演予定者一覧：2件 ／ 過去の開催：1件');
-  assert.equal(a.element('searchMatchLegend').hidden,false);
-  a.context.updateSearchResultSummary([],0,[],{nameQuery:''});
+  a.context.updateSearchResultSummary([],0,[]);
   assert.equal(a.element('searchResultSummary').textContent,'今後の開催：0件 ／ 進出者・出演予定者一覧：0件 ／ 過去の開催：0件');
-  assert.equal(a.element('searchMatchLegend').hidden,true);
 });
 test('強調は既存チップにクラスと読み上げ説明を追加し、名前をHTMLへ挿入しない', () => {
   const a=loadApp();const added=[];const children=[];
@@ -34,4 +32,21 @@ test('描画した自動生成一覧の件数を返す。通常カードや各�
   assert.equal(a.context.renderMainEvents('results',[],filters),1);
   assert.match(a.element('results').innerHTML,/pending-stage-card/);
   assert.equal(a.context.renderMainEvents('results',[],{...filters,nameQuery:'nonexistent'}),0);
+});
+
+test('検索一致の凡例を撤去し、オレンジ枠と読み上げ・お気に入りの区別を維持',()=>{
+  const fs=require('node:fs');
+  const path=require('node:path');
+  const root=path.join(__dirname,'..');
+  const html=fs.readFileSync(path.join(root,'index.html'),'utf8');
+  const css=fs.readFileSync(path.join(root,'style.css'),'utf8');
+  const script=fs.readFileSync(path.join(root,'script.js'),'utf8');
+  assert.doesNotMatch(html,/searchMatchLegend|青い枠・下線/);
+  assert.doesNotMatch(css,/search-match-legend|#185a9d/);
+  assert.doesNotMatch(script,/searchMatchLegend/);
+  assert.match(css,/\.performer\.search-match\{outline:2px solid #c65300/);
+  assert.match(css,/\.mc-name\.search-match\{outline:2px solid #c65300/);
+  assert.match(css,/\.performer\.favorite\{background:#fff59d\}/);
+  assert.match(css,/\.performer\.search-match \.performer-name[^\n]*text-decoration:underline/);
+  assert.match(script,/（芸人名の検索条件に一致）/);
 });
