@@ -664,7 +664,7 @@ for (const width of [1280,320]) {
       await openSearchURL(page,`${baseURL}/?noanalytics=1&month=10&unknown=drop#contact`);
       assert.equal(new URL(page.url()).hash,'#contact');
       assert.equal(new URL(page.url()).searchParams.get('unknown'),null);
-      assert.equal(await page.locator('script[src^="script.js?"]').getAttribute('src'),'script.js?v=20261111-v6');
+      assert.equal(await page.locator('script[src^="script.js?"]').getAttribute('src'),'script.js?v=20261119-orange-highlight');
       await page.locator('#day').selectOption('30');
       await page.locator('#nameQuery').fill(backupNames[0]);
       await page.waitForFunction(name=>new URL(location.href).searchParams.get('name')===name,backupNames[0]);
@@ -820,7 +820,7 @@ for(const width of [1280,390,375,320]) {
       assert.equal(await chip.locator('.performer-profile-link').getAttribute('href'),profile);
       const colors=await chip.evaluate(el=>({bg:getComputedStyle(el).backgroundColor,border:getComputedStyle(el).outlineColor}));
       assert.equal(colors.bg,'rgb(255, 245, 157)');assert.equal(colors.border,'rgb(198, 83, 0)');
-      assert.ok((await chip.locator('.performer-name').evaluate(el=>getComputedStyle(el).textDecorationLine)).includes('underline'));
+      assert.ok((await chip.locator('.performer-name-text').evaluate(el=>getComputedStyle(el).textDecorationLine)).includes('underline'));
       assert.equal(await page.locator('#searchMatchLegend').count(),0);
       await page.reload();await readySearchPage(page);
       assert.equal(await page.locator('#nameQuery').inputValue(),' ｚａｚｙ ');
