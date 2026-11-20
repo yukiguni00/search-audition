@@ -33,7 +33,7 @@ const expected=[
   ['2026-11-19','19:30','ゴスケ','スティックセニョール',['ラクダ人生']],
 ];
 const key=e=>e.date+'T'+e.time;
-const saraniTicket={url:'https://ticket.fany.lol/reception/70947/55946',linkLabel:'FANYチケット',saleInfo:'※FANY一般発売：11月20日(金)10:00〜'};
+const saraniTicket={url:'https://ticket.fany.lol/reception/70947/55946',linkLabel:'FANYチケット',saleInfo:'※FANY一般発売：11月20日(金)10:00〜',purchaseNote:'出演者への取り置きも可能です',streamingNote:'※配信はありません'};
 function assertSarAniSchedule(result){
   assert.equal(result.nextDate,'2026-11-27');
   assert.equal(result.nextTime,'17:00');
@@ -101,7 +101,15 @@ test('11/27開催のサラに！出場権26組は1枚の専用カード。3位�
   assert.match(output,/会場：歌舞伎町Sparkle/);
   assert.ok(output.includes('href="https://ticket.fany.lol/reception/70947/55946"'));
   assert.ok(output.includes('※FANY一般発売：11月20日(金)10:00〜'));
-  assert.doesNotMatch(output,/出演日時未確認|取り置きも可能|※配信はありません/);
+  assert.doesNotMatch(output,/出演日時未確認/);
+  assert.match(output,/ticket-note ticket-note-unified/);
+  assert.match(output,/チケットの購入は <a href="https:\/\/ticket\.fany\.lol\/reception\/70947\/55946"[^>]*>FANY<\/a>/);
+  assert.match(output,/もしくは出演者への取り置きも可能です/);
+  assert.match(output,/※配信はありません/);
+  assert.ok(output.indexOf('チケットの購入は')<output.indexOf('もしくは出演者への取り置きも可能です'));
+  assert.ok(output.indexOf('もしくは出演者への取り置きも可能です')<output.indexOf('※FANY一般発売：11月20日(金)10:00〜'));
+  assert.ok(output.indexOf('※FANY一般発売：11月20日(金)10:00〜')<output.indexOf('※配信はありません'));
+  assert.equal((output.match(/ticket-note-unified/g)||[]).length,1,'同一カードに一つだけチケット案内');
 });
 
 test('11/2 1部の第3位サンライズは公式結果を維持し、香盤MCとの差異を公演注記に表示',()=>{
