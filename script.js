@@ -1547,8 +1547,9 @@ function getNextStageSectionsHTML(ev, favorites) {
 function getTicketLinkHTML(ev, targetId) {
   const ticket = getTicketInfo(ev);
   const modernAgari = ev.eventType === "agari-stage" && /^2026-(?:11|12)-/.test(ev.date);
+  const saraniAgari = ev.eventType === "sarani-agari-stage" && Boolean(ticket.url && ticket.purchaseNote && ticket.streamingNote);
   const winterFirst = ev.eventType === "audition-1st-east" && ev.date >= "2026-11-24" && ev.date <= "2026-12-17";
-  if (modernAgari || (winterFirst && targetId === "results")) {
+  if (modernAgari || saraniAgari || (winterFirst && targetId === "results")) {
     const sale = ticket.saleInfo.replace(
       /^(?:一般発売：\d{4}年|※\s*FANY一般(?:販売|発売)：)(\d{1,2})月(\d{1,2})日[（(]([月火水木金土日])[）)]\s*(\d{1,2}:\d{2})[～〜]$/,
       (_, month, day, weekday, time) => `※FANY一般発売：${month}月${day}日(${weekday})${time}〜`
