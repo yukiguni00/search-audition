@@ -86,7 +86,10 @@ test('翔15組の次回は掲載済み11/6と一致。3組の所属を通常の�
       assert.ok(groups.some(g=>g.event.eventType==='agari-stage'),'11/19の出演情報を維持');
       const sarani=groups.filter(g=>g.event.eventType==='sarani-agari-stage');
       assert.equal(sarani.length,1,'11/19の最優秀者はサラに！出場権を1枚保持');
-      assert.equal(sarani[0].event.date,'','サラに！日時は未発表');
+      assert.equal(sarani[0].event.date,'2026-11-27','11/27開催日をお気に入りにも表示');
+      assert.equal(sarani[0].event.time,'17:00');
+      assert.equal(sarani[0].event.venue,'歌舞伎町Sparkle');
+      assert.match(a.context.getFavoriteScheduleLabel(sarani[0].event),/11月27日\(金\) 開演17:00/);
       assert.deepEqual(Array.from(sarani[0].names),['ミックストマトジュース']);
     }else{
       assert.ok(groups.every(g=>g.event.eventType==='agari-stage'),'出場権を獲得していない芸人へ進出情報を付与しない: '+name);

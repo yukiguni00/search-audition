@@ -664,7 +664,7 @@ for (const width of [1280,320]) {
       await openSearchURL(page,`${baseURL}/?noanalytics=1&month=10&unknown=drop#contact`);
       assert.equal(new URL(page.url()).hash,'#contact');
       assert.equal(new URL(page.url()).searchParams.get('unknown'),null);
-      assert.equal(await page.locator('script[src^="script.js?"]').getAttribute('src'),'script.js?v=20261119-orange-highlight');
+      assert.equal(await page.locator('script[src^="script.js?"]').getAttribute('src'),'script.js?v=20261120-sarani-schedule');
       await page.locator('#day').selectOption('30');
       await page.locator('#nameQuery').fill(backupNames[0]);
       await page.waitForFunction(name=>new URL(location.href).searchParams.get('name')===name,backupNames[0]);
@@ -762,13 +762,15 @@ for (const width of [1280,390,375,320]) {
       assert.deepEqual(await searchCardIDs(page).then(ids=>ids.filter(id=>!id.startsWith('event-pending-')).sort()),futureIDs);
       assert.equal(await page.locator('#favoriteSchedule .favorite-jump-btn').count(),3,'パピヨンの出演情報4件のうち先頭3件だけを折りたたみ表示');
       const favoriteDetails=await page.locator('#favoriteSchedule').textContent();
-      assert.ok(favoriteDetails.includes('出演部未定'));
-      assert.ok(!favoriteDetails.includes('サラに！アガり！ステージ'),'未確認の出場権は確定日時3件の後ろに置く');
+      assert.ok(!favoriteDetails.includes('出演部未定'),'日時の確定したサラに！が先頭3件に並ぶ');
+      assert.ok(favoriteDetails.includes('サラに！アガり！ステージ'),'11/27の確定予定を先頭に表示');
+      assert.ok(favoriteDetails.includes('11月27日(金) 開演17:00'),'お気に入りにも開催日時を表示');
       await page.locator('#favoriteScheduleToggleBtn').click();
       assert.equal(await page.locator('#favoriteSchedule .favorite-jump-btn').count(),4,'12/9アガり、12/14 1st、極進出、サラに！出場権の4件');
       const expandedFavoriteDetails=await page.locator('#favoriteSchedule').textContent();
       assert.ok(expandedFavoriteDetails.includes('サラに！アガり！ステージ'));
-      assert.ok(expandedFavoriteDetails.includes('出演日時未確認'),'未確認の出場権を今日の開催と誤表示しない');
+      assert.ok(!expandedFavoriteDetails.includes('出演日時未確認'),'確定済みの11/27を未確認扱いしない');
+      assert.ok(expandedFavoriteDetails.includes('出演部未定'),'未確定の極EASTの出演部は維持');
       assert.equal(await page.locator('#favoriteSchedule .favorite-summary').textContent(),'お気に入り1組中、1組の出演情報があります');
       assert.deepEqual(errors,[]);
     } finally { await context.close(); }
@@ -1003,7 +1005,7 @@ for(const width of [1280,390,375,320]) {
         assert.deepEqual(await assertVisibleCounts(recipient.page),{future:0,pending:1,past:0});
         assert.equal(await recipient.page.locator('#results .pending-stage-card .star').getAttribute('data-name'),'ZAZY');
       } finally {await recipient.context.close();}
-      await page.locator('#clearBtn').click();assert.deepEqual(await assertVisibleCounts(page),{future:22,pending:2,past:235},'12/13時点では12月アガり18公演が過去、12公演が今後');
+      await page.locator('#clearBtn').click();assert.deepEqual(await assertVisibleCounts(page),{future:22,pending:1,past:235},'12/13時点では11/27のサラに！は終了済みで今後欄に出ず、極の出演部未定カードだけ残る');
       assert.deepEqual(errors,[]);
     } finally {await context.close();}
   });
@@ -1016,7 +1018,13 @@ for(const width of [1280,320]){
       const rights=page.locator('#results .pending-stage-card').filter({hasText:'サラに！アガり！ステージ'});
       assert.equal(await rights.count(),1);
       assert.match(await rights.textContent(),/出場権獲得者/);
-      assert.match(await rights.textContent(),/出演日時未確認/);
+      assert.match(await rights.textContent(),/11月27日\(金\) 開演17:00/);
+      assert.equal(await rights.locator('.venue-line').textContent(),'会場：歌舞伎町Sparkle');
+      assert.equal(await rights.locator('.ticket-purchase-link a').getAttribute('href'),'https://ticket.fany.lol/reception/70947/55946');
+      assert.equal(await rights.locator('.ticket-purchase-link a').textContent(),'FANYチケット');
+      assert.equal(await rights.locator('.ticket-sale-info').textContent(),'※FANY一般発売：11月20日(金)10:00〜');
+      assert.equal(await rights.locator('.ticket-streaming-note').count(),0,'未発表の配信条件を作らない');
+      assert.ok(!(await rights.textContent()).includes('取り置きも可能'),'未発表の取り置き条件を作らない');
       assert.equal(await rights.locator('.star').count(),26);
       await page.locator('#eventType').selectOption('agari-stage');
       await page.locator('#month').selectOption('11');
@@ -1104,7 +1112,12 @@ for(const width of [1280,320]){
       assert.equal(await n19b.locator('.qualified-performers').nth(2).locator('.star').getAttribute('data-name'),'ラクダ人生','2部第3位を保持');
       await page.locator('#eventType').selectOption('sarani-agari-stage');
       await page.locator('#day').selectOption('all');
-      assert.equal(await page.locator('#results .pending-stage-card').count(),0,'日時未確認のため11月絞り込みでは表示しない');
+      assert.equal(await page.locator('#results .pending-stage-card').count(),1,'11月27日の確定日程なので11月絞り込みでも表示');
+      await page.locator('#day').selectOption('27');
+      assert.equal(await page.locator('#results .pending-stage-card .star').count(),26);
+      await page.locator('#day').selectOption('26');
+      assert.equal(await page.locator('#results .pending-stage-card').count(),0,'別日には出さない');
+      await page.locator('#day').selectOption('all');
       await page.locator('#month').selectOption('all');
       assert.equal(await page.locator('#results .pending-stage-card .star').count(),26);
       await page.locator('#eventType').selectOption('agari-stage');
@@ -1147,7 +1160,7 @@ for(const width of [1280,390,375,320]){
 }
 
 for(const width of [1280,390,375,320]){
-  test(`サラに！専用絞り込み ${width}px: 26組・未確認日程・芸人名・お気に入り・URL復元`,{timeout:30000},async()=>{
+  test(`サラに！専用絞り込み ${width}px: 11/27確定日時・26組・チケット・お気に入り・URL復元`,{timeout:30000},async()=>{
     const {context,page,errors}=await openPage(width,'2026-11-17T03:00:00Z');
     try{
       const picker=page.locator('#eventType');
@@ -1158,16 +1171,35 @@ for(const width of [1280,390,375,320]){
       assert.equal(await rights.count(),1,'出場権獲得者カードは1枚');
       assert.equal(await page.locator('#results .result-card:not(.pending-stage-card)').count(),0,'架空の開催日付き公演は表示しない');
       assert.match(await rights.textContent(),/サラに！アガり！ステージ/);
-      assert.match(await rights.textContent(),/出演日時未確認/);
+      assert.match(await rights.textContent(),/11月27日\(金\) 開演17:00/);
+      assert.equal(await rights.locator('.venue-line').textContent(),'会場：歌舞伎町Sparkle');
+      assert.equal(await rights.locator('.ticket-purchase-link a').getAttribute('href'),'https://ticket.fany.lol/reception/70947/55946');
+      assert.equal(await rights.locator('.ticket-purchase-link a').textContent(),'FANYチケット');
+      assert.equal(await rights.locator('.ticket-sale-info').textContent(),'※FANY一般発売：11月20日(金)10:00〜');
+      assert.equal(await rights.locator('.ticket-streaming-note').count(),0,'未発表の配信条件を作らない');
+      assert.ok(!(await rights.textContent()).includes('取り置きも可能'),'未発表の取り置き条件を作らない');
       assert.match(await rights.textContent(),/出場権獲得者/);
       assert.equal(await rights.locator('.star').count(),26);
       assert.equal(new URL(page.url()).searchParams.get('eventType'),'sarani-agari-stage','ライブ名選択は共有URLに保存');
+      await page.locator('#month').selectOption('11');
+      await page.locator('#day').selectOption('27');
+      await page.locator('#hour').selectOption('17');
+      assert.equal(await rights.count(),1,'11/27 17:00で検索できる');
+      assert.equal(new URL(page.url()).searchParams.get('day'),'27');
+      await page.locator('#day').selectOption('26');
+      assert.equal(await rights.count(),0,'11/26には表示しない');
+      await page.locator('#day').selectOption('27');
+      assert.equal(await rights.count(),1);
+      await page.locator('#month').selectOption('all');
+      await page.locator('#day').selectOption('all');
+      await page.locator('#hour').selectOption('all');
       await page.locator('#nameQuery').fill('ランス39号');
       await page.waitForFunction(()=>new URL(location.href).searchParams.get('name')==='ランス39号');
       assert.equal(await rights.locator('.star').count(),1);
       assert.equal(await rights.locator('.star').getAttribute('data-name'),'ランス39号');
       await rights.locator('.star').click();
       assert.equal(await rights.locator('.star').getAttribute('aria-pressed'),'true');
+      assert.ok((await page.locator('#favoriteSchedule').textContent()).includes('11月27日(金) 開演17:00'),'お気に入りにも確定公演を表示');
       await page.locator('#favoritesOnlyBtn').click();
       assert.equal(await rights.count(),1);
       assert.equal(await rights.locator('.star').count(),1);
