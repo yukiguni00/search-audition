@@ -6712,29 +6712,48 @@
     "excludedSlots": [],
     "stageResults": [
       {
-        "status": "pending",
+        "status": "ranked",
         "displayStyle": "qualified",
-        "performers": [],
+        "performers": [
+          "つつがないね"
+        ],
         "label": "最優秀者"
       },
       {
-        "status": "pending",
+        "status": "ranked",
         "displayStyle": "qualified",
-        "performers": [],
+        "performers": [
+          "あさゆま"
+        ],
         "label": "2位"
       },
       {
-        "status": "pending",
+        "status": "ranked",
         "displayStyle": "qualified",
-        "performers": [],
+        "performers": [
+          "コロネケン"
+        ],
         "label": "3位"
       },
       {
-        "status": "pending",
+        "status": "advanced",
         "displayStyle": "next-stage",
-        "performers": [],
+        "performers": [
+          "つつがないね"
+        ],
         "nextEventType": "sarani-agari-stage",
-        "label": "サラに！への進出"
+        "label": "サラに！アガり！ステージ出場権",
+        "nextEventTitle": "サラに！アガり！ステージ",
+        "nextDate": "2026-11-27",
+        "nextTime": "17:00",
+        "nextVenue": "歌舞伎町Sparkle",
+        "nextTicket": {
+          "url": "https://ticket.fany.lol/reception/70947/55946",
+          "linkLabel": "FANYチケット",
+          "saleInfo": "※FANY一般発売：11月20日(金)10:00〜",
+          "purchaseNote": "出演者への取り置きも可能です",
+          "streamingNote": "※配信はありません"
+        }
       }
     ],
     "ticket": {
