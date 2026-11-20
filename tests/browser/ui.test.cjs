@@ -664,7 +664,7 @@ for (const width of [1280,320]) {
       await openSearchURL(page,`${baseURL}/?noanalytics=1&month=10&unknown=drop#contact`);
       assert.equal(new URL(page.url()).hash,'#contact');
       assert.equal(new URL(page.url()).searchParams.get('unknown'),null);
-      assert.equal(await page.locator('script[src^="script.js?"]').getAttribute('src'),'script.js?v=20261119-orange-highlight');
+      assert.equal(await page.locator('script[src^="script.js?"]').getAttribute('src'),'script.js?v=20261120-sarani-schedule');
       await page.locator('#day').selectOption('30');
       await page.locator('#nameQuery').fill(backupNames[0]);
       await page.waitForFunction(name=>new URL(location.href).searchParams.get('name')===name,backupNames[0]);
