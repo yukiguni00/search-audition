@@ -1037,7 +1037,7 @@ for(const width of [1280,390,375,320]) {
 }
 
 for(const width of [1280,320]){
-  test('アガり結果 '+width+'px: 27公演結果・3位同順位・サラに出場権・FANY共通リンク',{timeout:30000},async()=>{
+  test('アガり結果 '+width+'px: 28公演結果・3位同順位・サラに出場権・FANY共通リンク',{timeout:30000},async()=>{
     const {context,page,errors}=await openPage(width,'2026-11-18T03:00:00Z');
     try{
       const rights=page.locator('#results .pending-stage-card').filter({hasText:'サラに！アガり！ステージ'});
@@ -1053,7 +1053,7 @@ for(const width of [1280,320]){
       assert.equal(await rights.locator('.ticket-sale-info').textContent(),'※FANY一般発売：11月20日(金)10:00〜');
       assert.equal(await rights.locator('.ticket-streaming-note').textContent(),'※配信はありません');
       assert.deepEqual(await ticketNote.locator('.ticket-purchase-link, .ticket-sale-info, .ticket-streaming-note').evaluateAll(nodes=>nodes.map(el=>el.className)),['ticket-purchase-link','ticket-sale-info','ticket-streaming-note']);
-      assert.equal(await rights.locator('.star').count(),27);
+      assert.equal(await rights.locator('.star').count(),28);
       await page.locator('#eventType').selectOption('agari-stage');
       await page.locator('#month').selectOption('11');
       await page.locator('#day').selectOption('4');
@@ -1147,17 +1147,23 @@ for(const width of [1280,320]){
       assert.deepEqual(await n20a.locator('.qualified-performers').nth(2).locator('.star').evaluateAll(nodes=>nodes.map(n=>n.dataset.name)),['桃子','キンジトウ'],'3位の同順位2組を表示');
       assert.equal(await n20a.locator('.next-stage-performers .star').getAttribute('data-name'),'き展');
       assert.equal(await n20a.locator('.event-notice').count(),0,'香盤差異なし');
-      assert.equal(await n20b.locator('.qualified-performers').count(),0,'19:30の部は未発表');
+      assert.equal(await n20a.locator('.performer-section .star[data-name="コロネケン"]').count(),0,'1部MCは出演者に追加しない');
+      assert.match(await n20b.locator('.event-mc').textContent(),/MC：すしまる/);
+      for(const [i,name] of ['つつがないね','あさゆま','コロネケン'].entries())
+        assert.equal(await n20b.locator('.qualified-performers').nth(i).locator('.star').getAttribute('data-name'),name);
+      assert.equal(await n20b.locator('.next-stage-performers .star').getAttribute('data-name'),'つつがないね');
+      assert.equal(await n20b.locator('.performer-section .star[data-name="コロネケン"]').count(),1,'2部第3位は2部香盤の出演者');
+      assert.equal(await n20b.locator('.event-notice').count(),0,'2部の香盤差異なし');
       await page.locator('#eventType').selectOption('sarani-agari-stage');
       await page.locator('#day').selectOption('all');
       assert.equal(await page.locator('#results .pending-stage-card').count(),1,'11月27日の確定日程なので11月絞り込みでも表示');
       await page.locator('#day').selectOption('27');
-      assert.equal(await page.locator('#results .pending-stage-card .star').count(),27);
+      assert.equal(await page.locator('#results .pending-stage-card .star').count(),28);
       await page.locator('#day').selectOption('26');
       assert.equal(await page.locator('#results .pending-stage-card').count(),0,'別日には出さない');
       await page.locator('#day').selectOption('all');
       await page.locator('#month').selectOption('all');
-      assert.equal(await page.locator('#results .pending-stage-card .star').count(),27);
+      assert.equal(await page.locator('#results .pending-stage-card .star').count(),28);
       await page.locator('#eventType').selectOption('agari-stage');
       await page.locator('#month').selectOption('11');
       await page.locator('#day').selectOption('24');
@@ -1198,7 +1204,7 @@ for(const width of [1280,390,375,320]){
 }
 
 for(const width of [1280,390,375,320]){
-  test(`サラに！専用絞り込み ${width}px: 11/27確定日時・27組・チケット・お気に入り・URL復元`,{timeout:30000},async()=>{
+  test(`サラに！専用絞り込み ${width}px: 11/27確定日時・28組・チケット・お気に入り・URL復元`,{timeout:30000},async()=>{
     const {context,page,errors}=await openPage(width,'2026-11-17T03:00:00Z');
     try{
       const picker=page.locator('#eventType');
@@ -1220,7 +1226,7 @@ for(const width of [1280,390,375,320]){
       assert.equal(await rights.locator('.ticket-streaming-note').textContent(),'※配信はありません');
       assert.deepEqual(await ticketNote.locator('.ticket-purchase-link, .ticket-sale-info, .ticket-streaming-note').evaluateAll(nodes=>nodes.map(el=>el.className)),['ticket-purchase-link','ticket-sale-info','ticket-streaming-note']);
       assert.match(await rights.textContent(),/出場権獲得者/);
-      assert.equal(await rights.locator('.star').count(),27);
+      assert.equal(await rights.locator('.star').count(),28);
       assert.equal(new URL(page.url()).searchParams.get('eventType'),'sarani-agari-stage','ライブ名選択は共有URLに保存');
       await page.locator('#month').selectOption('11');
       await page.locator('#day').selectOption('27');
