@@ -317,3 +317,19 @@ test('11/20未発表の4公演には架空の最優秀者やサラに！出場�
  }
  assert.equal(events.filter(e=>e.stageResults[3].status==='advanced').length,26);
 });
+
+test('11/27日時確定サラに！の出場権は、お気に入りで12月の予定より先に表示',()=>{
+ const app=loadApp();
+ app.run('todayString=()=>"2026-11-20"');
+ app.context.saveFavorites([app.context.normalizeText('パピヨン')]);
+ const g=app.context.getFavoriteScheduleData().eventGroups;
+ const sarani=g.find(x=>x.event.eventType==='sarani-agari-stage');
+ assert.ok(sarani,'出場権カードはお気に入りの予定に含まれる');
+ assert.equal(sarani.event.date,'2026-11-27');
+ assert.equal(sarani.event.time,'17:00');
+ assert.equal(sarani.event.venue,'歌舞伎町Sparkle');
+ assert.match(app.context.getFavoriteScheduleLabel(sarani.event),/11月27日\(金\) 開演17:00/);
+ const nextDecember=g.findIndex(x=>x.event.date.startsWith('2026-12'));
+ assert.ok(nextDecember>=0,'12月の出演予定が残っている');
+ assert.ok(g.indexOf(sarani)<nextDecember,'日程確定した11/27を12月公演より先に表示');
+});
