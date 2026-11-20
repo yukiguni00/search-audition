@@ -136,7 +136,7 @@ test('12月のFANYと11/20発売を11月の10/19発売やオーディション1s
  }
  const rights=app.context.getPendingStageGroups({nameQuery:'',eventType:'sarani-agari-stage',month:'all',day:'all',hour:'all'});
  assert.equal(rights.length,1);
- assert.equal(rights[0].names.length,26,'12月未発表分をサラに！の出場権に追加しない');
+ assert.equal(rights[0].names.length,27,'12月未発表分をサラに！の出場権に追加しない');
  assert.equal(rights[0].nextDate,'2026-11-27','11月開催の確定日程を12月公演と混同しない');
  assert.equal(rights[0].nextTime,'17:00');
  assert.equal(rights[0].venue,'歌舞伎町Sparkle');
