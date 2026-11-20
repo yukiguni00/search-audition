@@ -94,7 +94,7 @@ test('11/27開催のサラに！出場権26組は1枚の専用カード。3位�
   assert.equal(rights[0].nextDate,'2026-11-27');
   assert.equal(rights[0].nextTime,'17:00');
   assert.equal(rights[0].venue,'歌舞伎町Sparkle');
-  assert.deepEqual(rights[0].ticket,saraniTicket);
+  assert.equal(JSON.stringify(rights[0].ticket),JSON.stringify(saraniTicket));
   const output=app.context.buildPendingStageCardHTML(rights[0],[]);
   assert.match(output,/出場権獲得者/);
   assert.match(output,/11月27日\(金\) 開演17:00/);
