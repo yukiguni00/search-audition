@@ -650,7 +650,10 @@ function getFavoriteScheduleData() {
 }
 
 function isConfirmedFavoriteEvent(ev) {
-  return !ev.isPendingStage && Boolean(ev.date) && timeToMinutes(ev.time) !== null;
+  const exactSchedule = Boolean(ev.date) && timeToMinutes(ev.time) !== null;
+  // A dated Sarani qualification card has an actual start time, even though it is not a standalone event.
+  // Unassigned multi-slot stage cards still follow fully scheduled events.
+  return exactSchedule && (!ev.isPendingStage || ev.eventType === "sarani-agari-stage");
 }
 
 function getFavoriteScheduleLabel(ev) {
