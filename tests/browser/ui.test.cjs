@@ -6,10 +6,11 @@ const path = require('node:path');
 const { root, readJSON } = require('../helpers/app.cjs');
 // Optional: use an existing Playwright installation; never download a browser here.
 const { chromium } = require('playwright');
-const stages = readJSON('data/events.json').filter(e => e.date === '2026-10-30' && e.eventType === 'audition-2nd-east');
-const agari = readJSON('data/events.json').filter(e => e.eventType === 'agari-stage' && e.date.startsWith('2026-11'));
-const decemberAgari = readJSON('data/events.json').filter(e => e.eventType === 'agari-stage' && e.date.startsWith('2026-12'));
-const winterFirst = readJSON('data/events.json').filter(e => e.eventType === 'audition-1st-east' && e.date >= '2026-11-24');
+const published = readJSON('data/events.json');
+const stages = published.filter(e => e.date === '2026-10-30' && e.eventType === 'audition-2nd-east');
+const agari = published.filter(e => e.eventType === 'agari-stage' && e.date.startsWith('2026-11'));
+const decemberAgari = published.filter(e => e.eventType === 'agari-stage' && e.date.startsWith('2026-12'));
+const winterFirst = published.filter(e => e.eventType === 'audition-1st-east' && e.date >= '2026-11-24' && e.date <= '2026-12-17');
 let browser, server, baseURL;
 before(async () => {
   server = http.createServer(async (req, res) => {
@@ -715,16 +716,10 @@ for (const width of [1280,390,375,320]) {
   test(`10/30公式結果 ${width}px: 過去の極6・翔15を保持、未来予定は12月分とアガり香盤`, {timeout:30000}, async () => {
     const {context,page,errors} = await openPage(width);
     const expected = readJSON('tests/fixtures/2026-10-30-stage-results.json');
-    const futureIDs=[...readJSON('tests/fixtures/2026-nov-dec-audition-path.json').decemberEventIds,
-      ...agari.filter(e=>e.date>='2026-11-07').map(e=>e.id),
-      ...decemberAgari.map(e=>e.id),
-      ...winterFirst.map(e=>e.id)].map(id=>'event-'+id).sort();
     try {
       // Change only this test's clock; existing regression cases retain their own date.
       await page.evaluate(() => { Date.now = () => new Date('2026-11-07T03:00:00Z').getTime(); runSearch(); });
-      assert.equal(await page.locator('#results .result-card:not(.pending-stage-card)').count(),futureIDs.length);
-      assert.equal(await page.locator('.pending-stage-card').count(),2);
-      assert.deepEqual(await searchCardIDs(page).then(ids=>ids.filter(id=>!id.startsWith('event-pending-')).sort()),futureIDs);
+      await assertUnfilteredCards(page, '2026-11-07');
       await page.locator('#eventType').selectOption('audition-2nd-east');
       await page.locator('#month').selectOption('10');
       await page.locator('#day').selectOption('30');
@@ -757,9 +752,7 @@ for (const width of [1280,390,375,320]) {
       await winner.click();
       assert.equal(await winner.getAttribute('aria-pressed'),'true');
       await page.locator('#clearBtn').click();
-      assert.equal(await page.locator('#results .result-card:not(.pending-stage-card)').count(),futureIDs.length);
-      assert.equal(await page.locator('.pending-stage-card').count(),2);
-      assert.deepEqual(await searchCardIDs(page).then(ids=>ids.filter(id=>!id.startsWith('event-pending-')).sort()),futureIDs);
+      await assertUnfilteredCards(page, '2026-11-07');
       assert.equal(await page.locator('#favoriteSchedule .favorite-jump-btn').count(),3,'パピヨンの出演情報4件のうち先頭3件だけを折りたたみ表示');
       const favoriteDetails=await page.locator('#favoriteSchedule').textContent();
       assert.ok(!favoriteDetails.includes('出演部未定'),'日時の確定したサラに！が先頭3件に並ぶ');
@@ -786,6 +779,38 @@ async function assertVisibleCounts(page) {
   assert.equal(await page.locator('#searchResultSummary').textContent(),`今後の開催：${future}件 ／ 進出者・出演予定者一覧：${pending}件 ／ 過去の開催：${past}件`);
   return {future,pending,past};
 }
+async function assertUnfilteredCards(page, today) {
+  await assertVisibleCounts(page);
+  const future = [];
+  const past = [];
+  for (const event of published) {
+    const section = (event.dateEnd || event.date) < today ? past : future;
+    section.push('event-' + event.id);
+  }
+
+  // The two audited advancement lists have no individual performer assignments.
+  // Read their validity dates from the published results, independently of the UI.
+  const pending = [];
+  for (const [sourceID, type] of [
+    ['2026-10-30-1330-audition-2nd-east-1', 'kiwami-grand-battle-east'],
+    ['2026-11-19-1700-agari-stage', 'sarani-agari-stage'],
+  ]) {
+    const source = published.find(event => event.id === sourceID);
+    const result = source?.stageResults.find(r => r.nextEventType === type && r.status === 'advanced');
+    assert.ok(result, `${sourceID}: ${type}`);
+    const end = result.nextDateEnd || result.nextDate;
+    if (!end || end >= today) {
+      pending.push(`event-pending-${type}-${result.nextDate || 'undecided'}-${end || 'undecided'}`);
+    }
+  }
+
+  async function cardIDs(selector) {
+    return page.locator(selector).evaluateAll(cards => cards.map(card => card.id).sort());
+  }
+  assert.deepEqual(await cardIDs('#results .result-card:not(.pending-stage-card)'), future.sort(), today + ' 今後');
+  assert.deepEqual(await cardIDs('#results .pending-stage-card'), pending.sort(), today + ' 進出先');
+  assert.deepEqual(await cardIDs('#archiveResults .result-card'), past.sort(), today + ' 過去');
+}
 async function assertMatchChips(page) {
   const state=await page.evaluate(()=>{
     const query=getCurrentFilters().nameQuery;
@@ -802,7 +827,7 @@ for(const width of [1280,390,375,320]) {
   test(`結果視認性 ${width}px: 実データの件数・正規化一致・お気に入り・URL復元・クリア・0件`,{timeout:30000},async()=>{
     const {context,page,errors}=await openPage(width);
     try {
-      assert.deepEqual(await assertVisibleCounts(page),{future:101,pending:2,past:156});
+      await assertUnfilteredCards(page, '2026-10-24');
       assert.equal(await page.locator('#searchMatchLegend').count(),0);
       assert.equal(await assertMatchChips(page),0);
       await page.locator('#nameQuery').fill(' ｚａｚｙ ');
@@ -927,8 +952,7 @@ for(const width of [1280,390,375,320]) {
     try {
       assert.equal(new URL(page.url()).origin,baseURL);assert.match(await page.title(),/オーディション EAST・アガり！ステージ/);
       assert.equal(await page.locator('vite-error-overlay, nextjs-portal').count(),0);
-      assert.deepEqual(await assertVisibleCounts(page),{future:89,pending:2,past:168});
-      assert.equal(await page.locator('#results .pending-stage-card').count(),2);
+      await assertUnfilteredCards(page, '2026-11-08');
       const pending=page.locator('#results .lineup-overview-card');assert.equal(await pending.count(),1);
       assert.equal(await pending.locator('h3').textContent(),'グランドバトルEAST');
       assert.match(await pending.locator('.lineup-overview-heading').textContent(),/2ndステージからの進出者/);
@@ -1005,7 +1029,8 @@ for(const width of [1280,390,375,320]) {
         assert.deepEqual(await assertVisibleCounts(recipient.page),{future:0,pending:1,past:0});
         assert.equal(await recipient.page.locator('#results .pending-stage-card .star').getAttribute('data-name'),'ZAZY');
       } finally {await recipient.context.close();}
-      await page.locator('#clearBtn').click();assert.deepEqual(await assertVisibleCounts(page),{future:22,pending:1,past:235},'12/13時点では11/27のサラに！は終了済みで今後欄に出ず、極の出演部未定カードだけ残る');
+      await page.locator('#clearBtn').click();
+      await assertUnfilteredCards(page, '2026-12-13');
       assert.deepEqual(errors,[]);
     } finally {await context.close();}
   });

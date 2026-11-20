@@ -29,15 +29,12 @@ const missing=[
  ['2026-12-09-1700-agari-stage',20,2],
  ['2026-12-15-1930-agari-stage',2,1],
 ];
-test('12月アガり！は15日間×2回の30公演、全体257件で既存の1st・極・11月アガりを保持',()=>{
- assert.equal(all.length,257);
+test('12月アガり！は15日間×2回の30公演、既存の1st・極・11月アガりを保持',()=>{
  assert.equal(monthly.length,60);
  assert.equal(monthly.filter(e=>e.eventType==='audition-1st-east').length,26);
  assert.equal(monthly.filter(e=>e.eventType==='kiwami-grand-battle-east').length,4);
  assert.equal(november.length,30);
  assert.equal(december.length,30);
- assert.equal(all.filter(e=>e.eventType==='agari-stage').length,60);
- assert.equal(all.filter(e=>e.eventType!=='agari-stage').length,197);
  assert.deepEqual(all.filter(e=>e.date.startsWith('2026-12')),monthly,'月別正本と集約JSONは同じ');
  for(const [day,mc1,mc2] of sessions){
   const found=december.filter(e=>e.date==='2026-12-'+day);
@@ -110,7 +107,6 @@ test('3枚の元画像と再照合した12月アガり5芸名を香盤位置と�
   assert.deepEqual(total,e,'月別正本と集約一致: '+id);
  }
  assert.equal(december.reduce((n,e)=>n+e.performers.length,0),907);
- assert.equal(all.length,257);
 });
 test('12月のFANYと11/20発売を11月の10/19発売やオーディション1stの11/18と混同しない',()=>{
  const app=loadApp();
@@ -369,7 +365,6 @@ test('前回の12月アガり！32名と1st2名の確認済み表記を保持',(
  }
  assert.equal(expectedIds.size,23);
  // 後続の5組の確認結果は別テストに保持する。
- assert.equal(all.length,257);
  assert.equal(december.reduce((n,e)=>n+e.performers.length,0),907);
 });
 
@@ -444,7 +439,6 @@ test('追加確認の3組は確定表記、2組の判読不可は両候補検索
    assert.deepEqual(all.find(e=>e.id===spec.firstId),first);
  }
  assert.equal(monthly.filter(e=>e.eventType==='agari-stage').reduce((n,e)=>n+e.performers.length,0),907);
- assert.equal(all.length,257);
  const notice=readJSON('data/site-notice.json');
  assert.match(notice.items[0].message,/出演者名は目視確認中です/,'未校正の告知を維持');
 });

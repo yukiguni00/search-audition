@@ -20,6 +20,21 @@ test('月別JSON、索引、集約JSONが一致し、公演は対応月に属す
   });
   assert.deepEqual(all, monthly);
 });
+test('2026年12月までの掲載公演を期間・種別ごとに保持する', () => {
+  const counts = {};
+  for (const event of all.filter(e => e.date < '2027-01-01')) {
+    const period = event.date < '2026-11-01' ? '10月以前' : event.date.slice(0, 7);
+    const type = event.eventType === 'agari-stage' ? 'アガり' : 'その他';
+    const key = `${period} / ${type}`;
+    counts[key] = (counts[key] || 0) + 1;
+  }
+  assert.deepEqual(counts, {
+    '10月以前 / その他': 159,
+    '2026-11 / その他': 8, '2026-11 / アガり': 30,
+    '2026-12 / その他': 30, '2026-12 / アガり': 30,
+  });
+});
+
 test('公演ID・正規化/改名後の出演者重複・合格区分を確認', () => {
   checkEvents(all, key, exceptions);
 });
