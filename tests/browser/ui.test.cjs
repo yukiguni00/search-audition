@@ -1005,7 +1005,7 @@ for(const width of [1280,390,375,320]) {
         assert.deepEqual(await assertVisibleCounts(recipient.page),{future:0,pending:1,past:0});
         assert.equal(await recipient.page.locator('#results .pending-stage-card .star').getAttribute('data-name'),'ZAZY');
       } finally {await recipient.context.close();}
-      await page.locator('#clearBtn').click();assert.deepEqual(await assertVisibleCounts(page),{future:22,pending:2,past:235},'12/13時点では12月アガり18公演が過去、12公演が今後');
+      await page.locator('#clearBtn').click();assert.deepEqual(await assertVisibleCounts(page),{future:22,pending:1,past:235},'12/13時点では11/27のサラに！は終了済みで今後欄に出ず、極の出演部未定カードだけ残る');
       assert.deepEqual(errors,[]);
     } finally {await context.close();}
   });
