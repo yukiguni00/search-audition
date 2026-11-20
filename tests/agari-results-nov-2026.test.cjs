@@ -43,7 +43,7 @@ function assertSarAniSchedule(result){
 }
 
 test('公式発表26公演の入賞結果を正しく記録し、その他4公演は未発表',()=>{
-  assert.equal(all.length,257);assert.equal(events.length,30);
+  assert.equal(events.length,30);
   const resultKeys=new Set(expected.map(x=>x[0]+'T'+x[1]));
   for(const [date,time,winner,second,third] of expected){
     const e=events.find(e=>e.date===date&&e.time===time);

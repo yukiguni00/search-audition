@@ -1,0 +1,3 @@
+# Generated JSON is compared byte-for-byte by data:check.
+/data/events.json text eol=lf
+/data/events-index.json text eol=lf

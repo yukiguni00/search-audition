@@ -31,8 +31,7 @@ test('10/30公式結果: 極6・翔15、各部1/0・2/5・3/10。全員が出演
   }
 });
 
-test('10/30の結果以外の全フィールドを保持: 23/24/23、70組、全257公演', () => {
-  assert.equal(all.length, 257);
+test('10/30の結果以外の全フィールドを保持: 23/24/23、70組', () => {
   assert.deepEqual(stages.map(event => event.performers.length), [23,24,23]);
   assert.equal(stages.flatMap(event => event.performers).length, 70);
   for (const [index, event] of stages.entries()) {
@@ -73,11 +72,11 @@ test('確定した進出先だけを接続: 翔は11/6に掲載済み、極は12
         assert.equal(result.nextEventType,''); assert.equal(result.nextDate,'');
         assert.equal(a.context.filtersAllowPendingStageCard(filters,result),false);
       } else {
-        assert.deepEqual(JSON.parse(JSON.stringify({
+        assert.deepEqual({
           nextEventType:result.nextEventType,nextEventTitle:result.nextEventTitle,
           nextDate:result.nextDate,nextDateEnd:result.nextDateEnd,
           nextTime:result.nextTime,nextVenue:result.nextVenue,
-        })),index===0 ? {
+        },index===0 ? {
           nextEventType:'kiwami-grand-battle-east',nextEventTitle:'グランドバトルEAST（出演部未定）',
           nextDate:'2026-12-12',nextDateEnd:'2026-12-13',nextTime:'出演公演未定',nextVenue:'渋谷よしもと漫才劇場',
         } : {

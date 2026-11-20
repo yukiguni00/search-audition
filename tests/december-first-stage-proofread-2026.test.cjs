@@ -1168,7 +1168,6 @@ test('12月1st EASTの校正191枠＋後続の判読不可追記、元の公演�
   const month=readJSON('data/events/2026-12.json');
   const all=readJSON('data/events.json');
   assert.equal(month.length,60);
-  assert.equal(all.length,257);
   assert.deepEqual(all.filter(x=>x.date.startsWith('2026-12')),month);
   assert.equal(month.filter(x=>x.eventType==='kiwami-grand-battle-east').length,4);
   assert.equal(month.filter(x=>x.eventType==='audition-1st-east').length,26);

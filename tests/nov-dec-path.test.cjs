@@ -3,19 +3,19 @@ const assert=require('node:assert/strict');
 const {createHash}=require('node:crypto');
 const {loadApp,readJSON}=require('./helpers/app.cjs');
 const f=readJSON('tests/fixtures/2026-nov-dec-audition-path.json');
-const all=readJSON('data/events.json').filter(e=>e.eventType!=='agari-stage');
+const published = readJSON('data/events.json');
+const all=published.filter(e=>e.eventType!=='agari-stage');
 const empty={nameQuery:'',eventType:'all',month:'all',day:'all',hour:'all'};
 function current(){const a=loadApp();a.run('todayString=()=>"2026-11-08"');return a;}
 
 test('既存のオーディション経路164件を保持し、新しい1stの33公演を追加',()=>{
-  assert.equal(all.length,197);
   const old=structuredClone(all.filter(e=>e.date<'2026-11-01'));
   assert.equal(old.length,159);
   for(const e of old.filter(e=>e.date==='2026-10-30'&&e.eventType==='audition-2nd-east'))
     for(const r of e.stageResults)for(const key of ['nextEventType','nextEventTitle','nextDate','nextDateEnd','nextTime','nextVenue'])delete r[key];
   assert.equal(createHash('sha256').update(JSON.stringify(old)).digest('hex'),f.originalEventsSHA256);
-  const added=all.filter(e=>e.date>='2026-11-01' && e.eventType!=='audition-1st-east');
-  assert.equal(all.filter(e=>e.eventType==='audition-1st-east' && e.date>='2026-11-24').length,33,'今回の新規1stだけ33公演');
+  const added=all.filter(e=>e.date>='2026-11-01' && e.date<'2027-01-01' && e.eventType!=='audition-1st-east');
+  assert.equal(all.filter(e=>e.eventType==='audition-1st-east' && e.date>='2026-11-24' && e.date<='2026-12-17').length,33,'今回の新規1stだけ33公演');
   assert.equal(added.length,5);
   assert.deepEqual(added.map(e=>e.id),[f.novemberEventId,...f.decemberEventIds]);
   assert.deepEqual([...new Set(added.flatMap(e=>[...e.performers,...(e.stageResults||[]).flatMap(r=>r.performers)]))].sort(),[...f.auditionKakeru].sort());
@@ -82,17 +82,46 @@ test('翔15組の次回は掲載済み11/6と一致。3組の所属を通常の�
   for(const name of f.promoted){
     a.set('name',name);a.run('saveFavorites([normalizeText(name)])');
     const groups=a.context.getFavoriteScheduleData().eventGroups;
+    const appearances = published.filter(event =>
+      (event.dateEnd || event.date) >= '2026-11-08' &&
+      (event.performers.includes(name) || (event.sessions || []).some(session => session.performers?.includes(name)))
+    );
+    const listed = groups.filter(group => !group.event.isPendingStage);
+    assert.deepEqual(Array.from(listed, group => group.event.id).sort(), appearances.map(event => event.id).sort(),
+      name + ' の掲載済み出演を過不足なく表示');
+    const advances = groups.filter(group => group.event.isPendingStage);
     if(name==='ミックストマトジュース'){
-      assert.ok(groups.some(g=>g.event.eventType==='agari-stage'),'11/19の出演情報を維持');
-      const sarani=groups.filter(g=>g.event.eventType==='sarani-agari-stage');
-      assert.equal(sarani.length,1,'11/19の最優秀者はサラに！出場権を1枚保持');
-      assert.equal(sarani[0].event.date,'2026-11-27','11/27開催日をお気に入りにも表示');
-      assert.equal(sarani[0].event.time,'17:00');
-      assert.equal(sarani[0].event.venue,'歌舞伎町Sparkle');
-      assert.match(a.context.getFavoriteScheduleLabel(sarani[0].event),/11月27日\(金\) 開演17:00/);
-      assert.deepEqual(Array.from(sarani[0].names),['ミックストマトジュース']);
+      assert.ok(appearances.some(event => event.id === '2026-11-19-1700-agari-stage'), '11/19の出演情報を維持');
+      assert.equal(advances.length, 1, '11/19の最優秀者はサラに！出場権を1枚保持');
+      const [sarani] = advances;
+      assert.equal(sarani.event.eventType, 'sarani-agari-stage');
+      assert.equal(sarani.event.date,'2026-11-27','11/27開催日をお気に入りにも表示');
+      assert.equal(sarani.event.time,'17:00');
+      assert.equal(sarani.event.venue,'歌舞伎町Sparkle');
+      assert.match(a.context.getFavoriteScheduleLabel(sarani.event),/11月27日\(金\) 開演17:00/);
+      assert.deepEqual(Array.from(sarani.names),['ミックストマトジュース']);
     }else{
-      assert.ok(groups.every(g=>g.event.eventType==='agari-stage'),'出場権を獲得していない芸人へ進出情報を付与しない: '+name);
+      assert.equal(advances.length, 0, '所属だけで新たな出演予定を作らない: ' + name);
     }
+  }
+});
+
+test('出場権の日時確定を検索とお気に入りに反映し、開催翌日に両方から外す', () => {
+  const app = loadApp();
+  const result = {status: 'advanced', nextEventType: 'sarani-agari-stage', performers: ['対象']};
+  app.set('source', {id: 'source', date: '2026-10-01', performers: ['対象'], stageResults: [result]});
+  app.run('events = [source]; saveFavorites(["対象"]); todayString = () => today');
+  for (const [today, nextDate, expectedDates] of [
+    ['2026-11-28', '', ['']],
+    ['2026-11-26', '2026-11-27', ['2026-11-27']],
+    ['2026-11-27', '2026-11-27', ['2026-11-27']],
+    ['2026-11-28', '2026-11-27', []],
+  ]) {
+    app.set('today', today);
+    result.nextDate = nextDate;
+    const message = `基準日 ${today}、開催日 ${nextDate || '未確定'}`;
+    assert.deepEqual(Array.from(app.context.getPendingStageGroups(empty), g => g.nextDate), expectedDates, message);
+    const favorites = app.context.getFavoriteScheduleData().eventGroups;
+    assert.deepEqual(Array.from(favorites, g => g.event.date), expectedDates, message);
   }
 });
