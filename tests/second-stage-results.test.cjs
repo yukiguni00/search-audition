@@ -95,7 +95,11 @@ test('確定した進出先だけを接続: 翔は11/6に掲載済み、極は12
   const kiwami=groups.filter(g=>g.nextEventType==='kiwami-grand-battle-east');
   assert.equal(kiwami.length,1); assert.equal(kiwami[0].nextDate,'2026-12-12');
   assert.equal(kiwami[0].nextDateEnd,'2026-12-13');assert.equal(kiwami[0].names.length,6);
-  assert.equal(a.context.getPendingStageGroups({...filters,month:'11'}).length,0);
+  const november=a.context.getPendingStageGroups({...filters,month:'11'});
+  assert.equal(november.length,1,'11/27サラに！確定公演のみ11月絞り込みに表示');
+  assert.equal(november[0].nextEventType,'sarani-agari-stage');
+  assert.equal(november[0].nextDate,'2026-11-27');
+  assert.equal(november[0].nextTime,'17:00');
   assert.equal(a.context.getPendingStageGroups({...filters,eventType:'kakeru-challenge-east'}).length,0);
   a.run('saveFavorites(["zazy"]); favoritesOnlyMode = true');
   const favorites=a.context.getPendingStageGroups(filters);
