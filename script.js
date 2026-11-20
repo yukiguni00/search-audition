@@ -1020,6 +1020,7 @@ function getStageResults(ev) {
         nextDateEnd: result.nextDateEnd || "",
         nextTime: result.nextTime || "",
         nextVenue: result.nextVenue || "",
+        nextTicket: result.nextTicket || null,
         performers: Array.isArray(result.performers) ? result.performers : [],
         displayStyle: result.displayStyle || "next-stage",
         isAdditionalQualifier: result.isAdditionalQualifier === true,
@@ -1234,6 +1235,7 @@ function getPendingStageGroups(filters, options = {}) {
           nextDateEnd: result.nextDateEnd || "",
           nextTime: result.nextTime || "",
           venue: result.nextVenue || "詳細未定",
+          ticket: result.nextTicket || null,
           label: result.label || "出演予定者",
           names: [],
           totalNames: new Set(),
@@ -1309,8 +1311,8 @@ function isLineupOverviewGroup(group) {
 }
 
 function buildPendingStageCardHTML(group, favorites) {
-  const saraniQualification = group.nextEventType === "sarani-agari-stage" && !group.nextDate;
-  const dateLabel = saraniQualification ? "出演日時未確認" : formatPendingStageDate(group);
+  const saraniQualification = group.nextEventType === "sarani-agari-stage";
+  const dateLabel = saraniQualification && !group.nextDate ? "出演日時未確認" : formatPendingStageDate(group);
   const confirmedSlots = getConfirmedStageSlots(group);
   const lineupOverview = isLineupOverviewGroup(group);
   const timeLabel = lineupOverview
@@ -1330,7 +1332,9 @@ function buildPendingStageCardHTML(group, favorites) {
   }).join("・");
   const slotSchedule = confirmedSlots.map((ev) => `${formatDateLabel(ev.date)} ${ev.time}開演`).join("／");
   const pendingNote = saraniQualification
-    ? "※アガり！ステージ最優秀者として「サラに！アガり！ステージ」の出場権を獲得。出演日時は個別に未確認です。"
+    ? group.nextDate
+      ? "※アガり！ステージ最優秀者として出場権を獲得した組を掲載しています。"
+      : "※アガり！ステージ最優秀者として「サラに！アガり！ステージ」の出場権を獲得。出演日時は個別に未確認です。"
     : lineupOverview
     ? "※出演部は更新時点では未定です"
     : !group.nextTime && publishedTimes.length
@@ -1370,6 +1374,7 @@ function buildPendingStageCardHTML(group, favorites) {
         ` : ""}
       </div>
       ${lineupOverview ? `<p class="pending-stage-note lineup-overview-note">${escapeHTML(pendingNote)}</p><p class="visually-hidden">候補は${escapeHTML(slotDateLabel)}に計${confirmedSlots.length}公演。${escapeHTML(slotSchedule)}。日時を絞り込んでも、この日時への出演確定を示すものではありません。</p>` : ""}
+      ${group.ticket ? getTicketLinkHTML({eventType: group.nextEventType, date: group.nextDate, ticket: group.ticket}, "results") : ""}
     </article>
   `;
 }
