@@ -788,7 +788,7 @@ async function assertUnfilteredCards(page, today) {
     section.push('event-' + event.id);
   }
 
-  // The two audited advancement lists have no individual performer assignments.
+  // Audit the established two advancement lists and the new 12/23 first-stage qualifier independently of the UI.
   // Read their validity dates from the published results, independently of the UI.
   const pending = [];
   for (const [sourceID, type] of [
@@ -802,6 +802,13 @@ async function assertUnfilteredCards(page, today) {
     if (!end || end >= today) {
       pending.push(`event-pending-${type}-${result.nextDate || 'undecided'}-${end || 'undecided'}`);
     }
+  }
+  const winterQualifier=published.find(event => event.id==='2026-11-24-1600-audition-1st-east');
+  assert.ok(winterQualifier,'11/24 16:00の1st公演が存在');
+  assert.deepEqual(winterQualifier.qualifiedPerformers,['サクラダ前線'],'合格者は1組');
+  assert.equal(winterQualifier.qualifiedNextStageDate,'2026-12-23','次回2ndは12/23');
+  if(winterQualifier.qualifiedNextStageDate>=today) {
+    pending.push('event-pending-audition-2nd-east-2026-12-23-2026-12-23');
   }
 
   async function cardIDs(selector) {
