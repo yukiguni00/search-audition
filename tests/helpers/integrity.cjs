@@ -11,6 +11,12 @@ function checkNames(names, label, key = normalize) {
   }
   return seen;
 }
+function checkAdvanceDate(value, label) {
+  if (value === undefined || value === '') return;
+  assert.match(value, /^\d{4}-\d{2}-\d{2}$/, label);
+  const date = new Date(value);
+  assert.ok(Number.isFinite(date.getTime()) && date.toISOString().slice(0, 10) === value, label);
+}
 function checkEvents(events, key = normalize, exceptions = []) {
   assert.ok(Array.isArray(exceptions), '既知例外は配列が必要');
   const exceptionKeys = new Set();
@@ -29,12 +35,16 @@ function checkEvents(events, key = normalize, exceptions = []) {
     assert.ok(typeof ev.id === 'string' && ev.id, '公演IDが必要');
     assert.ok(!ids.has(ev.id), `公演ID重複 ${ev.id}`);
     ids.add(ev.id);
+    checkAdvanceDate(ev.qualifiedNextStageDate, ev.id + ' 進出日');
     const lists = ['performers', 'qualifiedPerformers', 'additionalQualifiedPerformers'];
     for (const field of lists) if (ev[field] !== undefined) checkNames(ev[field], `${ev.id}.${field}`, key);
     for (const [i, session] of (ev.sessions || []).entries()) {
       if (session.performers) checkNames(session.performers, `${ev.id}.sessions[${i}]`, key);
     }
     for (const [i, result] of (ev.stageResults || []).entries()) {
+      checkAdvanceDate(result.nextDate, ev.id + ' 進出日');
+      checkAdvanceDate(result.nextDateEnd, ev.id + ' 進出終了日');
+      if (result.nextDateEnd) assert.ok(result.nextDate && result.nextDate <= result.nextDateEnd, ev.id + ' 進出期間');
       if (result.performers) checkNames(result.performers, `${ev.id}.stageResults[${i}]`, key);
     }
     const regular = new Set((ev.qualifiedPerformers || []).map(key));

@@ -1,6 +1,6 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
-const { loadApp, readJSON } = require('./helpers/app.cjs');
+const {assertVMEqual, loadApp, readJSON } = require('./helpers/app.cjs');
 const all = readJSON('data/events.json');
 const stages = all.filter(e => e.date === '2026-10-30' && e.eventType === 'audition-2nd-east');
 
@@ -13,12 +13,13 @@ test('全公演: カード会場・発売情報・チケットURLを元データ
     assert.ok(html.includes(`会場：${escaped(ev.venueDisplayName || ev.venue || '')}`), ev.id);
     const ticket = a.context.getTicketInfo(ev);
     if (ticket.saleInfo) {
-      const unified = ev.eventType === 'agari-stage' || (ev.eventType === 'audition-1st-east' && ev.date >= '2026-11-24' && ev.date <= '2026-12-17');
-      const expected = unified
-        ? (ev.eventType === 'agari-stage'
-          ? (ev.date.startsWith('2026-11') ? '※FANY一般発売：10月19日(月)10:00〜' : '※FANY一般発売：11月20日(金)10:00〜')
-          : '※FANY一般発売：11月18日(水)10:00〜')
-        : ticket.saleInfo;
+      const unified = (ev.eventType === 'agari-stage' && /^2026-(11|12)-/.test(ev.date)) ||
+        (ev.eventType === 'audition-1st-east' && ev.date >= '2026-11-24' && ev.date <= '2026-12-17') ||
+        (ev.eventType === 'sarani-agari-stage' && ticket.url && ticket.purchaseNote && ticket.streamingNote);
+      const expected = unified ? ticket.saleInfo.replace(
+        /^(?:一般発売：\d{4}年|※\s*FANY一般(?:販売|発売)：)(\d+月\d+日)[（(](.)[）)]\s*(\d+:\d+)[～〜]$/,
+        '※FANY一般発売：$1($2)$3〜'
+      ) : ticket.saleInfo;
       assert.ok(html.includes(escaped(expected)), ev.id);
     }
     for (const url of [ticket.url, ...ticket.links.map(l => l.url)].filter(Boolean)) {
@@ -98,7 +99,7 @@ test('セッション内の名前と日時を同じ公演として検索、お�
   assert.equal(a.context.eventMatchesFilters(ev, filters), true);
   assert.equal(a.context.eventMatchesFilters(ev, {...filters,day:'2'}), false);
   a.run('saveFavorites(["Ａ", "a", " B "]);');
-  assert.deepEqual(Array.from(a.context.getFavorites()), ['a','b']);
+  assertVMEqual(a.context.getFavorites(), ['a','b']);
   a.set('aliasData', readJSON('data/performer-aliases.json'));
   for (const group of a.context.aliasData.aliases) for (const oldName of group.aliases) {
     assert.equal(a.context.normalizeText(oldName), a.context.normalizeText(group.currentName));

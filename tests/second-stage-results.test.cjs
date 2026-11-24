@@ -1,13 +1,14 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
 const {createHash} = require('node:crypto');
-const {loadApp, readJSON} = require('./helpers/app.cjs');
+const {assertVMEqual, readJSON}=require('./helpers/app.cjs');
+const {scenarioEvents, loadScenarioApp}=require('./helpers/november-scenario.cjs');
 const fixture = readJSON('tests/fixtures/2026-10-30-stage-results.json');
-const all = readJSON('data/events.json');
+const all = scenarioEvents('data/events.json');
 const stages = fixture.events.map(expected => all.find(event => event.id === expected.id));
 
 test('10/30公式結果: 極6・翔15、各部1/0・2/5・3/10。全員が出演者で区分間の重複なし', () => {
-  const a = loadApp();
+  const a = loadScenarioApp();
   assert.deepEqual(stages.map(event => event.stageResults.map(result => result.performers.length)), [[1,0],[2,5],[3,10]]);
   const registered = [];
   for (const [index, event] of stages.entries()) {
@@ -44,7 +45,7 @@ test('10/30の結果以外の全フィールドを保持: 23/24/23、70組', () 
 });
 
 test('既存の結果描画: advanced/none + qualifiedで両進出先・該当者なしを表示', () => {
-  const a = loadApp();
+  const a = loadScenarioApp();
   for (const event of stages) {
     const results = a.context.getStageResults(event);
     assert.equal(results.length, 2);
@@ -63,7 +64,7 @@ test('既存の結果描画: advanced/none + qualifiedで両進出先・該当�
 });
 
 test('確定した進出先だけを接続: 翔は11/6に掲載済み、極は12/12〜13の共通一覧1枚', () => {
-  const a = loadApp();
+  const a = loadScenarioApp();
   a.run('todayString = () => "2026-11-08"');
   const filters = {nameQuery:'', eventType:'all',month:'all',day:'all',hour:'all'};
   for (const event of stages) {
@@ -91,14 +92,14 @@ test('確定した進出先だけを接続: 翔は11/6に掲載済み、極は12
   }
   const groups=a.context.getPendingStageGroups(filters);
   assert.equal(groups.length,3,'極の出演部未定・サラに！出場権・12/23の1st合格進出を別々に表示');
-  assert.deepEqual(
-    Array.from(groups, g=>[g.nextEventType,g.nextDate]),
+  assertVMEqual(
+    groups.map(g=>[g.nextEventType,g.nextDate]),
     [['sarani-agari-stage','2026-11-27'],['kiwami-grand-battle-east','2026-12-12'],['audition-2nd-east','2026-12-23']],
     '掲載済みの進出先に、新しい12/23の進出予定だけを追加'
   );
   const dec23=groups.filter(g=>g.nextEventType==='audition-2nd-east');
   assert.equal(dec23.length,1,'12/23オーディション2nd予定は1枚');
-  assert.deepEqual(Array.from(dec23[0].names),['サクラダ前線']);
+  assertVMEqual(dec23[0].names,['サクラダ前線']);
   assert.equal(dec23[0].nextDate,'2026-12-23');
   assert.equal(dec23[0].nextTime,'','詳細未発表の開始時刻を作らない');
   assert.equal(dec23[0].venue,'詳細未定','詳細未発表の会場を作らない');
@@ -113,5 +114,5 @@ test('確定した進出先だけを接続: 翔は11/6に掲載済み、極は12
   assert.equal(a.context.getPendingStageGroups({...filters,eventType:'kakeru-challenge-east'}).length,0);
   a.run('saveFavorites(["zazy"]); favoritesOnlyMode = true');
   const favorites=a.context.getPendingStageGroups(filters);
-  assert.equal(favorites.length,1);assert.deepEqual(Array.from(favorites[0].names),['ZAZY']);
+  assert.equal(favorites.length,1);assertVMEqual(favorites[0].names,['ZAZY']);
 });

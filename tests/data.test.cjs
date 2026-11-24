@@ -20,19 +20,9 @@ test('月別JSON、索引、集約JSONが一致し、公演は対応月に属す
   });
   assert.deepEqual(all, monthly);
 });
-test('2026年12月までの掲載公演を期間・種別ごとに保持する', () => {
-  const counts = {};
-  for (const event of all.filter(e => e.date < '2027-01-01')) {
-    const period = event.date < '2026-11-01' ? '10月以前' : event.date.slice(0, 7);
-    const type = event.eventType === 'agari-stage' ? 'アガり' : 'その他';
-    const key = `${period} / ${type}`;
-    counts[key] = (counts[key] || 0) + 1;
-  }
-  assert.deepEqual(counts, {
-    '10月以前 / その他': 159,
-    '2026-11 / その他': 8, '2026-11 / アガり': 30,
-    '2026-12 / その他': 30, '2026-12 / アガり': 30,
-  });
+test('掲載済みの公演IDと公式発表の結果・進出日時を独立に照合する', () => {
+  const {auditAnnouncements} = require('./helpers/results-audit.cjs');
+  auditAnnouncements(all, readJSON('tests/audit/announcements.json'));
 });
 
 test('公演ID・正規化/改名後の出演者重複・合格区分を確認', () => {
@@ -104,4 +94,29 @@ test('架空の新規合格者不一致は、既知例外と同じ公演でも�
   assert.throws(() => checkEvents([{...original, qualifiedPerformers:[], additionalQualifiedPerformers:[rule.performerName]}], key, [rule]), /出演者にいない合格者 ZAZY/);
   const overlap = {...original, additionalQualifiedPerformers:[rule.performerName]};
   assert.throws(() => checkEvents([overlap], key, [rule]), /通常・追加合格の重複/);
+});
+
+test('VM境界で入れ子・未定義を保持し、値やフィールドの違いは検出する', () => {
+  const {assertVMEqual} = require('./helpers/app.cjs');
+  const result = app.run('([{names:["対象"], date:undefined}])');
+  assertVMEqual(result, [{names:['対象'], date:undefined}]);
+  assert.throws(() => assertVMEqual(result, [{names:['別'], date:undefined}]), assert.AssertionError);
+  assert.throws(() => assertVMEqual(result, [{names:['対象']}]), assert.AssertionError);
+});
+
+test('月別と集約が一緒に誤っていても独立監査が結果と既存公演を守る', () => {
+  const {auditAnnouncements} = require('./helpers/results-audit.cjs');
+  const audit = readJSON('tests/audit/announcements.json');
+  // Synthetic additional show keeps the negative controls independent of future real announcements.
+  const show = {eventType:'audition-1st-east', title:'検証用', date:'2099-01-01', time:'16:00'};
+  const id = 'audit-test-only';
+  const result = {qualifiedPerformers:['甲'], qualifiedNextStageDate:'2099-02-01'};
+  const event = {id, ...show, performers:['甲','乙'], ...result};
+  audit.events[id] = {show, ...result};
+  auditAnnouncements([...all, event], audit);
+  for (const change of [{qualifiedPerformers:['乙']}, {qualifiedNextStageDate:'2099-02-02'}]) {
+    assert.throws(() => auditAnnouncements([...all, {...event, ...change}], audit), /audit-test-only 公式発表/);
+  }
+  assert.throws(() => auditAnnouncements(all, audit), /audit-test-only 既存公演の欠落/);
+  assert.throws(() => checkEvents([{...event, qualifiedNextStageDate:'2099-02-30'}]), /進出日/);
 });

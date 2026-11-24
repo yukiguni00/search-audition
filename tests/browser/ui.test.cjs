@@ -6,7 +6,12 @@ const path = require('node:path');
 const { root, readJSON } = require('../helpers/app.cjs');
 // Optional: use an existing Playwright installation; never download a browser here.
 const { chromium } = require('playwright');
-const published = readJSON('data/events.json');
+const {scenarioEvents} = require('../helpers/november-scenario.cjs');
+const {expectedPendingIDs} = require('../helpers/pending-cards.cjs');
+const published = scenarioEvents();
+const scenarioFiles = new Map(readJSON('data/events-index.json').files.map(file =>
+  ['/data/' + file, JSON.stringify(scenarioEvents('data/' + file))]));
+scenarioFiles.set('/data/events.json', JSON.stringify(published));
 const stages = published.filter(e => e.date === '2026-10-30' && e.eventType === 'audition-2nd-east');
 const agari = published.filter(e => e.eventType === 'agari-stage' && e.date.startsWith('2026-11'));
 const decemberAgari = published.filter(e => e.eventType === 'agari-stage' && e.date.startsWith('2026-12'));
@@ -20,7 +25,9 @@ before(async () => {
       if (!file.startsWith(root + path.sep)) { res.writeHead(403).end(); return; }
       const type = {'.html':'text/html', '.js':'text/javascript', '.css':'text/css', '.json':'application/json'}[path.extname(file)] || 'application/octet-stream';
       if (pathname === '/favicon.ico') { res.writeHead(204).end(); return; }
-      res.writeHead(200, {'Content-Type':type}); res.end(await fs.readFile(file));
+      const scenario = req.headers['x-november-scenario'] ? scenarioFiles.get(pathname) : undefined;
+      const body = scenario ?? await fs.readFile(file);
+      res.writeHead(200, {'Content-Type':type}).end(body);
     } catch { res.writeHead(404).end(); }
   });
   await new Promise((resolve, reject) => { server.once('error', reject); server.listen(0, '127.0.0.1', resolve); });
@@ -32,15 +39,15 @@ after(async () => {
   if (browser) await browser.close();
   if (server) await new Promise(resolve => server.close(resolve));
 });
-async function openPage(width, now = '2026-10-24T03:00:00Z') {
-  const context = await browser.newContext({viewport:{width,height:844}, timezoneId:'Asia/Tokyo', isMobile:width<500, hasTouch:width<500});
+async function openPage(width, now = '2026-10-24T03:00:00Z', {live = false, query = ''} = {}) {
+  const context = await browser.newContext({extraHTTPHeaders:live ? {} : {'x-november-scenario':'1'}, viewport:{width,height:844}, timezoneId:'Asia/Tokyo', isMobile:width<500, hasTouch:width<500});
   await context.route('**/*', route => new URL(route.request().url()).origin === baseURL ? route.continue() : route.abort());
   await context.addInitScript(now => { Date.now = () => new Date(now).getTime(); }, now);
   const page = await context.newPage();
   const errors = [];
   page.on('pageerror', e => errors.push(e.message));
   page.on('console', msg => { if (['error','warning'].includes(msg.type())) errors.push(msg.text()); });
-  await page.goto(`${baseURL}/?noanalytics=1`);
+  await page.goto(`${baseURL}/?noanalytics=1${query}`);
   if (now === '2026-10-24T03:00:00Z') await page.locator(`#event-${stages[0].id}`).waitFor();
   else await readySearchPage(page);
   if (process.env.TEST_SCREENSHOT_DIR) {
@@ -430,10 +437,16 @@ async function assertBackupState(page, keys, displayNames = keys) {
   const selected = await page.locator('#results .star[aria-pressed="true"]').evaluateAll(nodes => [...new Set(nodes.map(n => n.dataset.key))].sort());
   assert.deepEqual(selected, [...keys].sort(), '星の状態も保存内容と一致');
 }
+async function assertBackupFilters(page) {
+  const values = await page.locator('#eventType, #month, #day').evaluateAll(inputs =>
+    Object.fromEntries(inputs.map(input => [input.id, input.value])));
+  assert.deepEqual(values, {eventType:'audition-2nd-east', month:'10', day:'30'});
+  assert.equal(await page.locator('#results .result-card').count(), 3);
+}
 async function reloadAndCheckBackup(page, keys, names = keys) {
   await page.reload();
   await page.locator(`#event-${stages[0].id}`).waitFor();
-  await filterSecondStage(page);
+  await assertBackupFilters(page);
   await assertBackupState(page, keys, names);
   assert.equal(await page.evaluate(() => localStorage.getItem('qaBackupGuard')), 'unchanged');
 }
@@ -449,9 +462,9 @@ async function submitValidBackup(page, code, accept) {
 }
 function backupScenario(width, name, body) {
   test(`バックアップ復元 ${width}px: ${name}`, {timeout:30000}, async () => {
-    const {context,page,errors} = await openPage(width);
+    const {context,page,errors} = await openPage(width, undefined, {query:'&eventType=audition-2nd-east&month=10&day=30'});
     try {
-      await filterSecondStage(page);
+      await assertBackupFilters(page);
       assert.equal(await page.evaluate(key => localStorage.getItem(key), backupKey), null, '独立コンテキストから開始');
       for (const name of backupNames) await clickFavorite(page, name, true);
       await page.evaluate(() => localStorage.setItem('qaBackupGuard', 'unchanged'));
@@ -779,37 +792,16 @@ async function assertVisibleCounts(page) {
   assert.equal(await page.locator('#searchResultSummary').textContent(),`今後の開催：${future}件 ／ 進出者・出演予定者一覧：${pending}件 ／ 過去の開催：${past}件`);
   return {future,pending,past};
 }
-async function assertUnfilteredCards(page, today) {
+async function assertUnfilteredCards(page, today, catalog = published) {
   await assertVisibleCounts(page);
   const future = [];
   const past = [];
-  for (const event of published) {
+  for (const event of catalog) {
     const section = (event.dateEnd || event.date) < today ? past : future;
     section.push('event-' + event.id);
   }
 
-  // Audit the established two advancement lists and the new 12/23 first-stage qualifier independently of the UI.
-  // Read their validity dates from the published results, independently of the UI.
-  const pending = [];
-  for (const [sourceID, type] of [
-    ['2026-10-30-1330-audition-2nd-east-1', 'kiwami-grand-battle-east'],
-    ['2026-11-19-1700-agari-stage', 'sarani-agari-stage'],
-  ]) {
-    const source = published.find(event => event.id === sourceID);
-    const result = source?.stageResults.find(r => r.nextEventType === type && r.status === 'advanced');
-    assert.ok(result, `${sourceID}: ${type}`);
-    const end = result.nextDateEnd || result.nextDate;
-    if (!end || end >= today) {
-      pending.push(`event-pending-${type}-${result.nextDate || 'undecided'}-${end || 'undecided'}`);
-    }
-  }
-  const winterQualifier=published.find(event => event.id==='2026-11-24-1600-audition-1st-east');
-  assert.ok(winterQualifier,'11/24 16:00の1st公演が存在');
-  assert.deepEqual(winterQualifier.qualifiedPerformers,['サクラダ前線'],'合格者は1組');
-  assert.equal(winterQualifier.qualifiedNextStageDate,'2026-12-23','次回2ndは12/23');
-  if(winterQualifier.qualifiedNextStageDate>=today) {
-    pending.push('event-pending-audition-2nd-east-2026-12-23-2026-12-23');
-  }
+  const pending = expectedPendingIDs(catalog, today);
 
   async function cardIDs(selector) {
     return page.locator(selector).evaluateAll(cards => cards.map(card => card.id).sort());
@@ -817,6 +809,25 @@ async function assertUnfilteredCards(page, today) {
   assert.deepEqual(await cardIDs('#results .result-card:not(.pending-stage-card)'), future.sort(), today + ' 今後');
   assert.deepEqual(await cardIDs('#results .pending-stage-card'), pending.sort(), today + ' 進出先');
   assert.deepEqual(await cardIDs('#archiveResults .result-card'), past.sort(), today + ' 過去');
+}
+for (const width of [1280,390,375,320]) {
+  test(`掲載中の全公演と進出先を実DOMで照合 ${width}px`, async () => {
+    const {context, page, errors} = await openPage(width, undefined, {live:true});
+    try {
+      await assertUnfilteredCards(page, '2026-10-24', readJSON('data/events.json'));
+      const ranks = await page.locator('.result-card:not(.pending-stage-card)').evaluateAll(cards =>
+        Object.fromEntries(cards.map(card => [card.id, Array.from(card.querySelectorAll('.qualified-performers'), section =>
+          Array.from(section.querySelectorAll('.star'), star => star.dataset.name))])));
+      for (const [id, entry] of Object.entries(readJSON('tests/audit/announcements.json').events)) {
+        if (entry.ranks) assert.deepEqual(ranks['event-' + id], entry.ranks, id);
+        if (entry.qualifiedPerformers && !entry.stageResults) {
+          const sections = [entry.qualifiedPerformers, entry.additionalQualifiedPerformers].filter(names => names?.length);
+          assert.deepEqual(ranks['event-' + id], sections, id);
+        }
+      }
+      assert.deepEqual(errors, []);
+    } finally { await context.close(); }
+  });
 }
 async function assertMatchChips(page) {
   const state=await page.evaluate(()=>{

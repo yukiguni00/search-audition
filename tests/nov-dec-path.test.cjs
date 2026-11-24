@@ -1,12 +1,13 @@
 const test=require('node:test');
 const assert=require('node:assert/strict');
 const {createHash}=require('node:crypto');
-const {loadApp,readJSON}=require('./helpers/app.cjs');
+const {assertVMEqual, readJSON}=require('./helpers/app.cjs');
+const {scenarioEvents, loadScenarioApp}=require('./helpers/november-scenario.cjs');
 const f=readJSON('tests/fixtures/2026-nov-dec-audition-path.json');
-const published = readJSON('data/events.json');
+const published = scenarioEvents('data/events.json');
 const all=published.filter(e=>e.eventType!=='agari-stage');
 const empty={nameQuery:'',eventType:'all',month:'all',day:'all',hour:'all'};
-function current(){const a=loadApp();a.run('todayString=()=>"2026-11-08"');return a;}
+function current(){const a=loadScenarioApp();a.run('todayString=()=>"2026-11-08"');return a;}
 
 test('既存のオーディション経路164件を保持し、新しい1stの33公演を追加',()=>{
   const old=structuredClone(all.filter(e=>e.date<'2026-11-01'));
@@ -59,7 +60,7 @@ test('日時・名前の検索でも6組は未割当。1名検索と★のみは
   for(const day of ['12','13'])for(const hour of ['17','20']){
     const filters={...empty,month:'12',day,hour,nameQuery:'zazy'};
     const groups=a.context.getPendingStageGroups(filters);assert.equal(groups.length,1);
-    assert.deepEqual(Array.from(groups[0].names),['ZAZY']);assert.equal(groups[0].totalCount,6);
+    assertVMEqual(groups[0].names,['ZAZY']);assert.equal(groups[0].totalCount,6);
     assert.equal(all.filter(e=>a.context.eventMatchesFilters(e,filters)).length,0);
     assert.match(a.context.buildPendingStageCardHTML(groups[0],[]),/この日時への出演確定を示すものではありません/);
   }
@@ -99,7 +100,7 @@ test('翔15組の次回は掲載済み11/6と一致。3組の所属を通常の�
       assert.equal(sarani.event.time,'17:00');
       assert.equal(sarani.event.venue,'歌舞伎町Sparkle');
       assert.match(a.context.getFavoriteScheduleLabel(sarani.event),/11月27日\(金\) 開演17:00/);
-      assert.deepEqual(Array.from(sarani.names),['ミックストマトジュース']);
+      assertVMEqual(sarani.names,['ミックストマトジュース']);
     }else{
       assert.equal(advances.length, 0, '所属だけで新たな出演予定を作らない: ' + name);
     }
@@ -107,7 +108,7 @@ test('翔15組の次回は掲載済み11/6と一致。3組の所属を通常の�
 });
 
 test('出場権の日時確定を検索とお気に入りに反映し、開催翌日に両方から外す', () => {
-  const app = loadApp();
+  const app = loadScenarioApp();
   const result = {status: 'advanced', nextEventType: 'sarani-agari-stage', performers: ['対象']};
   app.set('source', {id: 'source', date: '2026-10-01', performers: ['対象'], stageResults: [result]});
   app.run('events = [source]; saveFavorites(["対象"]); todayString = () => today');
