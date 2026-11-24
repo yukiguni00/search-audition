@@ -92,7 +92,7 @@ test('確定した進出先だけを接続: 翔は11/6に掲載済み、極は12
   const groups=a.context.getPendingStageGroups(filters);
   assert.equal(groups.length,3,'極の出演部未定・サラに！出場権・12/23の1st合格進出を別々に表示');
   assert.deepEqual(
-    groups.map(g=>[g.nextEventType,g.nextDate]),
+    Array.from(groups, g=>[g.nextEventType,g.nextDate]),
     [['sarani-agari-stage','2026-11-27'],['kiwami-grand-battle-east','2026-12-12'],['audition-2nd-east','2026-12-23']],
     '掲載済みの進出先に、新しい12/23の進出予定だけを追加'
   );
