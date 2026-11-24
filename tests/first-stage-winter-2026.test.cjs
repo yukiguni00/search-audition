@@ -1,7 +1,8 @@
 const test=require('node:test');
 const assert=require('node:assert/strict');
-const {readJSON,loadApp}=require('./helpers/app.cjs');
-const all=readJSON('data/events.json');
+const {assertVMEqual, readJSON}=require('./helpers/app.cjs');
+const {scenarioEvents, loadScenarioApp}=require('./helpers/november-scenario.cjs');
+const all=scenarioEvents('data/events.json');
 const winter=all.filter(e=>e.eventType==='audition-1st-east' && e.date>='2026-11-24' && e.date<='2026-12-17');
 const counts=[
   [
@@ -340,11 +341,11 @@ test('11/24 16:00のサクラダ前線が12/23 2ndへ進出。未確定の公演
   assert.equal(target.qualifiedNextStageDate,'2026-12-23');
   assert.equal(target.stageResults,undefined,'1st結果は既存の合格者フィールドで表現');
   assert.equal(all.filter(e=>e.date==='2026-12-23'&&e.eventType==='audition-2nd-east').length,0,'未発表の2nd詳細公演は作らない');
-  const app=loadApp();
+  const app=loadScenarioApp();
   app.run('todayString=()=>"2026-11-24"');
   const results=app.context.getStageResults(target);
   assert.equal(results.length,1);
-  assert.deepEqual([...results[0].performers],['サクラダ前線']);
+  assertVMEqual(results[0].performers,['サクラダ前線']);
   assert.equal(results[0].nextEventType,'audition-2nd-east');
   assert.equal(results[0].nextDate,'2026-12-23');
   assert.equal(results[0].nextTime,undefined,'開演時刻は未発表');
@@ -354,7 +355,7 @@ test('11/24 16:00のサクラダ前線が12/23 2ndへ進出。未確定の公演
   const filters={nameQuery:app.context.normalizeText('サクラダ前線'),eventType:'audition-2nd-east',month:'12',day:'23',hour:'all'};
   const groups=app.context.getPendingStageGroups(filters);
   assert.equal(groups.length,1);
-  assert.deepEqual(Array.from(groups[0].names),['サクラダ前線']);
+  assertVMEqual(groups[0].names,['サクラダ前線']);
   assert.equal(groups[0].totalCount,1);
   assert.equal(groups[0].nextDate,'2026-12-23');
   assert.equal(groups[0].nextTime,'','未確認の開演時刻を作らない');
@@ -371,7 +372,7 @@ test('11/24 16:00のサクラダ前線が12/23 2ndへ進出。未確定の公演
 });
 
 test('冬期1st全33公演の11/18一般販売・配信なし／アガり全30公演の10/19発売を混同しない',()=>{
-  const app=loadApp();
+  const app=loadScenarioApp();
   assert.equal(winter.length,33);
   for(const e of winter){
     assert.equal(e.ticket.streamingNote,'※配信はありません',e.id);
@@ -405,15 +406,15 @@ test('12月アガり初稿の目視確認中告知とプロフィール案内を
   const item=notice.items[0];
   const shown=(item.label?item.label+' ':'')+item.message+(item.detail?'　'+item.detail:'');
   assert.equal(shown,targetNotice);
-  const a=loadApp();
+  const a=loadScenarioApp();
   assert.equal(item.label,'🆕');
   assert.ok(shown.includes('吉本のタレント検索サービス'));
   assert.equal(a.context.eventMatchesFilters(winter[0],{nameQuery:'',eventType:'audition-1st-east',month:'11',day:'24',hour:'16'}),true);
 });
 
 test('11月1st香盤のユーザー目視校正12件を同じ位置で保持し月別・集約で一致',()=>{
-  const monthly=readJSON('data/events/2026-11.json');
-  const aggregate=readJSON('data/events.json');
+  const monthly=scenarioEvents('data/events/2026-11.json');
+  const aggregate=scenarioEvents('data/events.json');
   const corrections=[
     [
       "2026-11-24",

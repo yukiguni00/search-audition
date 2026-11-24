@@ -5,7 +5,7 @@ const assert = require('node:assert/strict');
 process.env.TZ = 'Asia/Tokyo';
 const root = path.resolve(__dirname, '../..');
 const readJSON = file => JSON.parse(fs.readFileSync(path.join(root, file), 'utf8'));
-function loadApp() {
+function loadApp(inputEvents = readJSON('data/events.json')) {
   const storage = new Map();
   const elements = new Map();
   const element = id => {
@@ -26,11 +26,15 @@ function loadApp() {
   assert.match(source, /\ninit\(\);\s*$/);
   vm.runInContext(source.replace(/\ninit\(\);\s*$/, '\n'), context);
   vm.runInContext('todayString = () => "2026-10-24"', context);
-  context.inputEvents = readJSON('data/events.json');
+  context.inputEvents = inputEvents;
   context.aliasData = readJSON('data/performer-aliases.json');
   vm.runInContext('events = inputEvents; performerRenameAliases = buildPerformerAliasMap(aliasData)', context);
   vm.runInContext('performerIdentities = buildPerformerIdentities(events)', context);
   return { context, element, run: code => vm.runInContext(code, context),
     set: (key, value) => { context[key] = value; } };
 }
-module.exports = { root, readJSON, loadApp };
+// For JSON-like values returned by the VM. Preserve undefined and nested array/object structure.
+function assertVMEqual(actual, expected, message) {
+  assert.deepStrictEqual(structuredClone(actual), expected, message);
+}
+module.exports = { root, readJSON, loadApp, assertVMEqual };

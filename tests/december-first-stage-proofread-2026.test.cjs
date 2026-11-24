@@ -1,7 +1,7 @@
 'use strict';
 const test=require('node:test');
 const assert=require('node:assert/strict');
-const {readJSON}=require('./helpers/app.cjs');
+const {scenarioEvents}=require('./helpers/november-scenario.cjs');
 const corrected=[
   [
     "2026-12-01",
@@ -1165,8 +1165,8 @@ const unresolved=[
   ]
 ];
 test('12月1st EASTの校正191枠＋後続の判読不可追記、元の公演順・全件集約との同期',()=>{
-  const month=readJSON('data/events/2026-12.json');
-  const all=readJSON('data/events.json');
+  const month=scenarioEvents('data/events/2026-12.json');
+  const all=scenarioEvents('data/events.json');
   assert.equal(month.length,60);
   assert.deepEqual(all.filter(x=>x.date.startsWith('2026-12')),month);
   assert.equal(month.filter(x=>x.eventType==='kiwami-grand-battle-east').length,4);
@@ -1180,7 +1180,7 @@ test('12月1st EASTの校正191枠＋後続の判読不可追記、元の公演�
   }
 });
 test('バ／パ判別不可のメモ2件は推測せず保持',()=>{
-  const month=readJSON('data/events/2026-12.json');
+  const month=scenarioEvents('data/events/2026-12.json');
   for(const [date,time,index,name] of unresolved){
     const e=month.find(x=>x.date===date&&x.time===time&&x.eventType==='audition-1st-east');
     assert.ok(e);

@@ -1,12 +1,13 @@
 'use strict';
 const test=require('node:test');
 const assert=require('node:assert/strict');
-const {readJSON,loadApp}=require('./helpers/app.cjs');
+const {readJSON}=require('./helpers/app.cjs');
+const {scenarioEvents, loadScenarioApp}=require('./helpers/november-scenario.cjs');
 
-const all=readJSON('data/events.json');
-const monthly=readJSON('data/events/2026-12.json');
+const all=scenarioEvents('data/events.json');
+const monthly=scenarioEvents('data/events/2026-12.json');
 const december=monthly.filter(e=>e.eventType==='agari-stage');
-const november=readJSON('data/events/2026-11.json').filter(e=>e.eventType==='agari-stage');
+const november=scenarioEvents('data/events/2026-11.json').filter(e=>e.eventType==='agari-stage');
 const sessions=[
  ['01','超巨大','広島兄弟'],
  ['02','マルモウケ','アイオライト'],
@@ -109,7 +110,7 @@ test('3枚の元画像と再照合した12月アガり5芸名を香盤位置と�
  assert.equal(december.reduce((n,e)=>n+e.performers.length,0),907);
 });
 test('12月のFANYと11/20発売を11月の10/19発売やオーディション1stの11/18と混同しない',()=>{
- const app=loadApp();
+ const app=loadScenarioApp();
  const decTicket='https://ticket.fany.lol/event/detail/23033';
  const novTicket='https://ticket.fany.lol/event/detail/22035';
  for(const e of december){
@@ -369,7 +370,7 @@ test('前回の12月アガり！32名と1st2名の確認済み表記を保持',(
 });
 
 test('追加確認の3組は確定表記、2組の判読不可は両候補検索・1枠お気に入り・独立キー',()=>{
- const app=loadApp();
+ const app=loadScenarioApp();
  const confirmed=[
    ['2026-12-04-1700-agari-stage','2026-12-16-1830-audition-1st-east','ごぞんじ武田','こぞんじ武田'],
    ['2026-12-07-1700-agari-stage','2026-12-03-1600-audition-1st-east','もってぃ','もってい'],

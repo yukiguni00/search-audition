@@ -1,8 +1,9 @@
+const {assertVMEqual} = require('./helpers/app.cjs');
 const test = require('node:test');
 const assert = require('node:assert/strict');
 const { createHash } = require('node:crypto');
-const { loadApp, readJSON } = require('./helpers/app.cjs');
-const all = readJSON('data/events.json');
+const {scenarioEvents, loadScenarioApp}=require('./helpers/november-scenario.cjs');
+const all = scenarioEvents('data/events.json');
 const added = all.filter(e => e.eventType === 'agari-stage' && e.date.startsWith('2026-11'));
 const publishedResultEventIDs = new Set(['2026-11-02-1700-agari-stage','2026-11-02-1930-agari-stage','2026-11-04-1700-agari-stage','2026-11-04-1930-agari-stage','2026-11-05-1700-agari-stage','2026-11-05-1930-agari-stage','2026-11-06-1700-agari-stage','2026-11-06-1930-agari-stage','2026-11-09-1700-agari-stage','2026-11-09-1930-agari-stage','2026-11-10-1700-agari-stage','2026-11-10-1930-agari-stage','2026-11-11-1700-agari-stage','2026-11-11-1930-agari-stage','2026-11-12-1700-agari-stage','2026-11-12-1930-agari-stage','2026-11-13-1700-agari-stage','2026-11-13-1930-agari-stage','2026-11-16-1700-agari-stage','2026-11-16-1930-agari-stage','2026-11-17-1700-agari-stage','2026-11-17-1930-agari-stage','2026-11-18-1700-agari-stage','2026-11-18-1930-agari-stage','2026-11-19-1700-agari-stage','2026-11-19-1930-agari-stage','2026-11-20-1700-agari-stage','2026-11-20-1930-agari-stage']);
 const filters = { nameQuery:'', eventType:'agari-stage', month:'11', day:'all', hour:'all' };
@@ -39,7 +40,7 @@ test('既存164公演と11月アガり30公演を維持', () => {
 });
 
 test('判読不可2枠: 両候補で同一カード・チップ、MC/3ブロック表示・香盤順保持', () => {
-  const a=loadApp();
+  const a=loadScenarioApp();
   assert.equal(added.flatMap(e=>e.lineup).filter(p=>p.identityStatus==='unresolved').length,2);
   for (const e of added) {
     const html=a.context.buildEventCardHTML(e,'results',[]);
@@ -65,11 +66,11 @@ test('判読不可2枠: 両候補で同一カード・チップ、MC/3ブロッ�
 });
 
 test('暫定名のお気に入りは各1組: 保存・再読込・日程・解除', () => {
-  const a=loadApp();
+  const a=loadScenarioApp();
   a.set('CSS',{escape:value=>value});
   for(const e of added) for(const p of e.lineup.filter(p=>p.entryKey)) {
     a.context.toggleFavorite(p.name);
-    assert.deepEqual(Array.from(a.context.getFavorites()),[p.entryKey]);
+    assertVMEqual(a.context.getFavorites(),[p.entryKey]);
     const schedule=a.context.getFavoriteScheduleData();
     assert.equal(schedule.total,1); assert.equal(schedule.upcomingCount,1);
     assert.equal(schedule.eventGroups.length,1); assert.equal(schedule.eventGroups[0].event.id,e.id);
@@ -78,7 +79,7 @@ test('暫定名のお気に入りは各1組: 保存・再読込・日程・解�
 });
 
 test('正式名への訂正はentryKeyを保持。既存芸人への確定統合は改名aliasで重複解消', () => {
-  const a=loadApp(); const e=structuredClone(added.find(e=>e.lineup.some(p=>p.entryKey)));
+  const a=loadScenarioApp(); const e=structuredClone(added.find(e=>e.lineup.some(p=>p.entryKey)));
   const p=e.lineup.find(p=>p.entryKey); const oldName=p.name;
   a.context.saveFavorites([p.entryKey]);
   p.name='確定芸名_TEST'; p.identityStatus='confirmed'; e.performers=e.performers.map(n=>n===oldName?p.name:n);
@@ -89,12 +90,12 @@ test('正式名への訂正はentryKeyを保持。既存芸人への確定統合
   a.set('migration',{aliases:[{currentName:p.name,aliases:[p.entryKey,oldName]}]});
   a.run('performerRenameAliases=buildPerformerAliasMap(migration)');
   a.context.saveFavorites([p.entryKey,p.name]);
-  assert.deepEqual(Array.from(a.context.getFavorites()),['確定芸名_test']);
+  assertVMEqual(a.context.getFavorites(),['確定芸名_test']);
   assert.equal(a.context.getFavoriteScheduleData().upcomingCount,1);
 });
 
 test('後日の順位とサラに進出は既存結果UIに接続でき、未提供結果は空のまま', () => {
-  const a=loadApp(); const e=structuredClone(added[0]);
+  const a=loadScenarioApp(); const e=structuredClone(added[0]);
   e.stageResults[0].status='ranked'; e.stageResults[0].performers=[e.performers[0]];
   Object.assign(e.stageResults[3],{status:'advanced',performers:[e.performers[0]],nextDate:'2026-12-01',nextEventTitle:'サラに！アガり！ステージ'});
   a.set('sample',e); a.run('events=[sample]');
