@@ -788,7 +788,7 @@ async function assertUnfilteredCards(page, today) {
     section.push('event-' + event.id);
   }
 
-  // The two audited advancement lists have no individual performer assignments.
+  // Audit the established two advancement lists and the new 12/23 first-stage qualifier independently of the UI.
   // Read their validity dates from the published results, independently of the UI.
   const pending = [];
   for (const [sourceID, type] of [
@@ -802,6 +802,13 @@ async function assertUnfilteredCards(page, today) {
     if (!end || end >= today) {
       pending.push(`event-pending-${type}-${result.nextDate || 'undecided'}-${end || 'undecided'}`);
     }
+  }
+  const winterQualifier=published.find(event => event.id==='2026-11-24-1600-audition-1st-east');
+  assert.ok(winterQualifier,'11/24 16:00の1st公演が存在');
+  assert.deepEqual(winterQualifier.qualifiedPerformers,['サクラダ前線'],'合格者は1組');
+  assert.equal(winterQualifier.qualifiedNextStageDate,'2026-12-23','次回2ndは12/23');
+  if(winterQualifier.qualifiedNextStageDate>=today) {
+    pending.push('event-pending-audition-2nd-east-2026-12-23-2026-12-23');
   }
 
   async function cardIDs(selector) {
@@ -1288,6 +1295,25 @@ for(const width of [1280,390,375,320]){
       assert.equal(await november.locator('.ticket-purchase-link a').getAttribute('href'),'https://ticket.fany.lol/event/detail/23168');
        assert.equal(await november.locator('.ticket-streaming-note').textContent(),'※配信はありません');
        assert.equal(await november.locator('.ticket-sale-info').textContent(),'※FANY一般発売：11月18日(水)10:00〜');
+      assert.equal(await november.locator('.qualified-performers .star').count(),1,'11/24 16:00の合格者は1組だけ');
+      assert.equal(await november.locator('.qualified-performers .star').getAttribute('data-name'),'サクラダ前線');
+      assert.match(await november.locator('.qualified-performers').textContent(),/12月23日\(水\)出演予定/);
+      await page.locator('#eventType').selectOption('audition-2nd-east');
+      await page.locator('#month').selectOption('12');
+      await page.locator('#day').selectOption('23');
+      const next=page.locator('#results .pending-stage-card');
+      assert.equal(await next.count(),1,'12/23の2nd進出予定を1枚表示');
+      assert.match(await next.textContent(),/12月23日\(水\)/);
+      assert.match(await next.textContent(),/開演時間未定/);
+      assert.equal(await next.locator('.venue-line').textContent(),'会場：詳細未定');
+      assert.equal(await next.locator('.star').getAttribute('data-name'),'サクラダ前線');
+      await next.locator('.star').click();
+      const showAllFavorites=page.locator('#favoriteScheduleToggleBtn');
+      if(await showAllFavorites.count()) await showAllFavorites.click();
+      assert.ok((await page.locator('#favoriteSchedule').textContent()).includes('12月23日(水)'),'お気に入り一覧を展開して2nd進出予定も表示');
+      await page.locator('#day').selectOption('22');
+      assert.equal(await next.count(),0,'12/22には表示しない');
+      await page.locator('#eventType').selectOption('audition-1st-east');
       await page.locator('#month').selectOption('12');
       await page.locator('#day').selectOption('1');
       assert.equal(await page.locator('#results .result-card').count(),2);

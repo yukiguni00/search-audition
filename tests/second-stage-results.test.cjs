@@ -90,7 +90,18 @@ test('確定した進出先だけを接続: 翔は11/6に掲載済み、極は12
     assert.equal(a.context.eventMatchesFilters(event, filters, true), true);
   }
   const groups=a.context.getPendingStageGroups(filters);
-  assert.equal(groups.length,2,'極の出演部未定とサラに！出場権は別々のカード');
+  assert.equal(groups.length,3,'極の出演部未定・サラに！出場権・12/23の1st合格進出を別々に表示');
+  assert.deepEqual(
+    Array.from(groups, g=>[g.nextEventType,g.nextDate]),
+    [['sarani-agari-stage','2026-11-27'],['kiwami-grand-battle-east','2026-12-12'],['audition-2nd-east','2026-12-23']],
+    '掲載済みの進出先に、新しい12/23の進出予定だけを追加'
+  );
+  const dec23=groups.filter(g=>g.nextEventType==='audition-2nd-east');
+  assert.equal(dec23.length,1,'12/23オーディション2nd予定は1枚');
+  assert.deepEqual(Array.from(dec23[0].names),['サクラダ前線']);
+  assert.equal(dec23[0].nextDate,'2026-12-23');
+  assert.equal(dec23[0].nextTime,'','詳細未発表の開始時刻を作らない');
+  assert.equal(dec23[0].venue,'詳細未定','詳細未発表の会場を作らない');
   const kiwami=groups.filter(g=>g.nextEventType==='kiwami-grand-battle-east');
   assert.equal(kiwami.length,1); assert.equal(kiwami[0].nextDate,'2026-12-12');
   assert.equal(kiwami[0].nextDateEnd,'2026-12-13');assert.equal(kiwami[0].names.length,6);
