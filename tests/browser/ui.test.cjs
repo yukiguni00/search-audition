@@ -820,9 +820,19 @@ for (const width of [1280,390,375,320]) {
           Array.from(section.querySelectorAll('.star'), star => star.dataset.name))])));
       for (const [id, entry] of Object.entries(readJSON('tests/audit/announcements.json').events)) {
         if (entry.ranks) assert.deepEqual(ranks['event-' + id], entry.ranks, id);
-        if (entry.qualifiedPerformers && !entry.stageResults) {
-          const sections = [entry.qualifiedPerformers, entry.additionalQualifiedPerformers].filter(names => names?.length);
+        if (!entry.stageResults && (entry.qualifiedResult === 'none' || entry.qualifiedPerformers || entry.additionalQualifiedPerformers)) {
+          // An announced result with no qualifiers still has a result section.
+          // Unlike an unannounced result, it must display an explicit empty-state message.
+          const sections = [
+            ...(entry.qualifiedResult === 'none' ? [[]] : entry.qualifiedPerformers?.length ? [entry.qualifiedPerformers] : []),
+            ...(entry.additionalQualifiedPerformers?.length ? [entry.additionalQualifiedPerformers] : []),
+          ];
           assert.deepEqual(ranks['event-' + id], sections, id);
+          const groups = page.locator(`#event-${id} .qualified-performers`);
+          assert.equal(await groups.locator('.qualified-none').count(), entry.qualifiedResult === 'none' ? 1 : 0, id + ' 合格結果の空欄表示');
+          if (entry.qualifiedResult === 'none') {
+            assert.equal(await groups.first().locator('.qualified-none').textContent(), '該当者なし', id);
+          }
         }
       }
       assert.deepEqual(errors, []);
