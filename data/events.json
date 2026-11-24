@@ -14560,7 +14560,9 @@
       "url": "https://ticket.fany.lol/event/detail/23168",
       "streamingNote": "※配信はありません",
       "saleInfo": "※ FANY一般販売：11月18日(水) 10:00〜"
-    }
+    },
+    "qualifiedPerformers": [],
+    "qualifiedResult": "none"
   },
   {
     "id": "2026-11-24-1930-agari-stage",
@@ -14749,29 +14751,48 @@
     "excludedSlots": [],
     "stageResults": [
       {
-        "status": "pending",
+        "status": "ranked",
         "displayStyle": "qualified",
-        "performers": [],
+        "performers": [
+          "たまゆら学園"
+        ],
         "label": "最優秀者"
       },
       {
-        "status": "pending",
+        "status": "ranked",
         "displayStyle": "qualified",
-        "performers": [],
+        "performers": [
+          "7図柄テンパイ"
+        ],
         "label": "2位"
       },
       {
-        "status": "pending",
+        "status": "ranked",
         "displayStyle": "qualified",
-        "performers": [],
+        "performers": [
+          "シャングリラS"
+        ],
         "label": "3位"
       },
       {
-        "status": "pending",
+        "status": "advanced",
         "displayStyle": "next-stage",
-        "performers": [],
+        "performers": [
+          "たまゆら学園"
+        ],
         "nextEventType": "sarani-agari-stage",
-        "label": "サラに！への進出"
+        "label": "サラに！アガり！ステージ出場権",
+        "nextEventTitle": "サラに！アガり！ステージ",
+        "nextDate": "2026-11-27",
+        "nextTime": "17:00",
+        "nextVenue": "歌舞伎町Sparkle",
+        "nextTicket": {
+          "url": "https://ticket.fany.lol/reception/70947/55946",
+          "linkLabel": "FANYチケット",
+          "saleInfo": "※FANY一般発売：11月20日(金)10:00〜",
+          "purchaseNote": "出演者への取り置きも可能です",
+          "streamingNote": "※配信はありません"
+        }
       }
     ],
     "ticket": {
