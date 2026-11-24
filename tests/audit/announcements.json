@@ -42,6 +42,7 @@
     "2026-11-19-1930-agari-stage": {"ranks": [["ゴスケ"], ["スティックセニョール"], ["ラクダ人生"]], "schedule": "sarani-2026-11-27"},
     "2026-11-20-1700-agari-stage": {"ranks": [["き展"], ["広島兄弟"], ["桃子", "キンジトウ"]], "schedule": "sarani-2026-11-27"},
     "2026-11-20-1930-agari-stage": {"ranks": [["つつがないね"], ["あさゆま"], ["コロネケン"]], "schedule": "sarani-2026-11-27"},
-    "2026-11-24-1600-audition-1st-east": {"qualifiedPerformers": ["サクラダ前線"], "qualifiedNextStageDate": "2026-12-23"}
+    "2026-11-24-1600-audition-1st-east": {"qualifiedPerformers": ["サクラダ前線"], "qualifiedNextStageDate": "2026-12-23"},
+    "2026-11-24-1700-agari-stage": {"ranks": [["ドゥダダ"], ["イエローテープ"], ["リビングベッドダイニング"]], "schedule": "sarani-2026-11-27"}
   }
 }
