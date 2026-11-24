@@ -1308,7 +1308,9 @@ for(const width of [1280,390,375,320]){
       assert.equal(await next.locator('.venue-line').textContent(),'会場：詳細未定');
       assert.equal(await next.locator('.star').getAttribute('data-name'),'サクラダ前線');
       await next.locator('.star').click();
-      assert.ok((await page.locator('#favoriteSchedule').textContent()).includes('12月23日(水)'),'お気に入りにも2nd進出予定を表示');
+      const showAllFavorites=page.locator('#favoriteScheduleToggleBtn');
+      if(await showAllFavorites.count()) await showAllFavorites.click();
+      assert.ok((await page.locator('#favoriteSchedule').textContent()).includes('12月23日(水)'),'お気に入り一覧を展開して2nd進出予定も表示');
       await page.locator('#day').selectOption('22');
       assert.equal(await next.count(),0,'12/22には表示しない');
       await page.locator('#eventType').selectOption('audition-1st-east');
