@@ -320,11 +320,56 @@ test('11/24〜12/17 1st新規33公演・841出演記録と開催時刻・欠場�
     assert.equal(e.venue,e.date==='2026-11-30'?'歌舞伎町Sparkle':'LEFKADA新宿');
     assert.equal(e.ticket.url,'https://ticket.fany.lol/event/detail/'+(e.date==='2026-11-30'?'23161':'23168'));
     assert.equal(e.stageResults,undefined,'結果を推測で登録しない');
-    assert.equal(e.qualifiedPerformers,undefined,'進出者を推測で登録しない');
+    if(e.id==='2026-11-24-1600-audition-1st-east'){
+      assert.deepEqual(e.qualifiedPerformers,['サクラダ前線'],'11/24 16:00発表済みの合格者');
+      assert.equal(e.qualifiedNextStageDate,'2026-12-23','12/23の2nd進出日');
+    } else {
+      assert.equal(e.qualifiedPerformers,undefined,'未発表公演の進出者を推測で登録しない');
+      assert.equal(e.qualifiedNextStageDate,undefined,'未発表公演の進出日を推測しない');
+    }
     assert.equal(e.mc,undefined,'MCを推測で登録しない');
     assert.ok(e.performers.every(n=>n&&n.trim()));
   }
 });
+test('11/24 16:00のサクラダ前線が12/23 2ndへ進出。未確定の公演時間・会場は作らない',()=>{
+  const target=winter.find(e=>e.id==='2026-11-24-1600-audition-1st-east');
+  assert.ok(target);
+  assert.equal(target.performers.length,25);
+  assert.equal(target.performers[23],'サクラダ前線','元の香盤位置');
+  assert.deepEqual(target.qualifiedPerformers,['サクラダ前線']);
+  assert.equal(target.qualifiedNextStageDate,'2026-12-23');
+  assert.equal(target.stageResults,undefined,'1st結果は既存の合格者フィールドで表現');
+  assert.equal(all.filter(e=>e.date==='2026-12-23'&&e.eventType==='audition-2nd-east').length,0,'未発表の2nd詳細公演は作らない');
+  const app=loadApp();
+  app.run('todayString=()=>"2026-11-24"');
+  const results=app.context.getStageResults(target);
+  assert.equal(results.length,1);
+  assert.deepEqual([...results[0].performers],['サクラダ前線']);
+  assert.equal(results[0].nextEventType,'audition-2nd-east');
+  assert.equal(results[0].nextDate,'2026-12-23');
+  assert.equal(results[0].nextTime,undefined,'開演時刻は未発表');
+  const sourceHtml=app.context.buildEventCardHTML(target,'results',[]);
+  assert.match(sourceHtml,/2nd進出者 \(12月23日\(水\)出演予定\)/);
+  assert.match(sourceHtml,/サクラダ前線/);
+  const filters={nameQuery:app.context.normalizeText('サクラダ前線'),eventType:'audition-2nd-east',month:'12',day:'23',hour:'all'};
+  const groups=app.context.getPendingStageGroups(filters);
+  assert.equal(groups.length,1);
+  assert.deepEqual(Array.from(groups[0].names),['サクラダ前線']);
+  assert.equal(groups[0].totalCount,1);
+  assert.equal(groups[0].nextDate,'2026-12-23');
+  assert.equal(groups[0].nextTime,'','未確認の開演時刻を作らない');
+  assert.equal(groups[0].venue,'詳細未定','未確認の2nd会場を作らない');
+  const pendingHtml=app.context.buildPendingStageCardHTML(groups[0],[]);
+  assert.match(pendingHtml,/12月23日\(水\) 開演時間未定/);
+  assert.match(pendingHtml,/会場：詳細未定/);
+  assert.equal(app.context.getPendingStageGroups({...filters,day:'22'}).length,0);
+  assert.equal(app.context.getPendingStageGroups({...filters,nameQuery:app.context.normalizeText('別の芸人')}).length,0);
+  app.context.saveFavorites([app.context.normalizeText('サクラダ前線')]);
+  const scheduled=app.context.getFavoriteScheduleData().eventGroups;
+  assert.ok(scheduled.some(g=>g.event.eventType==='audition-2nd-east'&&g.event.date==='2026-12-23'&&g.event.isPendingStage),'お気に入りの進出予定にも追加');
+  assert.ok(!winter.some(e=>e.id!==target.id&&e.qualifiedPerformers!==undefined),'残り32公演の未発表結果を保持');
+});
+
 test('冬期1st全33公演の11/18一般販売・配信なし／アガり全30公演の10/19発売を混同しない',()=>{
   const app=loadApp();
   assert.equal(winter.length,33);
