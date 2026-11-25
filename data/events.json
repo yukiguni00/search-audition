@@ -14846,7 +14846,11 @@
       "url": "https://ticket.fany.lol/event/detail/23168",
       "streamingNote": "※配信はありません",
       "saleInfo": "※ FANY一般販売：11月18日(水) 10:00〜"
-    }
+    },
+    "qualifiedPerformers": [
+      "ミイラボックス"
+    ],
+    "qualifiedNextStageDate": "2026-12-23"
   },
   {
     "id": "2026-11-25-1830-audition-1st-east",
