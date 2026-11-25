@@ -45,6 +45,7 @@
     "2026-11-24-1600-audition-1st-east": {"qualifiedPerformers": ["サクラダ前線"], "qualifiedNextStageDate": "2026-12-23"},
     "2026-11-24-1700-agari-stage": {"ranks": [["ドゥダダ"], ["イエローテープ"], ["リビングベッドダイニング"]], "schedule": "sarani-2026-11-27"},
     "2026-11-24-1830-audition-1st-east": {"qualifiedPerformers": [], "qualifiedResult": "none"},
-    "2026-11-24-1930-agari-stage": {"ranks": [["たまゆら学園"], ["7図柄テンパイ"], ["シャングリラS"]], "schedule": "sarani-2026-11-27"}
+    "2026-11-24-1930-agari-stage": {"ranks": [["たまゆら学園"], ["7図柄テンパイ"], ["シャングリラS"]], "schedule": "sarani-2026-11-27"},
+    "2026-11-25-1600-audition-1st-east": {"qualifiedPerformers": ["ミイラボックス"], "qualifiedNextStageDate": "2026-12-23"}
   }
 }
