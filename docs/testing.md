@@ -37,6 +37,6 @@ PRの報告は成功時は「`npm run check` PASS、`npm run test:browser` PASS�
 
 実データの全公演・進出カードをChromiumで照合し、過去の特定の検索・お気に入り操作は発表時点の結果を使って再現します。NodeのVMから返った配列やオブジェクトは `assertVMEqual(actual, expected)` で入れ子まで厳密に比較します。
 
-`npm run check` は同期確認とNode標準テスト、`npm run test:browser` はChromiumで検索・URL復元・お気に入り・バックアップ・MC・4画面幅を確認します。ブラウザテストに外部サービスへの接続は不要です。必要な画像は `TEST_SCREENSHOT_DIR` でリポジトリ外へ保存してください。
+`npm run check` は同期確認とNode標準テスト、`npm run test:browser` はChromiumで検索・URL復元・お気に入り・バックアップ・MC・4画面幅を確認します。ブラウザテストに外部サービスへの接続は不要です。同じChromium内の独立したコンテキストで、最大4件を並列実行します。必要な画像は `TEST_SCREENSHOT_DIR` でリポジトリ外へ保存してください。保存時は同じ画面幅のファイル名が重なるため、自動で直列実行します。
 
 PRで既存の `Data integrity and Node tests` が成功してからマージします。無料Public標準Ubuntuランナーのみを使用し、Privateではジョブを停止します。キャッシュ・artifact・matrix・有料サービスは使いません。実機Safari・実際のスクリーンリーダー読み上げは別途確認が必要です。
