@@ -7533,6 +7533,84 @@
     "qualifiedResult": "none"
   },
   {
+    "id": "2026-11-27-1700-sarani-agari-stage",
+    "eventType": "sarani-agari-stage",
+    "title": "サラに！アガり！ステージ",
+    "date": "2026-11-27",
+    "month": 11,
+    "day": 27,
+    "time": "17:00",
+    "timeMinutes": 1020,
+    "venue": "歌舞伎町Sparkle",
+    "performerLabel": "出場権獲得者",
+    "eventNotice": "※アガり！ステージ最優秀者として出場権を獲得した組を掲載しています。実際の出演者全員・出演順は未確認です。",
+    "performers": [
+      "ライダーキック",
+      "パピヨン",
+      "きっと君はくるさ",
+      "プテラエリア",
+      "サクラダ前線",
+      "坊主ボーイズ",
+      "ハヤヲ",
+      "フクロクジュ",
+      "XYZ",
+      "ピーチキャッスル",
+      "バチョフ",
+      "御恩と奉公と痛み",
+      "バイバイスプリット",
+      "阿部直也",
+      "ランス39号",
+      "マルティンス",
+      "パウリスタ",
+      "まえだかっこかり",
+      "超アジア",
+      "アイガモシーサー",
+      "ダスティローデス",
+      "ただならぬ刀",
+      "きしゃぽっぽ",
+      "スーパートマト",
+      "ミックストマトジュース",
+      "ゴスケ",
+      "き展",
+      "つつがないね",
+      "ドゥダダ",
+      "たまゆら学園"
+    ],
+    "stageResults": [
+      {
+        "status": "ranked",
+        "displayStyle": "qualified",
+        "performers": [
+          "ミックストマトジュース"
+        ],
+        "label": "最優秀者"
+      },
+      {
+        "status": "ranked",
+        "displayStyle": "qualified",
+        "performers": [
+          "ただならぬ刀"
+        ],
+        "label": "2位"
+      },
+      {
+        "status": "ranked",
+        "displayStyle": "qualified",
+        "performers": [
+          "パピヨン"
+        ],
+        "label": "3位"
+      }
+    ],
+    "ticket": {
+      "url": "https://ticket.fany.lol/reception/70947/55946",
+      "linkLabel": "FANYチケット",
+      "saleInfo": "※FANY一般発売：11月20日(金)10:00〜",
+      "purchaseNote": "出演者への取り置きも可能です",
+      "streamingNote": "※配信はありません"
+    }
+  },
+  {
     "id": "2026-11-30-1600-audition-1st-east",
     "eventType": "audition-1st-east",
     "title": "オーディション1stステージ EAST",
